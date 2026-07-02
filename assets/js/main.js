@@ -1,0 +1,249 @@
+/* dapiced.github.io — starfield, typed roles, live projects */
+(function () {
+  "use strict";
+
+  /* ---------- starfield canvas ---------- */
+  var canvas = document.getElementById("starfield");
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (canvas && canvas.getContext) {
+    var ctx = canvas.getContext("2d");
+    var stars = [];
+    var meteor = null;
+    var STAR_COUNT = 160;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function makeStars() {
+      stars = [];
+      for (var i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.3 + 0.3,
+          base: Math.random() * 0.5 + 0.3,
+          amp: Math.random() * 0.45,
+          phase: Math.random() * Math.PI * 2,
+          speed: Math.random() * 1.2 + 0.4
+        });
+      }
+    }
+
+    function spawnMeteor() {
+      meteor = {
+        x: Math.random() * canvas.width * 0.7,
+        y: Math.random() * canvas.height * 0.25,
+        vx: 7 + Math.random() * 5,
+        vy: 2.5 + Math.random() * 2,
+        life: 1
+      };
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var sec = t / 1000;
+
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        var alpha = s.base + s.amp * Math.sin(sec * s.speed + s.phase);
+        ctx.globalAlpha = Math.max(0.05, Math.min(1, alpha));
+        ctx.fillStyle = "#dbe9ff";
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (meteor) {
+        var m = meteor;
+        var grad = ctx.createLinearGradient(m.x - m.vx * 10, m.y - m.vy * 10, m.x, m.y);
+        grad.addColorStop(0, "rgba(230,241,255,0)");
+        grad.addColorStop(1, "rgba(230,241,255," + (0.85 * m.life) + ")");
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(m.x - m.vx * 10, m.y - m.vy * 10);
+        ctx.lineTo(m.x, m.y);
+        ctx.stroke();
+        m.x += m.vx;
+        m.y += m.vy;
+        m.life -= 0.012;
+        if (m.life <= 0 || m.x > canvas.width + 150) meteor = null;
+      } else if (Math.random() < 0.0025) {
+        spawnMeteor();
+      }
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(draw);
+    }
+
+    function drawStatic() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        ctx.globalAlpha = s.base;
+        ctx.fillStyle = "#dbe9ff";
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    resize();
+    makeStars();
+    window.addEventListener("resize", function () {
+      resize();
+      makeStars();
+      if (reduceMotion) drawStatic();
+    });
+
+    if (reduceMotion) {
+      drawStatic();
+    } else {
+      requestAnimationFrame(draw);
+    }
+  }
+
+  /* ---------- typed roles ---------- */
+  var rolesEl = document.getElementById("typed-roles");
+  if (rolesEl) {
+    var roles = [
+      "Developer — Azure Infrastructure AI",
+      "25+ years automating complex systems",
+      "MLOps · DataOps · Infrastructure as Code",
+      "Kaggle competitor · Data Science student",
+      "Stargazer — of night skies and repositories"
+    ];
+    var ri = 0, ci = 0, deleting = false;
+
+    function typeTick() {
+      var word = roles[ri];
+      if (!deleting) {
+        ci++;
+        if (ci === word.length) {
+          deleting = true;
+          rolesEl.textContent = word.slice(0, ci);
+          setTimeout(typeTick, 2200);
+          return;
+        }
+      } else {
+        ci--;
+        if (ci === 0) {
+          deleting = false;
+          ri = (ri + 1) % roles.length;
+        }
+      }
+      rolesEl.textContent = word.slice(0, ci);
+      setTimeout(typeTick, deleting ? 28 : 55);
+    }
+
+    if (reduceMotion) {
+      rolesEl.textContent = roles[0];
+    } else {
+      typeTick();
+    }
+  }
+
+  /* ---------- live projects from GitHub API ---------- */
+  var grid = document.getElementById("projects-grid");
+  if (grid) {
+    var LANG_COLORS = {
+      Python: "#3572A5", R: "#198CE7", HTML: "#e34c26", CSS: "#563d7c",
+      Shell: "#89e051", JavaScript: "#f1e05a", PowerShell: "#012456",
+      Jinja: "#a52a22", Dockerfile: "#384d54", Perl: "#0298c3",
+      "Jupyter Notebook": "#DA5B0B"
+    };
+
+    fetch("https://api.github.com/users/dapiced/repos?per_page=100&sort=updated")
+      .then(function (r) {
+        if (!r.ok) throw new Error("GitHub API " + r.status);
+        return r.json();
+      })
+      .then(function (repos) {
+        var own = repos.filter(function (r) {
+          return !r.fork && r.name !== "dapiced" && r.name !== "dapiced.github.io";
+        });
+        own.sort(function (a, b) {
+          var d = b.stargazers_count - a.stargazers_count;
+          return d !== 0 ? d : (a.updated_at < b.updated_at ? 1 : -1);
+        });
+        grid.innerHTML = "";
+        own.slice(0, 9).forEach(function (repo) {
+          var card = document.createElement("a");
+          card.className = "project-card reveal";
+          card.href = repo.html_url;
+          card.target = "_blank";
+          card.rel = "noopener";
+
+          var name = document.createElement("span");
+          name.className = "project-name";
+          name.textContent = repo.name;
+
+          var desc = document.createElement("span");
+          desc.className = "project-desc";
+          var d = (repo.description || "Automation project").replace(/\*\*/g, "");
+          desc.textContent = d.length > 130 ? d.slice(0, 129) + "…" : d;
+
+          var meta = document.createElement("span");
+          meta.className = "project-meta";
+          var parts = [];
+          if (repo.language) {
+            var dot = '<span class="lang-dot" style="background:' +
+              (LANG_COLORS[repo.language] || "#bc8cff") + '"></span>';
+            parts.push(dot + repo.language);
+          } else if ((repo.topics || []).indexOf("ansible") !== -1) {
+            parts.push('<span class="lang-dot" style="background:#EE0000"></span>Ansible');
+          }
+          parts.push("★ " + repo.stargazers_count);
+          if (repo.forks_count > 0) parts.push("⑂ " + repo.forks_count);
+          meta.innerHTML = parts.map(function (p) { return "<span>" + p + "</span>"; }).join("");
+
+          card.appendChild(name);
+          card.appendChild(desc);
+          card.appendChild(meta);
+          grid.appendChild(card);
+          requestAnimationFrame(function () { card.classList.add("visible"); });
+        });
+      })
+      .catch(function () {
+        grid.innerHTML = '<p class="projects-note">Telemetry link temporarily down — ' +
+          'browse everything directly on <a href="https://github.com/dapiced?tab=repositories">GitHub</a>.</p>';
+      });
+  }
+
+  /* ---------- scroll reveal ---------- */
+  if ("IntersectionObserver" in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("visible"); });
+  }
+
+  /* ---------- mobile nav ---------- */
+  var toggle = document.querySelector(".nav-toggle");
+  var links = document.querySelector(".nav-links");
+  if (toggle && links) {
+    toggle.addEventListener("click", function () {
+      var open = links.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    links.addEventListener("click", function (e) {
+      if (e.target.tagName === "A") links.classList.remove("open");
+    });
+  }
+
+  /* ---------- footer year ---------- */
+  var year = document.getElementById("year");
+  if (year) year.textContent = String(new Date().getFullYear());
+})();

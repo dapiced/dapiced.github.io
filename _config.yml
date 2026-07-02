@@ -1,0 +1,25 @@
+title: Dominic D'Apice
+tagline: Developer — Azure Infrastructure AI
+description: >-
+  Developer — Azure Infrastructure AI in Montréal, Canada. 25+ years automating
+  complex systems: Azure, Databricks, Ansible, Terraform, MLOps & DataOps.
+url: "https://dapiced.github.io"
+author:
+  name: Dominic D'Apice
+lang: en
+timezone: America/Toronto
+
+permalink: /blog/:year/:month/:title/
+
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+feed:
+  path: feed.xml
+
+exclude:
+  - README.md
+  - LICENSE

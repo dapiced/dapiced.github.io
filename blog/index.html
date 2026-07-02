@@ -1,0 +1,29 @@
+---
+layout: default
+title: Mission Log — Blog
+description: >-
+  Field notes from 25+ years of infrastructure: Azure, Databricks, Ansible,
+  MLOps, DataOps, and the occasional look at the night sky.
+---
+
+<section class="section">
+  <p class="eyebrow">MISSION LOG</p>
+  <h2 class="section-title">Blog</h2>
+  <p style="color: var(--muted); max-width: 640px;">
+    Field notes from the machine room: Azure &amp; Databricks operations, Ansible at scale,
+    Azure DevOps → GitHub Actions migrations, MLOps / DataOps — and the occasional detour
+    through the night sky.
+  </p>
+  <ul class="post-list" style="margin-top: 2rem;">
+    {% for post in site.posts %}
+    <li class="post-item">
+      <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
+      <p class="post-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time>
+        {% if post.tags and post.tags.size > 0 %} · {% for tag in post.tags %}#{{ tag }} {% endfor %}{% endif %}
+      </p>
+      <p class="excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>

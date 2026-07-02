@@ -1,0 +1,19 @@
+---
+layout: default
+---
+<article class="section post">
+  <header class="post-header">
+    <p class="eyebrow"><a href="/blog/">← MISSION LOG</a></p>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+      {% assign words = content | number_of_words %}
+      · {{ words | divided_by: 200 | plus: 1 }} min read
+      {% if page.tags and page.tags.size > 0 %} · {% for tag in page.tags %}<span class="tag">#{{ tag }}</span> {% endfor %}{% endif %}
+    </p>
+  </header>
+  <div class="post-content">
+    {{ content }}
+  </div>
+  <p class="post-footer"><a href="/blog/">← Back to all posts</a></p>
+</article>

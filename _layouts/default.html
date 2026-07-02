@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% seo %}
+  {% feed_meta %}
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Dominic D'Apice",
+    "url": "https://dapiced.github.io",
+    "jobTitle": "Developer — Azure Infrastructure AI",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Montréal",
+      "addressRegion": "QC",
+      "addressCountry": "CA"
+    },
+    "knowsAbout": ["Microsoft Azure", "Databricks", "MLOps", "DataOps", "Ansible", "Terraform", "Infrastructure as Code", "Data Science", "Machine Learning"],
+    "sameAs": [
+      "https://github.com/dapiced",
+      "https://www.linkedin.com/in/dapiced/",
+      "https://www.kaggle.com/dominicdapice",
+      "https://huggingface.co/dapiced"
+    ]
+  }
+  </script>
+</head>
+<body>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a class="brand" href="/"><span class="brand-planet" aria-hidden="true"></span>dominic@azure<span class="brand-cursor" aria-hidden="true">▌</span></a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#projects">Projects</a></li>
+        <li><a href="/#timeline">Timeline</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a class="nav-gh" href="https://github.com/dapiced" target="_blank" rel="noopener">GitHub ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <footer class="footer">
+    <div class="footer-arc" aria-hidden="true"></div>
+    <p class="motto">« Per aspera ad astra »</p>
+    <p class="footer-sub">Thanks for stopping by — Merci de votre visite</p>
+    <ul class="footer-links">
+      <li><a href="https://github.com/dapiced" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://www.kaggle.com/dominicdapice" target="_blank" rel="noopener">Kaggle</a></li>
+      <li><a href="https://huggingface.co/dapiced" target="_blank" rel="noopener">Hugging Face</a></li>
+      <li><a href="/feed.xml">RSS</a></li>
+    </ul>
+    <p class="footer-copy">© <span id="year">2026</span> Dominic D'Apice · Montréal, Canada · Orion Arm</p>
+  </footer>
+
+  <script src="/assets/js/main.js" defer></script>
+</body>
+</html>
