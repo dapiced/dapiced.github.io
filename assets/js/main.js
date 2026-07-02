@@ -12,9 +12,31 @@
     var meteor = null;
     var STAR_COUNT = 160;
 
+    /* ✦ Vincenzo D'Apice (1937–2022) — the golden star of this sky.
+       /blog/2026/07/une-etoile-pour-mon-pere/ */
+    var gold = { x: 0, y: 0 };
+
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      gold.x = canvas.width * 0.76;
+      gold.y = canvas.height * 0.22;
+    }
+
+    function drawGold(pulse) {
+      var halo = ctx.createRadialGradient(gold.x, gold.y, 0, gold.x, gold.y, 16);
+      halo.addColorStop(0, "rgba(255,233,168," + 0.7 * pulse + ")");
+      halo.addColorStop(0.4, "rgba(227,179,65," + 0.28 * pulse + ")");
+      halo.addColorStop(1, "rgba(227,179,65,0)");
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(gold.x, gold.y, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#ffe9a8";
+      ctx.beginPath();
+      ctx.arc(gold.x, gold.y, 1.7 + 0.6 * pulse, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     function makeStars() {
@@ -56,6 +78,8 @@
         ctx.fill();
       }
 
+      drawGold(0.7 + 0.3 * Math.sin(sec * 1.1));
+
       if (meteor) {
         var m = meteor;
         var grad = ctx.createLinearGradient(m.x - m.vx * 10, m.y - m.vy * 10, m.x, m.y);
@@ -90,6 +114,7 @@
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
       }
+      drawGold(0.85);
       ctx.globalAlpha = 1;
     }
 
