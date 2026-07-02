@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Hello, Universe: why this site exists"
-date: 2026-07-02 21:00:00 -0400
+date: 2026-07-02 12:00:00 -0400
 tags: [meta, career]
 ---
 
