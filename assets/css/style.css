@@ -541,4 +541,6 @@ h2.section-title::after {
 .footer-dedication a { color: var(--gold); opacity: 0.8; }
 .footer-dedication a:hover { opacity: 1; color: var(--gold); text-decoration: none; text-shadow: 0 0 12px rgba(227, 179, 65, 0.6); }
 
+.footer-star-status { position: relative; margin: -0.5rem 0 1.1rem; font-size: 0.76rem; font-style: italic; color: var(--faint); min-height: 1em; }
+
 .footer-copy { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--faint); margin: 0; position: relative; }
