@@ -518,6 +518,25 @@ h2.section-title::after {
 .footer-links a { font-size: 0.85rem; color: var(--muted); }
 .footer-links a:hover { color: var(--lightblue); }
 
+/* tooltip revealed when hovering Vincenzo's golden star */
+.gold-tip {
+  position: fixed;
+  z-index: 60;
+  transform: translate(-50%, 0);
+  background: rgba(13, 21, 38, 0.95);
+  border: 1px solid rgba(227, 179, 65, 0.55);
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 4px 24px rgba(227, 179, 65, 0.2);
+}
+.gold-tip.visible { opacity: 1; }
+.gold-tip .tip-name { display: block; color: var(--gold); font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
+.gold-tip .tip-sub { display: block; color: var(--muted); font-size: 0.72rem; font-style: italic; white-space: nowrap; }
+
 .footer-dedication { position: relative; margin: 0 0 1rem; font-size: 0.82rem; font-style: italic; }
 .footer-dedication a { color: var(--gold); opacity: 0.8; }
 .footer-dedication a:hover { opacity: 1; color: var(--gold); text-decoration: none; text-shadow: 0 0 12px rgba(227, 179, 65, 0.6); }
