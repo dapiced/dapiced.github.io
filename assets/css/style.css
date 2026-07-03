@@ -481,6 +481,10 @@ h2.section-title::after {
 }
 .post-content img { max-width: 100%; border-radius: 10px; }
 
+.post-comments { margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.comments-title { color: var(--lightblue); font-size: 1.3rem; margin: 0 0 0.3rem; }
+.comments-hint { font-size: 0.85rem; color: var(--faint); margin: 0 0 1.4rem; }
+
 .post-footer { margin-top: 3rem; font-family: var(--mono); }
 
 /* ---------- footer ---------- */
