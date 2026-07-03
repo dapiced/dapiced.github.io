@@ -8,7 +8,7 @@ layout: default
     <p class="post-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
       {% assign words = content | number_of_words %}
-      · {{ words | divided_by: 200 | plus: 1 }} min read
+      · {{ words | divided_by: 200 | plus: 1 }} min read<span id="post-views" hidden> · 👁 <span id="post-views-n"></span> visitors</span>
       {% if page.tags and page.tags.size > 0 %} · {% for tag in page.tags %}<span class="tag">#{{ tag }}</span> {% endfor %}{% endif %}
     </p>
   </header>
