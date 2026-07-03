@@ -2,7 +2,7 @@
 
 Personal site and blog of **Dominic D'Apice** — Developer, Azure Infrastructure AI.
 
-**Live at [dapiced.github.io](https://dapiced.github.io)** — built with [Jekyll](https://jekyllrb.com/) on GitHub Pages, deep-space theme matching the [GitHub profile](https://github.com/dapiced).
+**Live at [dapiced.github.io](https://dapiced.github.io)** built with [Jekyll](https://jekyllrb.com/) on GitHub Pages, deep-space theme matching the [GitHub profile](https://github.com/dapiced).
 
 ## Writing a new blog post
 
