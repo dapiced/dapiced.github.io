@@ -6,7 +6,7 @@ tags: [philosophy, cosmology, dialogue]
 ---
 
 <p style="text-align:center; font-family: Georgia, serif; font-style: italic; color: var(--muted); font-size: 1.05rem;">
-A late-night metaphysics dialogue with Claude (Anthropic) — translated from the French, published as it happened.
+A late-night metaphysics dialogue with Claude (Anthropic).
 </p>
 
 Last night I asked Claude a simple question. Four exchanges later, we had gone from Leibniz's riddle to a theorem — and to an image that demonstrates it. Here is the faithful transcript (typos fixed, nothing else).
