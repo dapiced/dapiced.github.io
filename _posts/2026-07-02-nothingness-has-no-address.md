@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Nothingness Has No Address — a dialogue on the greatest enigma"
-date: 2026-07-02 22:00:00 -0400
+date: 2026-07-02 17:00:00 -0400
 tags: [philosophy, cosmology, dialogue]
 ---
 
