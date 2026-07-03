@@ -252,6 +252,8 @@ h2.section-title::after {
   letter-spacing: 0.22em;
   color: var(--faint);
 }
+.hero-coords a { color: var(--faint); text-decoration: none; transition: color 0.3s ease, text-shadow 0.3s ease; }
+.hero-coords a:hover { color: var(--gold); text-decoration: none; text-shadow: 0 0 14px rgba(227, 179, 65, 0.55); }
 
 /* ---------- about ---------- */
 
