@@ -290,23 +290,36 @@
     });
   }
 
-  /* ---------- per-post visitor count (GoatCounter) ---------- */
-  var pv = document.getElementById("post-views");
-  if (pv) {
-    fetch("https://dapiced.goatcounter.com/counter/" + location.pathname + ".json")
+  /* ---------- visitor counts (GoatCounter) ---------- */
+  function fetchCount(path, onCount) {
+    fetch("https://dapiced.goatcounter.com/counter/" + path + ".json")
       .then(function (r) {
         if (!r.ok) throw new Error("counter " + r.status);
         return r.json();
       })
       .then(function (d) {
         var n = d.count_unique || d.count;
-        if (n) {
-          document.getElementById("post-views-n").textContent = n;
-          pv.hidden = false;
-        }
+        if (n && n !== "0") onCount(n);
       })
       .catch(function () { /* no data yet — badge stays hidden */ });
   }
+
+  /* on a post page: count under the title */
+  var pv = document.getElementById("post-views");
+  if (pv) {
+    fetchCount(location.pathname, function (n) {
+      document.getElementById("post-views-n").textContent = n;
+      pv.hidden = false;
+    });
+  }
+
+  /* on post lists (blog index, homepage preview): count per item */
+  document.querySelectorAll(".list-views").forEach(function (el) {
+    fetchCount(el.getAttribute("data-path"), function (n) {
+      el.querySelector(".list-views-n").textContent = n;
+      el.hidden = false;
+    });
+  });
 
   /* ---------- footer year ---------- */
   var year = document.getElementById("year");
