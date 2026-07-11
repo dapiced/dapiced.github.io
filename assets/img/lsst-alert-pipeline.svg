@@ -1,0 +1,214 @@
+<svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The LSST alert pipeline read as infrastructure: from photon to notification in under 60 seconds">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5FC9F8"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+    .am  { fill:#FFB454; }
+    .cy  { fill:#5FC9F8; }
+    .panel { fill:#0E1526; stroke:#263450; stroke-width:1; }
+    .lbl { font-size:11px; font-weight:bold; letter-spacing:1.5px; }
+    .sm  { font-size:10px; }
+    .xs  { font-size:9px; }
+  </style>
+
+  <!-- page + terminal window -->
+  <rect x="0" y="0" width="1200" height="675" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="659" rx="12" fill="#0A0F1C" stroke="#263450"/>
+
+  <!-- terminal title bar -->
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> tail -f /dev/sky</tspan></text>
+  <rect x="332" y="17" width="7" height="14" fill="#FFB454" opacity="0.8"/>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">LSST · night 12 of 3,652</text>
+
+  <!-- starfield -->
+  <g fill="#E6EDF7">
+    <circle cx="380" cy="66" r="1" opacity="0.25"/><circle cx="452" cy="90" r="0.8" opacity="0.2"/>
+    <circle cx="560" cy="62" r="1.2" opacity="0.35"/><circle cx="641" cy="82" r="0.8" opacity="0.18"/>
+    <circle cx="708" cy="60" r="1" opacity="0.3"/><circle cx="770" cy="96" r="1.4" opacity="0.4"/>
+    <circle cx="838" cy="70" r="0.8" opacity="0.2"/><circle cx="902" cy="104" r="1" opacity="0.3"/>
+    <circle cx="965" cy="64" r="1.2" opacity="0.35"/><circle cx="1028" cy="88" r="0.8" opacity="0.22"/>
+    <circle cx="1088" cy="66" r="1" opacity="0.3"/><circle cx="1146" cy="98" r="1.3" opacity="0.4"/>
+    <circle cx="1110" cy="128" r="0.8" opacity="0.2"/><circle cx="986" cy="122" r="0.9" opacity="0.25"/>
+    <circle cx="866" cy="126" r="0.8" opacity="0.18"/><circle cx="742" cy="124" r="1" opacity="0.28"/>
+    <circle cx="60" cy="620" r="0.9" opacity="0.15"/><circle cx="1150" cy="610" r="0.9" opacity="0.15"/>
+  </g>
+
+  <!-- header -->
+  <text x="35" y="78" font-size="10" letter-spacing="3" class="s">VERA C. RUBIN OBSERVATORY — LEGACY SURVEY OF SPACE AND TIME — IN PRODUCTION SINCE 2026-06-30</text>
+  <text x="35" y="106" font-size="24" font-weight="bold" class="t">FROM PHOTON TO NOTIFICATION IN <tspan class="am">&#8804; 60 SECONDS</tspan></text>
+  <text x="35" y="126" font-size="11" class="s">the LSST alert pipeline, read as infrastructure</text>
+
+  <!-- ===== STAGE 1 · TELESCOPE ===== -->
+  <!-- the source -->
+  <path d="M 95 165 L 97.5 172.5 L 105 175 L 97.5 177.5 L 95 185 L 92.5 177.5 L 85 175 L 92.5 172.5 Z" fill="#FFB454"/>
+  <circle cx="95" cy="175" r="9" fill="#FFB454" opacity="0.15"/>
+  <!-- photon path -->
+  <line x1="95" y1="188" x2="95" y2="286" stroke="#FFB454" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="95" y1="288" x2="106" y2="260" stroke="#FFB454" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <!-- mirror + camera -->
+  <path d="M 55 300 Q 107 272 159 300" fill="none" stroke="#5FC9F8" stroke-width="3"/>
+  <line x1="62" y1="308" x2="152" y2="308" stroke="#263450" stroke-width="2"/>
+  <rect x="92" y="238" width="30" height="20" rx="3" class="panel" stroke="#5FC9F8"/>
+  <circle cx="107" cy="248" r="4" fill="none" stroke="#5FC9F8" stroke-width="1.2"/>
+  <text x="107" y="344" font-size="11" font-weight="bold" text-anchor="middle" class="t">SIMONYI TELESCOPE</text>
+  <text x="107" y="360" class="sm s" text-anchor="middle">8.4 m · LSSTCam 3.2 Gpx</text>
+  <text x="107" y="376" class="sm s" text-anchor="middle">one image every 40 s</text>
+
+  <line x1="176" y1="262" x2="202" y2="262" stroke="#5FC9F8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== STAGE 2 · DIFFERENCE IMAGING ===== -->
+  <rect x="210" y="196" width="3" height="11" fill="#5FC9F8"/>
+  <text x="220" y="206" class="lbl t">DIFFERENCE IMAGING</text>
+
+  <!-- frame: tonight -->
+  <rect x="210" y="222" width="82" height="82" rx="6" class="panel"/>
+  <g fill="#E6EDF7">
+    <circle cx="224" cy="242" r="1.5" opacity="0.85"/><circle cx="268" cy="236" r="1.5" opacity="0.85"/>
+    <circle cx="240" cy="266" r="1.5" opacity="0.85"/><circle cx="276" cy="282" r="1.5" opacity="0.85"/>
+    <circle cx="230" cy="288" r="1.5" opacity="0.85"/><circle cx="254" cy="252" r="1" opacity="0.4"/>
+    <circle cx="220" cy="272" r="1" opacity="0.4"/>
+  </g>
+  <circle cx="270" cy="260" r="7" fill="#FFB454" opacity="0.2"/>
+  <circle cx="270" cy="260" r="2.6" fill="#FFB454"/>
+  <text x="304" y="268" font-size="18" text-anchor="middle" class="s">&#8722;</text>
+
+  <!-- frame: template -->
+  <rect x="316" y="222" width="82" height="82" rx="6" class="panel"/>
+  <g fill="#E6EDF7">
+    <circle cx="330" cy="242" r="1.5" opacity="0.85"/><circle cx="374" cy="236" r="1.5" opacity="0.85"/>
+    <circle cx="346" cy="266" r="1.5" opacity="0.85"/><circle cx="382" cy="282" r="1.5" opacity="0.85"/>
+    <circle cx="336" cy="288" r="1.5" opacity="0.85"/><circle cx="360" cy="252" r="1" opacity="0.4"/>
+    <circle cx="326" cy="272" r="1" opacity="0.4"/>
+  </g>
+  <text x="410" y="268" font-size="18" text-anchor="middle" class="s">=</text>
+
+  <!-- frame: the diff -->
+  <rect x="422" y="222" width="82" height="82" rx="6" fill="#0E1526" stroke="#FFB454" stroke-width="1" opacity="0.95"/>
+  <circle cx="482" cy="260" r="9" fill="#FFB454" opacity="0.18"/>
+  <circle cx="482" cy="260" r="5" fill="#FFB454" opacity="0.35"/>
+  <circle cx="482" cy="260" r="2.6" fill="#FFB454"/>
+
+  <text x="251" y="320" class="sm s" text-anchor="middle">tonight, t&#8320;</text>
+  <text x="357" y="320" class="sm s" text-anchor="middle">template</text>
+  <text x="463" y="320" class="sm am" text-anchor="middle">the diff</text>
+  <text x="210" y="344" class="sm"><tspan class="cy">git diff</tspan><tspan class="s"> against yesterday's sky</tspan></text>
+  <text x="210" y="360" class="sm s">~10,000 detections / image</text>
+
+  <line x1="510" y1="262" x2="538" y2="262" stroke="#5FC9F8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== STAGE 3 · ALERT PACKET ===== -->
+  <rect x="545" y="196" width="3" height="11" fill="#5FC9F8"/>
+  <text x="555" y="206" class="lbl t">ALERT PACKET</text>
+  <rect x="545" y="222" width="145" height="106" rx="8" class="panel"/>
+  <text x="556" y="244" class="xs t">diaSourceId: 2026&#8230;</text>
+  <text x="556" y="261" class="xs s">ra : 150.9412</text>
+  <text x="556" y="278" class="xs s">dec: -28.0731</text>
+  <text x="556" y="295" class="xs"><tspan class="s">flux: </tspan><tspan class="am">+14.2 &#963;</tspan></text>
+  <text x="556" y="314" class="xs s">cutouts:</text>
+  <rect x="614" y="304" width="12" height="12" rx="2" fill="none" stroke="#FFB454" stroke-width="1"/>
+  <rect x="631" y="304" width="12" height="12" rx="2" fill="none" stroke="#FFB454" stroke-width="1" opacity="0.6"/>
+  <text x="545" y="352" class="sm s">Avro, with image stamps</text>
+
+  <line x1="694" y1="262" x2="712" y2="262" stroke="#5FC9F8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== STAGE 4 · KAFKA ===== -->
+  <rect x="717" y="196" width="3" height="11" fill="#5FC9F8"/>
+  <text x="727" y="206" class="lbl t">APACHE KAFKA</text>
+  <g>
+    <rect x="717" y="222" width="188" height="20" rx="4" class="panel"/>
+    <text x="724" y="236" class="xs dim">p0</text>
+    <rect x="745" y="228" width="8" height="8" fill="#33445F"/><rect x="767" y="228" width="8" height="8" fill="#33445F"/>
+    <rect x="789" y="228" width="8" height="8" fill="#33445F"/><rect x="811" y="228" width="8" height="8" fill="#33445F"/>
+    <rect x="833" y="228" width="8" height="8" fill="#33445F"/><rect x="855" y="228" width="8" height="8" fill="#33445F"/>
+    <rect x="877" y="228" width="8" height="8" fill="#FFB454"/>
+  </g>
+  <g>
+    <rect x="717" y="252" width="188" height="20" rx="4" class="panel"/>
+    <text x="724" y="266" class="xs dim">p1</text>
+    <rect x="745" y="258" width="8" height="8" fill="#33445F"/><rect x="767" y="258" width="8" height="8" fill="#33445F"/>
+    <rect x="789" y="258" width="8" height="8" fill="#33445F"/><rect x="811" y="258" width="8" height="8" fill="#33445F"/>
+    <rect x="833" y="258" width="8" height="8" fill="#33445F"/><rect x="855" y="258" width="8" height="8" fill="#FFB454"/>
+    <rect x="877" y="258" width="8" height="8" fill="#FFB454" opacity="0.45"/>
+  </g>
+  <g>
+    <rect x="717" y="282" width="188" height="20" rx="4" class="panel"/>
+    <text x="724" y="296" class="xs dim">p2</text>
+    <rect x="745" y="288" width="8" height="8" fill="#33445F"/><rect x="767" y="288" width="8" height="8" fill="#33445F"/>
+    <rect x="789" y="288" width="8" height="8" fill="#33445F"/><rect x="811" y="288" width="8" height="8" fill="#33445F"/>
+    <rect x="833" y="288" width="8" height="8" fill="#33445F"/><rect x="855" y="288" width="8" height="8" fill="#33445F"/>
+    <rect x="877" y="288" width="8" height="8" fill="#FFB454"/>
+  </g>
+  <text x="717" y="326" class="sm"><tspan class="cy">topic: alerts</tspan><tspan class="s"> · ~115 msg/s</tspan></text>
+  <text x="717" y="344" class="sm am" font-weight="bold">up to 10M alerts / night</text>
+
+  <line x1="909" y1="262" x2="927" y2="262" stroke="#5FC9F8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== STAGE 5 · BROKERS ===== -->
+  <rect x="932" y="196" width="3" height="11" fill="#5FC9F8"/>
+  <text x="942" y="206" class="lbl t">7 COMMUNITY BROKERS</text>
+  <text x="932" y="221" class="xs s">crossmatch · ML classify · filter · route</text>
+
+  <rect x="932" y="230" width="58" height="20" rx="10" class="panel"/>
+  <text x="961" y="244" class="xs t" text-anchor="middle">FINK</text>
+  <rect x="998" y="230" width="66" height="20" rx="10" class="panel"/>
+  <text x="1031" y="244" class="xs t" text-anchor="middle">ALeRCE</text>
+  <rect x="1072" y="230" width="72" height="20" rx="10" class="panel"/>
+  <text x="1108" y="244" class="xs t" text-anchor="middle">ANTARES</text>
+
+  <rect x="932" y="258" width="64" height="20" rx="10" class="panel"/>
+  <text x="964" y="272" class="xs t" text-anchor="middle">LASAIR</text>
+  <rect x="1004" y="258" width="60" height="20" rx="10" class="panel"/>
+  <text x="1034" y="272" class="xs t" text-anchor="middle">AMPEL</text>
+  <rect x="1072" y="258" width="88" height="20" rx="10" class="panel"/>
+  <text x="1116" y="272" class="xs t" text-anchor="middle">PITT-GOOGLE</text>
+
+  <rect x="932" y="286" width="70" height="20" rx="10" class="panel"/>
+  <text x="967" y="300" class="xs t" text-anchor="middle">BABAMUL</text>
+  <text x="1012" y="300" class="xs dim">full-stream access</text>
+
+  <text x="932" y="334" class="sm"><tspan class="cy">&#8594;</tspan><tspan class="s"> follow-up telescopes</tspan></text>
+  <text x="932" y="352" class="sm"><tspan class="cy">&#8594;</tspan><tspan class="s"> science platform</tspan></text>
+  <text x="932" y="370" class="sm"><tspan class="cy">&#8594;</tspan><tspan class="am"> a Slack ping at 3 a.m.</tspan></text>
+
+  <!-- ===== SLO TIMELINE ===== -->
+  <text x="550" y="420" font-size="12" font-weight="bold" text-anchor="middle" class="am">SLO: &#8804; 60 seconds from shutter close to published alert</text>
+  <path d="M 120 438 L 120 430 L 980 430 L 980 438" fill="none" stroke="#FFB454" stroke-width="1.2" opacity="0.8"/>
+
+  <line x1="120" y1="462" x2="1080" y2="462" stroke="#263450" stroke-width="2"/>
+  <line x1="120" y1="462" x2="980" y2="462" stroke="#5FC9F8" stroke-width="2"/>
+  <line x1="980" y1="462" x2="1080" y2="462" stroke="#54637F" stroke-width="2" stroke-dasharray="4 5"/>
+  <line x1="120" y1="454" x2="120" y2="470" stroke="#8CA0BE" stroke-width="1.5"/>
+  <line x1="360" y1="456" x2="360" y2="468" stroke="#3A4A68" stroke-width="1.5"/>
+  <line x1="700" y1="456" x2="700" y2="468" stroke="#3A4A68" stroke-width="1.5"/>
+  <line x1="980" y1="454" x2="980" y2="470" stroke="#8CA0BE" stroke-width="1.5"/>
+  <circle cx="980" cy="462" r="7" fill="#FFB454" opacity="0.2"/>
+  <circle cx="980" cy="462" r="3" fill="#FFB454"/>
+
+  <text x="240" y="484" class="xs s" text-anchor="middle">image readout &amp; transfer</text>
+  <text x="530" y="484" class="xs s" text-anchor="middle">difference imaging + detection</text>
+  <text x="840" y="484" class="xs s" text-anchor="middle">alert production &#8594; Kafka</text>
+  <text x="1030" y="484" class="xs dim" text-anchor="middle">margin</text>
+  <text x="120" y="502" class="sm s">t = 0 — shutter closes</text>
+  <text x="980" y="502" class="sm t" font-weight="bold" text-anchor="middle">alert published</text>
+
+  <!-- lambda note -->
+  <text x="600" y="536" class="sm s" text-anchor="middle">Speed layer: this page, in sixty seconds.  Batch layer: annual Data Releases reprocess every image from scratch.</text>
+  <text x="600" y="554" font-size="11" font-weight="bold" text-anchor="middle" class="t">— a Lambda architecture, pointed at the sky —</text>
+
+  <!-- footer -->
+  <line x1="120" y1="576" x2="1080" y2="576" stroke="#1B2740"/>
+  <text x="600" y="606" font-size="12" text-anchor="middle"><tspan class="t" font-weight="bold">10 TB</tspan><tspan class="s"> / night </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> ~1,000</tspan><tspan class="s"> images / night </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> 800</tspan><tspan class="s"> visits / field </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> 10</tspan><tspan class="s"> years</tspan></text>
+  <text x="600" y="638" font-size="9" text-anchor="middle" class="dim">dominic d'apice · dapiced.github.io — mission log · figures: rubinobservatory.org · 2026-07</text>
+</svg>
