@@ -48,7 +48,7 @@ Each image yields on the order of 10,000 detections. Which brings us to the part
 
 ## Kafka under the stars
 
-Every detection becomes an alert: a structured **Avro** packet - IDs, coordinates, fluxes, the light-curve history, small image cutouts - published to **Apache Kafka**.
+Every detection becomes an alert: a structured **Avro** packet, IDs, coordinates, fluxes, the light-curve history, small image cutouts published to **Apache Kafka**.
 
 Yes, that Kafka. The same broker technology carrying your clickstreams and your application logs is carrying the sky. At design cadence, ~10,000 alerts per image times ~1,000 images works out to about **ten million alerts per night**, roughly 115 messages per second, sustained, every clear night, for a decade. In these first weeks the system is already pushing seven million a night.
 
