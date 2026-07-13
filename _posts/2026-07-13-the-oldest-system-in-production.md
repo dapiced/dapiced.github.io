@@ -80,6 +80,10 @@ That is a canary deploy. A staged rollout with the healthier node first, on a di
 
 Somewhere at JPL right now, someone is watching 160 bits per second of telemetry and deciding whether to proceed. I hope their change ticket gets approved. I have never meant that sentence more sincerely.
 
+[![Diagram: the Voyager 1 operations timeline read as infrastructure — launch in 1977, Pale Blue Dot in 1990, roll thrusters written off in 2004, interstellar space in 2012, then a zoom on the busy years 2023–2026: the memory-chip incident and its patch, the 21-year thruster rollback, load shedding, the Big Bang canary, and the one-light-day milestone of November 2026](/assets/img/voyager-ops-timeline.svg)](/assets/img/voyager-ops-timeline.svg)
+
+*Forty-nine years of uptime, read as a change log. Click for full resolution.*
+
 ---
 
 ## What actually keeps a system alive
@@ -97,6 +101,14 @@ Rubin watches the sky and never blinks. Voyager left, and never looked back, exc
 Both are in production. Both are on-call rotations that someone, tonight, is quietly honouring. The newest system we have and the oldest one are running the same playbook: watch the telemetry, respect the power budget, test on the canary, and keep the signal alive.
 
 Forty-nine years of uptime. The diff is still running.
+
+**Voyager 1, alone in interstellar space** *(artist's concept, NASA/JPL-Caltech)*
+
+[![Artist's concept of Voyager 1 in interstellar space, its white high-gain dish antenna pointed back toward a distant Sun](https://photojournal.jpl.nasa.gov/jpeg/PIA17462.jpg)](https://photojournal.jpl.nasa.gov/catalog/PIA17462)
+
+**The Pale Blue Dot** *(1990, reprocessed in 2020, NASA/JPL-Caltech)*
+
+[![The Pale Blue Dot: Earth as a fraction of a pixel caught in a scattered ray of sunlight, photographed by Voyager 1 from 6 billion kilometres away](https://photojournal.jpl.nasa.gov/jpeg/PIA23645.jpg)](https://photojournal.jpl.nasa.gov/catalog/PIA23645)
 
 ---
 
