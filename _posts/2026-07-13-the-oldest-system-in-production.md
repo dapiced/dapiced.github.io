@@ -104,11 +104,11 @@ Forty-nine years of uptime. The diff is still running.
 
 **Voyager 1, alone in interstellar space** *(artist's concept, NASA/JPL-Caltech)*
 
-[![Artist's concept of Voyager 1 in interstellar space, its white high-gain dish antenna pointed back toward a distant Sun](https://photojournal.jpl.nasa.gov/jpeg/PIA17462.jpg)](https://photojournal.jpl.nasa.gov/catalog/PIA17462)
+[![Artist's concept of Voyager 1 in interstellar space, its white high-gain dish antenna pointed back toward a distant Sun](/assets/img/voyager1-interstellar.jpg)](/assets/img/voyager1-interstellar.jpg)
 
 **The Pale Blue Dot** *(1990, reprocessed in 2020, NASA/JPL-Caltech)*
 
-[![The Pale Blue Dot: Earth as a fraction of a pixel caught in a scattered ray of sunlight, photographed by Voyager 1 from 6 billion kilometres away](https://photojournal.jpl.nasa.gov/jpeg/PIA23645.jpg)](https://photojournal.jpl.nasa.gov/catalog/PIA23645)
+[![The Pale Blue Dot: Earth as a fraction of a pixel caught in a scattered ray of sunlight, photographed by Voyager 1 from 6 billion kilometres away](/assets/img/pale-blue-dot.jpg)](/assets/img/pale-blue-dot.jpg)
 
 ---
 
