@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Oldest System in Production"
-date: 2026-07-13 21:00:00 -0400
+date: 2026-07-13 20:00:00 -0400
 tags: [astronomy, dataops, engineering]
 description: "Forty-nine years of uptime, 23 watts of transmit power, a 45-hour deploy loop, and a risky change window scheduled for this month. Voyager 1, read with infrastructure eyes."
 ---
