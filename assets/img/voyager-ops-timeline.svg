@@ -1,0 +1,179 @@
+<svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Voyager 1 operations timeline read as infrastructure: launch in 1977, Pale Blue Dot in 1990, thrusters written off in 2004, interstellar space in 2012, then the busy years 2023 to 2026 with the memory patch, the thruster revival, load shedding and the Big Bang canary, one light-day from Earth in November 2026">
+  <defs>
+    <marker id="varr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5FC9F8"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+    .am  { fill:#FFB454; }
+    .cy  { fill:#5FC9F8; }
+    .panel { fill:#0E1526; stroke:#263450; stroke-width:1; }
+    .lbl { font-size:11px; font-weight:bold; letter-spacing:1.5px; }
+    .sm  { font-size:10px; }
+    .xs  { font-size:9px; }
+  </style>
+
+  <!-- page + terminal window -->
+  <rect x="0" y="0" width="1200" height="675" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="659" rx="12" fill="#0A0F1C" stroke="#263450"/>
+
+  <!-- terminal title bar -->
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> uptime --since 1977-09-05</tspan></text>
+  <rect x="392" y="17" width="7" height="14" fill="#FFB454" opacity="0.8"/>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">VOYAGER 1 · 172.6 AU · 160 bps</text>
+
+  <!-- starfield -->
+  <g fill="#E6EDF7">
+    <circle cx="380" cy="66" r="1" opacity="0.25"/><circle cx="452" cy="90" r="0.8" opacity="0.2"/>
+    <circle cx="560" cy="62" r="1.2" opacity="0.35"/><circle cx="641" cy="82" r="0.8" opacity="0.18"/>
+    <circle cx="708" cy="60" r="1" opacity="0.3"/><circle cx="770" cy="96" r="1.4" opacity="0.4"/>
+    <circle cx="838" cy="70" r="0.8" opacity="0.2"/><circle cx="902" cy="104" r="1" opacity="0.3"/>
+    <circle cx="965" cy="64" r="1.2" opacity="0.35"/><circle cx="1028" cy="88" r="0.8" opacity="0.22"/>
+    <circle cx="1088" cy="66" r="1" opacity="0.3"/><circle cx="1146" cy="98" r="1.3" opacity="0.4"/>
+    <circle cx="1110" cy="128" r="0.8" opacity="0.2"/><circle cx="986" cy="122" r="0.9" opacity="0.25"/>
+    <circle cx="196" cy="150" r="0.9" opacity="0.22"/><circle cx="292" cy="186" r="0.8" opacity="0.18"/>
+    <circle cx="60" cy="620" r="0.9" opacity="0.15"/><circle cx="1150" cy="610" r="0.9" opacity="0.15"/>
+  </g>
+
+  <!-- header -->
+  <text x="35" y="78" font-size="10" letter-spacing="3" class="s">VOYAGER 1 — IN PRODUCTION SINCE 1977-09-05 — 25.8 BILLION KM FROM THE OPERATORS</text>
+  <text x="35" y="106" font-size="24" font-weight="bold" class="t">FORTY-NINE YEARS OF UPTIME</text>
+  <text x="35" y="128" class="sm s">the change log of the oldest system in production · one command round trip: 45 hours</text>
+
+  <!-- ===== MAIN TIMELINE 1977 → 2036 ===== -->
+  <rect x="35" y="168" width="3" height="11" fill="#5FC9F8"/>
+  <text x="45" y="178" class="lbl t">MISSION TIMELINE</text>
+  <text x="1080" y="178" class="xs dim" text-anchor="end">1977 ────────── 2036</text>
+
+  <!-- axis: solid past, dashed future -->
+  <line x1="120" y1="300" x2="926" y2="300" stroke="#5FC9F8" stroke-width="2"/>
+  <line x1="926" y1="300" x2="1080" y2="300" stroke="#54637F" stroke-width="2" stroke-dasharray="4 5"/>
+
+  <!-- LAUNCH 1977 (below) -->
+  <line x1="131" y1="292" x2="131" y2="308" stroke="#8CA0BE" stroke-width="1.5"/>
+  <circle cx="131" cy="300" r="6" fill="#FFB454" opacity="0.18"/>
+  <circle cx="131" cy="300" r="2.6" fill="#FFB454"/>
+  <text x="131" y="328" class="sm t" font-weight="bold" text-anchor="middle">LAUNCH</text>
+  <text x="131" y="343" class="xs s" text-anchor="middle">1977-09-05</text>
+  <text x="131" y="357" class="xs dim" text-anchor="middle">go-live · 470 W</text>
+
+  <!-- FLYBYS ~1980 (above) -->
+  <line x1="184" y1="294" x2="184" y2="300" stroke="#3A4A68" stroke-width="1.5"/>
+  <line x1="184" y1="294" x2="184" y2="262" stroke="#263450" stroke-width="1" stroke-dasharray="2 3"/>
+  <text x="184" y="240" class="xs s" text-anchor="middle">1979–80</text>
+  <text x="184" y="254" class="xs dim" text-anchor="middle">Jupiter · Saturn — the feature releases</text>
+
+  <!-- PALE BLUE DOT 1990 (below) -->
+  <line x1="333" y1="292" x2="333" y2="308" stroke="#3A4A68" stroke-width="1.5"/>
+  <circle cx="333" cy="300" r="2" fill="#5FC9F8"/>
+  <text x="333" y="328" class="xs cy" text-anchor="middle">1990 · Pale Blue Dot</text>
+  <text x="333" y="342" class="xs dim" text-anchor="middle">one look back, then eyes forward</text>
+
+  <!-- 2004 THRUSTERS DEAD (above) -->
+  <line x1="559" y1="294" x2="559" y2="300" stroke="#3A4A68" stroke-width="1.5"/>
+  <line x1="559" y1="294" x2="559" y2="262" stroke="#263450" stroke-width="1" stroke-dasharray="2 3"/>
+  <text x="559" y="240" class="xs s" text-anchor="middle">2004 · roll thrusters written off</text>
+  <text x="559" y="254" class="xs dim" text-anchor="middle">failover to backup — for 21 years</text>
+
+  <!-- 2012 INTERSTELLAR (below) -->
+  <line x1="700" y1="292" x2="700" y2="308" stroke="#3A4A68" stroke-width="1.5"/>
+  <circle cx="700" cy="300" r="2" fill="#5FC9F8"/>
+  <text x="700" y="328" class="xs cy" text-anchor="middle">2012 · enters interstellar space</text>
+  <text x="700" y="342" class="xs dim" text-anchor="middle">first system beyond the prod boundary</text>
+
+  <!-- THE BUSY YEARS zone (highlight) -->
+  <rect x="876" y="282" width="60" height="36" rx="5" fill="#FFB454" opacity="0.08" stroke="#FFB454" stroke-width="1"/>
+  <text x="906" y="262" class="xs am" font-weight="bold" text-anchor="middle">2023–26</text>
+  <line x1="906" y1="268" x2="906" y2="280" stroke="#FFB454" stroke-width="1" opacity="0.6"/>
+
+  <!-- spacecraft glyph at current position -->
+  <g transform="translate(926,300)">
+    <circle cx="0" cy="0" r="7" fill="#FFB454" opacity="0.2"/>
+    <circle cx="0" cy="0" r="3" fill="#FFB454"/>
+  </g>
+
+  <!-- 2036 EOL (above, dim) -->
+  <line x1="1080" y1="292" x2="1080" y2="308" stroke="#54637F" stroke-width="1.5"/>
+  <text x="1080" y="328" class="xs dim" text-anchor="end">≈ 2036 · last watts</text>
+  <text x="1080" y="342" class="xs dim" text-anchor="end">decommission, by physics</text>
+
+  <!-- ===== ZOOM BRACKET ===== -->
+  <path d="M 876 322 L 820 384 L 272 384" fill="none" stroke="#FFB454" stroke-width="1" opacity="0.45" stroke-dasharray="3 4"/>
+  <path d="M 936 322 L 992 384 L 1080 384" fill="none" stroke="#FFB454" stroke-width="1" opacity="0.45" stroke-dasharray="3 4"/>
+
+  <!-- ===== ZOOM PANEL · 2023 → 2027 ===== -->
+  <rect x="35" y="374" width="3" height="11" fill="#FFB454"/>
+  <text x="45" y="384" class="lbl am">ZOOM · THE BUSY YEARS</text>
+
+  <!-- zoom axis -->
+  <line x1="120" y1="490" x2="967" y2="490" stroke="#5FC9F8" stroke-width="2"/>
+  <line x1="967" y1="490" x2="1080" y2="490" stroke="#54637F" stroke-width="2" stroke-dasharray="4 5"/>
+
+  <!-- 2023-11 · incident (below, amber) -->
+  <line x1="329" y1="482" x2="329" y2="498" stroke="#FFB454" stroke-width="1.5"/>
+  <circle cx="329" cy="490" r="6" fill="#FFB454" opacity="0.18"/>
+  <circle cx="329" cy="490" r="2.6" fill="#FFB454"/>
+  <text x="329" y="518" class="xs am" font-weight="bold" text-anchor="middle">2023-11 · INCIDENT</text>
+  <text x="329" y="532" class="xs s" text-anchor="middle">telemetry turns to garbage</text>
+  <text x="329" y="546" class="xs dim" text-anchor="middle">root cause: one dead memory chip</text>
+
+  <!-- 2024-04 · the patch (above, cyan) -->
+  <line x1="432" y1="482" x2="432" y2="490" stroke="#5FC9F8" stroke-width="1.5"/>
+  <line x1="432" y1="482" x2="432" y2="452" stroke="#263450" stroke-width="1" stroke-dasharray="2 3"/>
+  <circle cx="432" cy="490" r="2" fill="#5FC9F8"/>
+  <text x="432" y="418" class="xs cy" font-weight="bold" text-anchor="middle">2024-04 · THE PATCH</text>
+  <text x="432" y="432" class="xs s" text-anchor="middle">code relocated around the dead chip</text>
+  <text x="432" y="446" class="xs dim" text-anchor="middle">no testbed · verified by inspection</text>
+
+  <!-- 2025-02 · CRS off (below, dim) -->
+  <line x1="636" y1="482" x2="636" y2="498" stroke="#3A4A68" stroke-width="1.5"/>
+  <text x="636" y="518" class="xs s" text-anchor="middle">2025-02 · CRS off</text>
+  <text x="636" y="532" class="xs dim" text-anchor="middle">load shedding, 47 yrs of service</text>
+
+  <!-- 2025-03 · thrusters revived (above, cyan) -->
+  <line x1="669" y1="482" x2="669" y2="490" stroke="#5FC9F8" stroke-width="1.5"/>
+  <line x1="669" y1="482" x2="669" y2="452" stroke="#263450" stroke-width="1" stroke-dasharray="2 3"/>
+  <circle cx="669" cy="490" r="2" fill="#5FC9F8"/>
+  <text x="669" y="418" class="xs cy" font-weight="bold" text-anchor="middle">2025-03 · ROLLBACK</text>
+  <text x="669" y="432" class="xs s" text-anchor="middle">"dead" thrusters fire after 21 years</text>
+  <text x="669" y="446" class="xs dim" text-anchor="middle">before the antenna maintenance window</text>
+
+  <!-- 2026-04 · LECP off (below, dim) -->
+  <line x1="890" y1="482" x2="890" y2="498" stroke="#3A4A68" stroke-width="1.5"/>
+  <text x="880" y="518" class="xs s" text-anchor="middle">2026-04 · LECP off</text>
+  <text x="880" y="532" class="xs dim" text-anchor="middle">after 49 yrs, to buy time</text>
+
+  <!-- 2026-07 · BIG BANG (above, amber, you are here) -->
+  <line x1="967" y1="482" x2="967" y2="490" stroke="#FFB454" stroke-width="1.5"/>
+  <circle cx="967" cy="490" r="7" fill="#FFB454" opacity="0.2"/>
+  <circle cx="967" cy="490" r="3" fill="#FFB454"/>
+  <line x1="967" y1="482" x2="967" y2="452" stroke="#FFB454" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>
+  <text x="967" y="418" class="xs am" font-weight="bold" text-anchor="middle">2026-07 · BIG BANG</text>
+  <text x="967" y="432" class="xs s" text-anchor="middle">power swap · canary: Voyager 2 first</text>
+  <text x="967" y="446" class="xs am" text-anchor="middle">▲ you are here</text>
+
+  <!-- 2026-11-18 · one light-day (below) -->
+  <line x1="1051" y1="482" x2="1051" y2="498" stroke="#8CA0BE" stroke-width="1.5"/>
+  <path d="M 1051 484 L 1052.8 488.2 L 1057 490 L 1052.8 491.8 L 1051 496 L 1049.2 491.8 L 1045 490 L 1049.2 488.2 Z" fill="#E6EDF7" opacity="0.9"/>
+  <text x="1051" y="518" class="xs t" font-weight="bold" text-anchor="middle">2026-11-18</text>
+  <text x="1051" y="532" class="xs s" text-anchor="middle">one light-day out</text>
+  <text x="1051" y="546" class="xs dim" text-anchor="middle">ping: 48 h round trip</text>
+
+  <!-- zoom scale note -->
+  <text x="120" y="574" class="xs dim">scale: 2023 → 2027 · solid = happened · dashed = scheduled</text>
+
+  <!-- footer -->
+  <line x1="120" y1="592" x2="1080" y2="592" stroke="#1B2740"/>
+  <text x="600" y="620" font-size="12" text-anchor="middle"><tspan class="t" font-weight="bold">68 KB</tspan><tspan class="s"> memory </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> 23 W</tspan><tspan class="s"> transmitter </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> 160 bps</tspan><tspan class="s"> telemetry </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> −4 W</tspan><tspan class="s"> / year </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> 45 h</tspan><tspan class="s"> deploy loop</tspan></text>
+  <text x="600" y="648" font-size="9" text-anchor="middle" class="dim">dominic d'apice · dapiced.github.io — mission log · figures: NASA/JPL · 2026-07</text>
+</svg>
