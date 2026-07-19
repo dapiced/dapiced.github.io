@@ -46,7 +46,7 @@
   </g>
 
   <!-- header -->
-  <text x="35" y="78" font-size="10" letter-spacing="3" class="s">VERA C. RUBIN OBSERVATORY — LEGACY SURVEY OF SPACE AND TIME — IN PRODUCTION SINCE 2026-06-30</text>
+  <text x="35" y="78" font-size="10" letter-spacing="3" class="s">VERA C. RUBIN OBSERVATORY -LEGACY SURVEY OF SPACE AND TIME -IN PRODUCTION SINCE 2026-06-30</text>
   <text x="35" y="106" font-size="24" font-weight="bold" class="t">FROM PHOTON TO NOTIFICATION IN <tspan class="am">&#8804; 60 SECONDS</tspan></text>
   <text x="35" y="126" font-size="11" class="s">the LSST alert pipeline, read as infrastructure</text>
 
@@ -200,15 +200,15 @@
   <text x="530" y="484" class="xs s" text-anchor="middle">difference imaging + detection</text>
   <text x="840" y="484" class="xs s" text-anchor="middle">alert production &#8594; Kafka</text>
   <text x="1030" y="484" class="xs dim" text-anchor="middle">margin</text>
-  <text x="120" y="502" class="sm s">t = 0 — shutter closes</text>
+  <text x="120" y="502" class="sm s">t = 0 -shutter closes</text>
   <text x="980" y="502" class="sm t" font-weight="bold" text-anchor="middle">alert published</text>
 
   <!-- lambda note -->
   <text x="600" y="536" class="sm s" text-anchor="middle">Speed layer: this page, in sixty seconds.  Batch layer: annual Data Releases reprocess every image from scratch.</text>
-  <text x="600" y="554" font-size="11" font-weight="bold" text-anchor="middle" class="t">— a Lambda architecture, pointed at the sky —</text>
+  <text x="600" y="554" font-size="11" font-weight="bold" text-anchor="middle" class="t">-a Lambda architecture, pointed at the sky —</text>
 
   <!-- footer -->
   <line x1="120" y1="576" x2="1080" y2="576" stroke="#1B2740"/>
   <text x="600" y="606" font-size="12" text-anchor="middle"><tspan class="t" font-weight="bold">10 TB</tspan><tspan class="s"> / night </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> ~1,000</tspan><tspan class="s"> images / night </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> 800</tspan><tspan class="s"> visits / field </tspan><tspan class="dim">·</tspan><tspan class="t" font-weight="bold"> 10</tspan><tspan class="s"> years</tspan></text>
-  <text x="600" y="638" font-size="9" text-anchor="middle" class="dim">dominic d'apice · dapiced.github.io — mission log · figures: rubinobservatory.org · 2026-07</text>
+  <text x="600" y="638" font-size="9" text-anchor="middle" class="dim">dominic d'apice · dapiced.github.io -mission log · figures: rubinobservatory.org · 2026-07</text>
 </svg>
