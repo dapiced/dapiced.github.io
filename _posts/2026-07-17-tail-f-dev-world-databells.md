@@ -4,7 +4,6 @@ title: "Reverse-Engineering Databells, a 104-Node Cluster That Plays Reality"
 date: 2026-07-17 20:00:00 -0400
 tags: [iot, esp8266, arduino, python, sqlite, data-engineering, poisson-distribution, distributed-systems, sonification, montreal]
 description: "Field notes from someone else's machine room: the full teardown of Databells, event streams, poisson-distribution processes, pairing, a fleet of ESP8266s, and the art installation that renders the state of the world as sound."
----
 
 ```text
 2026-07-17T14:32:11Z  event=star_ignited        scope=universe   rate=411e6/day
@@ -13,11 +12,14 @@ description: "Field notes from someone else's machine room: the full teardown of
 2026-07-17T14:32:57Z  event=human_died          cause=suicide    rate=1.3/min
 ```
 
+---
 The world emits events. It has always emitted events; births, deaths, supernovae, package deliveries at rates we mostly consume through dashboards, if we consume them at all. A number in a report has no mass. It doesn't displace air.
 
 In a dark room in Old Montreal, somebody built a different kind of consumer for that stream. A hundred reclaimed bells; ship bells, cowbells, fire alarms, a schoolhouse bell pulled off a demolition pile, each wired to its own microcontroller, each subscribed to one topic of the world's event bus, each ringing at the real measured rate. A gong sounds every 46 seconds. The placard reads: *Suicide (Worldwide) - 1 per ring - 1.3 rings per minute*. You do the division in your head and go quiet 😶.
 
 I went to see an art installation. I found a production-grade distributed system, and I did what 25 years of infrastructure work have trained me to do: I read every label, photographed every exposed board, and reconstructed the architecture. Consider this a field note from someone else's machine room.
+
+---
 
 ![The Databells room at Salon des Bananes, Old Montreal](/assets/img/databells/databells-01-salle.jpg)
 *[Databells](https://www.databells.ca/), by Ottawa artist Rich Loen (a former programmer - it shows), at the [Salon des Bananes](https://www.salondesbananes.com/), 220 Saint-Paul St W. Until August 16, 2026, daily 12-8 pm, free. Photo: me.*
