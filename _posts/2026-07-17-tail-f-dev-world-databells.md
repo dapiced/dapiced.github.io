@@ -254,7 +254,7 @@ And the last source class, my favorite: some bells subscribe to *the room*. A ch
 - **The supply chain is a co-architect.** COVID moved this design from Raspberry Pi to ESP. Your architecture diagram is a hypothesis; procurement gets a veto.
 - **Boring tech compounds.** SQLite, stdlib tooling, Arduino, relays. Nothing fashionable, nothing cloud, five nines of *artistic* uptime, and the whole stack fits in a van!
 
-## 12. Open questions (the email is drafted)
+## 12. Open questions
 
 For the Loen.Design team, ranked: (1) ESP32 or ESP8266 ? What does the production fleet actually run, and was there a prototype generation? (2) The WiFi topology for ~104 stations on 2.4 GHz. (3) The server↔node protocol, per-strike commands or batched schedules with local execution? (4) Whether the beat grid has a fixed BPM or adapts to the active Σλ. (5) Why the banana. No publication explains the banana. I have accepted that the mystery may be the point 🤷‍♂️.
 
