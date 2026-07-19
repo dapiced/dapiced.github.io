@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Reverse-Engineering Databells, a 104-Node Cluster That Plays Reality"
-date: 2026-07-17
-lang: en
+date: 2026-07-17 20:00:00 -0400
 tags: [iot, esp8266, arduino, python, sqlite, data-engineering, poisson-distribution, distributed-systems, sonification, montreal]
 description: "Field notes from someone else's machine room: the full teardown of Databells, event streams, poisson-distribution processes, pairing, a fleet of ESP8266s, and the art installation that renders the state of the world as sound."
 ---
