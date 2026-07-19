@@ -5,13 +5,6 @@ date: 2026-07-17 20:00:00 -0400
 tags: [iot, esp8266, arduino, python, sqlite, data-engineering, poisson-distribution, distributed-systems, sonification, montreal]
 description: "Field notes from someone else's machine room: the full teardown of Databells, event streams, poisson-distribution processes, pairing, a fleet of ESP8266s, and the art installation that renders the state of the world as sound."
 
-```text
-2026-07-17T14:32:11Z  event=star_ignited        scope=universe   rate=411e6/day
-2026-07-17T14:32:11Z  event=video_uploaded      scope=youtube    rate=2.6e3/min
-2026-07-17T14:32:12Z  event=pothole_repaired    scope=montreal   rate=18.3/hr
-2026-07-17T14:32:57Z  event=human_died          cause=suicide    rate=1.3/min
-```
-
 ---
 The world emits events. It has always emitted events; births, deaths, supernovae, package deliveries at rates we mostly consume through dashboards, if we consume them at all. A number in a report has no mass. It doesn't displace air.
 
@@ -19,6 +12,12 @@ In a dark room in Old Montreal, somebody built a different kind of consumer for 
 
 I went to see an art installation. I found a production-grade distributed system, and I did what 25 years of infrastructure work have trained me to do: I read every label, photographed every exposed board, and reconstructed the architecture. Consider this a field note from someone else's machine room.
 
+```text
+2026-07-17T14:32:11Z  event=star_ignited        scope=universe   rate=411e6/day
+2026-07-17T14:32:11Z  event=video_uploaded      scope=youtube    rate=2.6e3/min
+2026-07-17T14:32:12Z  event=pothole_repaired    scope=montreal   rate=18.3/hr
+2026-07-17T14:32:57Z  event=human_died          cause=suicide    rate=1.3/min
+```
 ---
 
 ![The Databells room at Salon des Bananes, Old Montreal](/assets/img/databells/databells-01-salle.jpg)
