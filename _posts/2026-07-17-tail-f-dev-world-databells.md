@@ -272,7 +272,7 @@ If you're the kind of person who checks Voyager's velocity against a placard for
 
 ---
 
-## Terms explication
+## Term definitions
 
 ** Poisson processes or Poisson-distribution processes ** model the random occurrence of independent events over time at a constant average rate.
 ** Variance ** In a Poisson process, variance measures the spread of events, and it is uniquely equal to the average rate (λ). The variance is always equal to the mean (λ).
