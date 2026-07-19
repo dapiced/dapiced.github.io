@@ -54,14 +54,14 @@ Yes, that Kafka. The same broker technology carrying your clickstreams and your 
 
 No human being consumes that. Nobody's inbox survives contact with the universe. So Rubin distributes the raw stream only to **community alert brokers** - seven systems approved for the full firehose: Fink, ALeRCE, ANTARES, Lasair, AMPEL, Pitt-Google, BABAMUL. Look at what a broker actually does and tell me this isn't the alert management we practice on our own systems:
 
-- **cross-matching** each detection against archival catalogs -deduplication and enrichment;
-- **machine-learning classification** -triage;
-- **user-defined filters** -Lasair literally lets astronomers write SQL against the live stream -routing rules;
+- **cross-matching** each detection against archival catalogs — deduplication and enrichment;
+- **machine-learning classification** — triage;
+- **user-defined filters** — Lasair literally lets astronomers write SQL against the live stream — routing rules;
 - **redistribution** through APIs, watchlists, downstream Kafka topics, and yes, notifications straight into Slack.
 
 Follow that chain to its end: a star explodes in a galaxy millions of light-years away, and within about a minute of the photons landing in Chile, the event can surface as a Slack ping in some research group's channel. Someone, somewhere, is effectively on-call for the universe. Astronomy has industrialized alert triage at a scale that would humble most SOCs, and it solved it with exactly the toolbox we use for microservices, because at ten million events a night it's exactly the same problem: signal versus noise, latency versus completeness, and who gets woken up.
 
-[![Diagram: the LSST alert pipeline read as infrastructure -a photon hits the 8.4 m mirror, difference imaging diffs tonight's sky against a template, each detection becomes an Avro packet on a Kafka topic, seven community brokers cross-match, ML-classify, filter and route, all within a 60-second SLO](/assets/img/lsst-alert-pipeline.svg)](/assets/img/lsst-alert-pipeline.svg)
+[![Diagram: the LSST alert pipeline read as infrastructure — a photon hits the 8.4 m mirror, difference imaging diffs tonight's sky against a template, each detection becomes an Avro packet on a Kafka topic, seven community brokers cross-match, ML-classify, filter and route, all within a 60-second SLO](/assets/img/lsst-alert-pipeline.svg)](/assets/img/lsst-alert-pipeline.svg)
 
 *From photon to notification in sixty seconds. Click for full resolution.*
 
@@ -69,11 +69,11 @@ Follow that chain to its end: a star explodes in a galaxy millions of light-year
 
 The second thing an infrastructure eye catches: there are two processing planes.
 
-**Prompt processing** is the sixty-second path, the alert stream, plus a prompt products database you can query within 24 hours. **Data Release processing** is the other plane: every year, the project reprocesses *everything* from scratch -every image since night one, with the best calibrations and the latest pipeline code -to produce deep, internally consistent catalogs.
+**Prompt processing** is the sixty-second path, the alert stream, plus a prompt products database you can query within 24 hours. **Data Release processing** is the other plane: every year, the project reprocesses *everything* from scratch — every image since night one, with the best calibrations and the latest pipeline code — to produce deep, internally consistent catalogs.
 
 A speed layer for freshness. A batch layer for truth. I first met this pattern in a big-data course, as a textbook diagram with Nathan Marz's name attached: the **Lambda architecture**. It is one thing to see it in a slide deck. It is another to find it bolted to a mountain, pointed at the sky.
 
-And that annual full reprocess is quietly the most radical guarantee in the whole system: the pipelines are versioned code, and given the raw photons plus the configuration, the science can be re-derived. What infrastructure-as-code promises our datacenters -state you can rebuild from source -modern astronomy simply requires. The catalog of the universe, reproducible on demand.
+And that annual full reprocess is quietly the most radical guarantee in the whole system: the pipelines are versioned code, and given the raw photons plus the configuration, the science can be re-derived. What infrastructure-as-code promises our datacenters — state you can rebuild from source — modern astronomy simply requires. The catalog of the universe, reproducible on demand.
 
 ## ML is load-bearing
 
@@ -81,7 +81,7 @@ At ten million alerts a night, there is no human in the first-level loop. Machin
 
 First, real/bogus separation: models deciding whether a residual in the difference image is astrophysics or an artifact. Then, downstream at the brokers, classifiers assigning probabilities across a whole taxonomy, supernova? variable star? active galactic nucleus? asteroid? From light curves and engineered features, in near-real time. Fink describes its pipeline in terms of feature engineering and ML modules; ALeRCE's core product is curated classification probabilities across that taxonomy.
 
-This is ML with a latency budget, uptime expectations, and drift to watch -the instrument ages, the sky does not hold its class balance constant, and a silently degrading classifier doesn't throw an exception; it just quietly drowns real supernovae in noise. Model monitoring, where the cost of failure is missed physics.
+This is ML with a latency budget, uptime expectations, and drift to watch — the instrument ages, the sky does not hold its class balance constant, and a silently degrading classifier doesn't throw an exception; it just quietly drowns real supernovae in noise. Model monitoring, where the cost of failure is missed physics.
 
 People occasionally ask why someone who has spent his whole career in infrastructure is spending his evenings learning machine learning. From now on I'll just point at Cerro Pachón: because ML stopped being a research artifact and became infrastructure, a load-bearing wall in the largest scientific instrument ever aimed at the night sky.
 
