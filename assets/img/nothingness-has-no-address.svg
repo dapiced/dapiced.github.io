@@ -29,11 +29,11 @@
   <!-- ═══════════ HEADER ═══════════ -->
   <text x="600" y="86" text-anchor="middle" font-size="12" letter-spacing="3" fill="#5A6A79">A CONVERSATION, DISTILLED · ON NOTHINGNESS, BOUNDARIES AND ROOT COMMITS</text>
   <text x="600" y="140" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="38" fill="#E7EDF4">“Why is there something rather than nothing?”</text>
-  <text x="600" y="182" text-anchor="middle" font-size="16.5" fill="#F0B23E">Answer — a beginning is a boundary, not a transition. Nothingness has no address.</text>
+  <text x="600" y="182" text-anchor="middle" font-size="16.5" fill="#F0B23E">Answer - a beginning is a boundary, not a transition. Nothingness has no address.</text>
   <line x1="80" y1="212" x2="1120" y2="212" stroke="#232B36" stroke-width="1"/>
 
   <!-- ═══════════ MODEL A ═══════════ -->
-  <text x="80" y="252" font-size="13" letter-spacing="2" fill="#8FA0B0">MODEL A — THE INTUITION</text>
+  <text x="80" y="252" font-size="13" letter-spacing="2" fill="#8FA0B0">MODEL A - THE INTUITION</text>
   <text x="1120" y="252" text-anchor="end" font-size="13" letter-spacing="2" fill="#E0564B">INCOHERENT ✕</text>
 
   <rect x="80" y="270" width="1040" height="230" rx="10" fill="#0D131B" stroke="#232B36" stroke-width="1"/>
@@ -61,11 +61,11 @@
   <text x="800" y="392" text-anchor="middle" font-size="12.5" fill="#8B7A4F">universe</text>
 
   <text x="104" y="534" font-size="15.5" fill="#E0564B">✕</text>
-  <text x="128" y="534" font-size="15.5" fill="#AEB9C4">To draw “nothing” is already to make it something — a region, a state, an instant.</text>
+  <text x="128" y="534" font-size="15.5" fill="#AEB9C4">To draw “nothing” is already to make it something - a region, a state, an instant.</text>
   <text x="128" y="560" font-size="15.5" fill="#AEB9C4">An instant of nothingness is an instant, hence something. The model contradicts itself.</text>
 
   <!-- ═══════════ MODEL B ═══════════ -->
-  <text x="80" y="614" font-size="13" letter-spacing="2" fill="#8FA0B0">MODEL B — THE BOUNDARY</text>
+  <text x="80" y="614" font-size="13" letter-spacing="2" fill="#8FA0B0">MODEL B - THE BOUNDARY</text>
   <text x="1120" y="614" text-anchor="end" font-size="13" letter-spacing="2" fill="#4CC38A">COHERENT ✓</text>
 
   <!-- the frame itself only begins at t₀: no left edge -->
@@ -77,7 +77,7 @@
   <path d="M 452 646 H 438 V 892 H 452" fill="none" stroke="#F0B23E" stroke-width="3"/>
 
   <!-- to the left: nothing is drawn. not even a void. -->
-  <text x="96" y="758" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#6E7B88">there is no “nothing” here —</text>
+  <text x="96" y="758" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#6E7B88">there is no “nothing” here -</text>
   <text x="96" y="790" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="19" fill="#6E7B88">there is no “here”.</text>
 
   <!-- time axis -->
@@ -113,11 +113,11 @@
   <text x="460" y="930" font-size="12" fill="#5A6A79">← even the diagram's frame begins at t₀</text>
 
   <text x="104" y="964" font-size="15.5" fill="#4CC38A">✓</text>
-  <text x="128" y="964" font-size="15.5" fill="#AEB9C4">A beginning is a boundary of time's domain — not a transition from a prior state.</text>
-  <text x="128" y="990" font-size="15.5" fill="#AEB9C4">“Before t₀” is undefined — like “north of the North Pole”. Nothingness has nowhere to live.</text>
+  <text x="128" y="964" font-size="15.5" fill="#AEB9C4">A beginning is a boundary of time's domain - not a transition from a prior state.</text>
+  <text x="128" y="990" font-size="15.5" fill="#AEB9C4">“Before t₀” is undefined - like “north of the North Pole”. Nothingness has nowhere to live.</text>
 
   <!-- ═══════════ THREE TOPOLOGIES ═══════════ -->
-  <text x="80" y="1038" font-size="12.5" letter-spacing="2" fill="#5A6A79">THREE TOPOLOGIES OF THE PAST — NO INSTANT OF NOTHINGNESS IN ANY OF THEM</text>
+  <text x="80" y="1038" font-size="12.5" letter-spacing="2" fill="#5A6A79">THREE TOPOLOGIES OF THE PAST - NO INSTANT OF NOTHINGNESS IN ANY OF THEM</text>
 
   <!-- (−∞, +∞) -->
   <text x="240" y="1068" text-anchor="middle" font-size="17" fill="#E7EDF4">(−∞, +∞)</text>
@@ -131,17 +131,17 @@
   <line x1="460" y1="1094" x2="728" y2="1094" stroke="#8FA0B0" stroke-width="1.5"/>
   <polygon points="740,1094 726,1088 726,1100" fill="#8FA0B0"/>
   <circle cx="460" cy="1094" r="6" fill="#F0B23E"/>
-  <text x="600" y="1124" text-anchor="middle" font-size="12.5" fill="#8FA0B0">a first instant — no transition</text>
+  <text x="600" y="1124" text-anchor="middle" font-size="12.5" fill="#8FA0B0">a first instant - no transition</text>
 
   <!-- (0, +∞) -->
   <text x="960" y="1068" text-anchor="middle" font-size="17" fill="#E7EDF4">(0, +∞)</text>
   <line x1="820" y1="1094" x2="1088" y2="1094" stroke="#8FA0B0" stroke-width="1.5"/>
   <polygon points="1100,1094 1086,1088 1086,1100" fill="#8FA0B0"/>
   <circle cx="820" cy="1094" r="6" fill="#0B0F14" stroke="#F0B23E" stroke-width="2"/>
-  <text x="960" y="1124" text-anchor="middle" font-size="12.5" fill="#8FA0B0">finite past — no first instant</text>
+  <text x="960" y="1124" text-anchor="middle" font-size="12.5" fill="#8FA0B0">finite past - no first instant</text>
 
   <!-- ═══════════ SAME STRUCTURE, EVERYWHERE ═══════════ -->
-  <text x="80" y="1178" font-size="13" letter-spacing="2" fill="#8FA0B0">THE SAME STRUCTURE, EVERYWHERE — THE “PREVIOUS” RELATION STOPS</text>
+  <text x="80" y="1178" font-size="13" letter-spacing="2" fill="#8FA0B0">THE SAME STRUCTURE, EVERYWHERE - THE “PREVIOUS” RELATION STOPS</text>
   <line x1="410" y1="1204" x2="410" y2="1330" stroke="#1B2530" stroke-width="1"/>
   <line x1="790" y1="1204" x2="790" y2="1330" stroke="#1B2530" stroke-width="1"/>
 
@@ -155,7 +155,7 @@
   <circle cx="358" cy="1258" r="7" fill="#E7EDF4"/>
   <text x="358" y="1232" text-anchor="middle" font-size="12" fill="#8FA0B0">HEAD</text>
   <text x="118" y="1292" text-anchor="middle" font-size="13" fill="#F0B23E">root</text>
-  <text x="118" y="1312" text-anchor="middle" font-size="13" fill="#F0B23E">parent: —</text>
+  <text x="118" y="1312" text-anchor="middle" font-size="13" fill="#F0B23E">parent: -</text>
   <text x="235" y="1346" text-anchor="middle" font-size="13" fill="#8FA0B0">no parent ≠ parent “nothing”</text>
 
   <!-- PKI -->
@@ -179,9 +179,9 @@
   <text x="965" y="1214" text-anchor="middle" font-size="11.5" letter-spacing="2" fill="#5A6A79">SETS</text>
   <text y="1266" font-size="21" fill="#E7EDF4"><tspan x="838" fill="#F0B23E">∅</tspan><tspan x="874" fill="#5A6A79">→</tspan><tspan x="912">{∅}</tspan><tspan x="976" fill="#5A6A79">→</tspan><tspan x="1014">{∅,{∅}}</tspan></text>
   <text y="1296" font-size="12.5" fill="#5A6A79"><tspan x="842">0</tspan><tspan x="928">1</tspan><tspan x="1054">2</tspan></text>
-  <text x="965" y="1346" text-anchor="middle" font-size="13" fill="#8FA0B0">∅ exists — empty of content, not of being</text>
+  <text x="965" y="1346" text-anchor="middle" font-size="13" fill="#8FA0B0">∅ exists - empty of content, not of being</text>
 
-  <text x="600" y="1398" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="17" fill="#AEB9C4">The relation doesn't point to nothing — it simply ceases to apply.</text>
+  <text x="600" y="1398" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="17" fill="#AEB9C4">The relation doesn't point to nothing - it simply ceases to apply.</text>
 
   <!-- ═══════════ DOUBLE LOCK ═══════════ -->
   <text x="80" y="1442" font-size="13" letter-spacing="2" fill="#8FA0B0">DOUBLE LOCK</text>
@@ -207,6 +207,6 @@
   <!-- ═══════════ CONCLUSION ═══════════ -->
   <line x1="80" y1="1592" x2="1120" y2="1592" stroke="#232B36" stroke-width="1"/>
   <text x="600" y="1658" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="42" fill="#E7EDF4">“Nothing was never on the menu.”</text>
-  <text x="600" y="1698" text-anchor="middle" font-size="15.5" fill="#8FA0B0">one question remains — why this menu? every explanation terminates on a self-signed root.</text>
+  <text x="600" y="1698" text-anchor="middle" font-size="15.5" fill="#8FA0B0">one question remains - why this menu? every explanation terminates on a self-signed root.</text>
   <text x="600" y="1736" text-anchor="middle" font-size="11" fill="#4A5866">// established in four messages, without ever meeting the void · 2026-07-02</text>
 </svg>
