@@ -93,6 +93,7 @@ Why does a bell even have a `rate_max`? Acoustics. Per the documentary, a massiv
 
 Everything below is anchored to a photo or a primary source.
 
+{% raw %}
 ```mermaid
 flowchart LR
     subgraph SRC["Data sources"]
@@ -123,6 +124,7 @@ flowchart LR
     NX --> ACT
     ACT --> BELL
 ```
+{% endraw %}
 
 End to end: an annual statistic lands in SQLite → the orchestrator normalizes it to a rate → constrained matching pairs it with a compatible bell → the scheduler lays every strike onto a musical grid → a command crosses the WiFi LAN → firmware interprets a macro → a relay pulses for 50 ms → a solenoid strikes bronze → an event that happened somewhere on Earth becomes a pressure wave in Old Montreal. Ingestion to delivery, with a sound wave as the sink and an emotion as the dashboard.
 
