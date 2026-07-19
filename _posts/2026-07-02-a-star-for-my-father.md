@@ -6,7 +6,7 @@ tags: [tribute, family, stars]
 ---
 
 <p style="text-align:center; font-family: Georgia, serif; font-style: italic; color: var(--muted); font-size: 1.05rem;">
-Vincenzo D'Apice · September 12, 1937 — August 8, 2022
+Vincenzo D'Apice · September 12, 1937 - August 8, 2022
 </p>
 
 <figure style="margin: 2rem 0; text-align: center;">
