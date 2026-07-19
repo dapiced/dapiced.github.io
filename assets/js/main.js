@@ -12,7 +12,7 @@
     var meteor = null;
     var STAR_COUNT = 160;
 
-    /* ✦ Vincenzo D'Apice (1937–2022) - the golden star of this sky.
+    /* ✦ Vincenzo D'Apice (1937-2022) - the golden star of this sky.
        /blog/2026/07/a-star-for-my-father/ */
     var gold = { x: 0, y: 0 };
     var goldHover = false;
@@ -132,7 +132,7 @@
     tip.className = "gold-tip";
     tip.setAttribute("aria-hidden", "true");
     tip.innerHTML = '<span class="tip-name">✦ Vincenzo D’Apice</span>' +
-                    '<span class="tip-sub">1937–2022 · Papa’s star</span>';
+                    '<span class="tip-sub">1937-2022 · Papa’s star</span>';
     document.body.appendChild(tip);
 
     window.addEventListener("mousemove", function (e) {
