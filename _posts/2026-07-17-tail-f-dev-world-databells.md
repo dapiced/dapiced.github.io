@@ -6,8 +6,6 @@ tags: [iot, esp8266, arduino, python, sqlite, data-engineering, poisson-distribu
 description: "Field notes from someone else's machine room: the full teardown of Databells, event streams, poisson-distribution processes, pairing, a fleet of ESP8266s, and the art installation that renders the state of the world as sound."
 ---
 
-<!-- Photos: drop the /assets/img/databells/ folder into your assets root. -->
-
 ```text
 2026-07-17T14:32:11Z  event=star_ignited        scope=universe   rate=411e6/day
 2026-07-17T14:32:11Z  event=video_uploaded      scope=youtube    rate=2.6e3/min
@@ -25,6 +23,8 @@ I went to see an art installation. I found a production-grade distributed system
 *[Databells](https://www.databells.ca/), by Ottawa artist Rich Loen (a former programmer - it shows), at the [Salon des Bananes](https://www.salondesbananes.com/), 220 Saint-Paul St W. Until August 16, 2026, daily 12-8 pm, free. Photo: me.*
 
 **Method, before anything else.** Every claim below traces to one of three sources: my own on-site observations and photos, the artist's [official documentary](https://www.youtube.com/watch?v=OTikIqsn9X0), or press coverage (all linked at the bottom). Some Passages are my own inferences, consistent with the evidence, unconfirmed by the team. In this house we label our confidence levels.
+
+---
 
 ## 1. The data layer: 300-400 topics, each with a mood and a decimation factor
 
