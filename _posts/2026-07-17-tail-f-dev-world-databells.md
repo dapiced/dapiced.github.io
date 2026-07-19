@@ -24,8 +24,6 @@ I went to see an art installation. I found a production-grade distributed system
 
 **Method, before anything else.** Every claim below traces to one of three sources: my own on-site observations and photos, the artist's [official documentary](https://www.youtube.com/watch?v=OTikIqsn9X0), or press coverage (all linked at the bottom). Some Passages are my own inferences, consistent with the evidence, unconfirmed by the team. In this house we label our confidence levels.
 
----
-
 ## 1. The data layer: 300-400 topics, each with a mood and a decimation factor
 
 Start where every honest system diagram starts: the data. Per the documentary, the corpus is **300 to 400 curated sources**, assembled over years by dedicated data researchers. Two ingestion patterns: **batch** (estimated statistics; mortality, production, astronomy, refreshed as the research updates) and **streaming** (live internet feeds the server ties into). Plus one source class nobody writes about, which I'll get to, because it ingests *you*.
