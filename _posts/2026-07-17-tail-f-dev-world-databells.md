@@ -4,8 +4,8 @@ title: "Reverse-Engineering Databells, a 104-Node Cluster That Plays Reality"
 date: 2026-07-17 20:00:00 -0400
 tags: [iot, esp8266, arduino, python, sqlite, data-engineering, poisson-distribution, distributed-systems, sonification, montreal]
 description: "Field notes from someone else's machine room: the full teardown of Databells, event streams, poisson-distribution processes, pairing, a fleet of ESP8266s, and the art installation that renders the state of the world as sound."
-
 ---
+
 The world emits events. It has always emitted events; births, deaths, supernovae, package deliveries at rates we mostly consume through dashboards, if we consume them at all. A number in a report has no mass. It doesn't displace air.
 
 In a dark room in Old Montreal, somebody built a different kind of consumer for that stream. A hundred reclaimed bells; ship bells, cowbells, fire alarms, a schoolhouse bell pulled off a demolition pile, each wired to its own microcontroller, each subscribed to one topic of the world's event bus, each ringing at the real measured rate. A gong sounds every 46 seconds. The placard reads: *Suicide (Worldwide) - 1 per ring - 1.3 rings per minute*. You do the division in your head and go quiet 😶.
