@@ -20,7 +20,7 @@ If you have ever kept an old system alive because it was still doing something n
 
 Start with the hardware, because the numbers are absurd in the opposite direction from Rubin's.
 
-Voyager 1 carries three pairs of computers -command, flight data, attitude control -with a combined memory of roughly 68 kilobytes. Not gigabytes. Not megabytes. Kilobytes. For comparison: a single Avro alert packet from the Rubin pipeline, with its image cutouts, runs around 80 KB. One message from the newest system in production would not fit in the entire memory of the oldest.
+Voyager 1 carries three pairs of computers — command, flight data, attitude control — with a combined memory of roughly 68 kilobytes. Not gigabytes. Not megabytes. Kilobytes. For comparison: a single Avro alert packet from the Rubin pipeline, with its image cutouts, runs around 80 KB. One message from the newest system in production would not fit in the entire memory of the oldest.
 
 The radio transmitter emits about 23 watts, the power of a refrigerator light bulb. By the time that signal has spread across 25.8 billion kilometres, the Deep Space Network's 70-metre dishes are fishing attowatts out of the noise. Telemetry comes down at 160 bits per second. Not megabits. Bits. A rate at which this blog post would take about ten minutes to download.
 
@@ -62,7 +62,7 @@ Re-reading a twenty-year-old post-mortem, discovering the root cause was wrong, 
 
 Meanwhile, the power budget keeps doing the only thing it knows how to do.
 
-Voyager 1 launched with ten science instruments. The team has been shutting them down one by one for years -not because they failed, but to keep the heaters running and the remaining instruments alive. It is load shedding in its purest form: every year the RTGs give you four watts less, and every few years that arithmetic forces you to choose which observation humanity stops making, forever. The cosmic ray subsystem was switched off in February 2025 after 47 years of operation. This April, the Low-Energy Charged Particles instrument followed, after almost 49 years of near-continuous service.
+Voyager 1 launched with ten science instruments. The team has been shutting them down one by one for years — not because they failed, but to keep the heaters running and the remaining instruments alive. It is load shedding in its purest form: every year the RTGs give you four watts less, and every few years that arithmetic forces you to choose which observation humanity stops making, forever. The cosmic ray subsystem was switched off in February 2025 after 47 years of operation. This April, the Low-Energy Charged Particles instrument followed, after almost 49 years of near-continuous service.
 
 Read that again the way we would write it in a decommission ticket: *service LECP retired after 49 years of operation; no successor system exists; data collection at this position in space will not resume in any currently living human's lifetime.*
 
@@ -80,7 +80,7 @@ That is a canary deploy. A staged rollout with the healthier node first, on a di
 
 Somewhere at JPL right now, someone is watching 160 bits per second of telemetry and deciding whether to proceed. I hope their change ticket gets approved. I have never meant that sentence more sincerely.
 
-[![Diagram: the Voyager 1 operations timeline read as infrastructure -launch in 1977, Pale Blue Dot in 1990, roll thrusters written off in 2004, interstellar space in 2012, then a zoom on the busy years 2023–2026: the memory-chip incident and its patch, the 21-year thruster rollback, load shedding, the Big Bang canary, and the one-light-day milestone of November 2026](/assets/img/voyager-ops-timeline.svg)](/assets/img/voyager-ops-timeline.svg)
+[![Diagram: the Voyager 1 operations timeline read as infrastructure — launch in 1977, Pale Blue Dot in 1990, roll thrusters written off in 2004, interstellar space in 2012, then a zoom on the busy years 2023–2026: the memory-chip incident and its patch, the 21-year thruster rollback, load shedding, the Big Bang canary, and the one-light-day milestone of November 2026](/assets/img/voyager-ops-timeline.svg)](/assets/img/voyager-ops-timeline.svg)
 
 *Forty-nine years of uptime, read as a change log. Click for full resolution.*
 
@@ -114,9 +114,9 @@ Forty-nine years of uptime. The diff is still running.
 
 **Further reading**
 
-- [NASA's Voyager 1 Resumes Sending Engineering Updates to Earth](https://www.jpl.nasa.gov/news/nasas-voyager-1-resumes-sending-engineering-updates-to-earth/) -the FDS memory patch, April 2024
-- [Engineers Pinpoint Cause of Voyager 1 Issue](https://science.nasa.gov/blogs/voyager/2024/04/04/engineers-pinpoint-cause-of-voyager-1-issue-are-working-on-solution/) -the root cause analysis, in NASA's own words
-- [NASA's Voyager 1 Revives Backup Thrusters Before Command Pause](https://www.jpl.nasa.gov/news/nasas-voyager-1-revives-backup-thrusters-before-command-pause/) -the 2025 thruster resurrection
-- [NASA Shuts Off Instrument on Voyager 1 to Keep Spacecraft Operating](https://science.nasa.gov/blogs/voyager/2026/04/17/nasa-shuts-off-instrument-on-voyager-1-to-keep-spacecraft-operating/) -the LECP shutdown, April 2026
-- [Voyager 1 shuts off instrument to buy time before 'Big Bang' fix](https://www.cnn.com/2026/04/27/science/voyager-1-big-bang) -the power-swap manoeuvre and its canary rollout
-- [Voyager 1 -Wikipedia](https://en.wikipedia.org/wiki/Voyager_1) -distances, instrument timeline, and the road to one light-day
+- [NASA's Voyager 1 Resumes Sending Engineering Updates to Earth](https://www.jpl.nasa.gov/news/nasas-voyager-1-resumes-sending-engineering-updates-to-earth/) — the FDS memory patch, April 2024
+- [Engineers Pinpoint Cause of Voyager 1 Issue](https://science.nasa.gov/blogs/voyager/2024/04/04/engineers-pinpoint-cause-of-voyager-1-issue-are-working-on-solution/) — the root cause analysis, in NASA's own words
+- [NASA's Voyager 1 Revives Backup Thrusters Before Command Pause](https://www.jpl.nasa.gov/news/nasas-voyager-1-revives-backup-thrusters-before-command-pause/) — the 2025 thruster resurrection
+- [NASA Shuts Off Instrument on Voyager 1 to Keep Spacecraft Operating](https://science.nasa.gov/blogs/voyager/2026/04/17/nasa-shuts-off-instrument-on-voyager-1-to-keep-spacecraft-operating/) — the LECP shutdown, April 2026
+- [Voyager 1 shuts off instrument to buy time before 'Big Bang' fix](https://www.cnn.com/2026/04/27/science/voyager-1-big-bang) — the power-swap manoeuvre and its canary rollout
+- [Voyager 1 — Wikipedia](https://en.wikipedia.org/wiki/Voyager_1) — distances, instrument timeline, and the road to one light-day

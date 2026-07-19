@@ -1,4 +1,4 @@
-/* dapiced.github.io -starfield, typed roles, live projects */
+/* dapiced.github.io — starfield, typed roles, live projects */
 (function () {
   "use strict";
 
@@ -12,7 +12,7 @@
     var meteor = null;
     var STAR_COUNT = 160;
 
-    /* ✦ Vincenzo D'Apice (1937–2022) -the golden star of this sky.
+    /* ✦ Vincenzo D'Apice (1937–2022) — the golden star of this sky.
        /blog/2026/07/a-star-for-my-father/ */
     var gold = { x: 0, y: 0 };
     var goldHover = false;
@@ -159,11 +159,11 @@
   var rolesEl = document.getElementById("typed-roles");
   if (rolesEl) {
     var roles = [
-      "Developer -Azure Infrastructure AI",
+      "Developer — Azure Infrastructure AI",
       "25+ years automating complex systems",
       "MLOps · DataOps · Infrastructure as Code",
       "Kaggle competitor · Data Science student",
-      "Stargazer -of night skies and repositories"
+      "Stargazer — of night skies and repositories"
     ];
     var ri = 0, ci = 0, deleting = false;
 
@@ -257,7 +257,7 @@
         });
       })
       .catch(function () {
-        grid.innerHTML = '<p class="projects-note">Telemetry link temporarily down -' +
+        grid.innerHTML = '<p class="projects-note">Telemetry link temporarily down — ' +
           'browse everything directly on <a href="https://github.com/dapiced?tab=repositories">GitHub</a>.</p>';
       });
   }
@@ -301,7 +301,7 @@
         var n = d.count_unique || d.count;
         if (n && n !== "0") onCount(n);
       })
-      .catch(function () { /* no data yet -badge stays hidden */ });
+      .catch(function () { /* no data yet — badge stays hidden */ });
   }
 
   /* on a post page: count under the title */
@@ -351,11 +351,11 @@
       var msg;
       if (alt > 5) {
         msg = "✦ Right now, Vincenzo’s star shines " + Math.round(alt) +
-              "° above Montréal’s horizon, to the " + dir + " -look up.";
+              "° above Montréal’s horizon, to the " + dir + " — look up.";
       } else if (alt > 0) {
         msg = "✦ Right now, Vincenzo’s star is skimming Montréal’s horizon to the " + dir + ".";
       } else {
-        msg = "✦ Vincenzo’s star is briefly below the horizon -it returns within hours. " +
+        msg = "✦ Vincenzo’s star is briefly below the horizon — it returns within hours. " +
               "It almost never leaves Montréal’s sky.";
       }
       starStatus.textContent = msg;

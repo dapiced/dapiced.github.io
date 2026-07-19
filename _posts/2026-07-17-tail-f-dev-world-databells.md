@@ -63,7 +63,7 @@ Supernovae:   1.8 rings/min × 1,000/ring = 1,800/min = 30/s
 Suicides:     1.3/min ≈ 683,000/yr
               → WHO's published order of magnitude (~700k).           PASS
 
-Internal:     "57.077626/min (30,000,000/yr) -1051 ms between rings"
+Internal:     "57.077626/min (30,000,000/yr) — 1051 ms between rings"
               57.077626 × 525,600 min/yr = 30.0M ✓ ; 60,000/57.08 = 1051 ms ✓
               → the math shown in the software's own UI is self-consistent. PASS
 ```
@@ -139,8 +139,8 @@ Each bell gets a dedicated controller: the custom **LD05** board, designed by th
 | Power | 8–28 VDC, center positive; 3 barrel jacks + screw terminals - a chainable power bus running through the tables |
 | Outputs | 2 opto-isolated relays for strikers and direct-drive electric bells; a **Stepper** header with Dir/Pulse jumpers |
 | Inputs | 2 × 3.5 mm jacks (IN1/IN2), input level jumper-configurable +5/+12 - the sensor interface |
-| Display | 4-wire I²C "Display" header -a per-bell LCD was designed in; production shipped 3D-printed frames holding printed cards |
-| Identity | Label with MAC, hostname, static IP -and the hostnames are film titles: *PansLabyrinth* at .212, *TreasureofSierraMadre* at .131 |
+| Display | 4-wire I²C "Display" header — a per-bell LCD was designed in; production shipped 3D-printed frames holding printed cards |
+| Identity | Label with MAC, hostname, static IP — and the hostnames are film titles: *PansLabyrinth* at .212, *TreasureofSierraMadre* at .131 |
 
 The silicon origin story, from the documentary, is the most 2020s architecture decision imaginable: the project began on **Raspberry Pis**. Then COVID hit the supply chain and boards budgeted at \$10–20 spiked to \$60–100 - times 100 bells. The pivot came from a random maker video: a ping-pong scoreboard driven by a \$5 Espressif chip with WiFi on-die, programmable under the Arduino toolchain. The entire node architecture changed because of a shortage. Every infrastructure engineer who lived through 2021 procurement just nodded involuntarily.
 
@@ -190,7 +190,7 @@ sequenceDiagram
     O->>N: strike command (WiFi, 192.168.2.x)
     N->>N: interpret macro relay(1,1) wait(50ms) relay(1,0)
     N->>R: 50 ms pulse
-    R->>C: solenoid strikes -ding
+    R->>C: solenoid strikes — ding
     N-->>O: heartbeat / status (rolls up into "99/104 connected")
 ```
 
@@ -281,6 +281,6 @@ If you're the kind of person who checks Voyager's velocity against a placard for
 
 **Official**: [databells.ca](https://www.databells.ca/) · [salondesbananes.com](https://www.salondesbananes.com/) · [loen.art](https://www.loen.art/) · [Databells documentary (YouTube)](https://www.youtube.com/watch?v=OTikIqsn9X0) · [Free visit pass (Eventbrite)](https://www.eventbrite.ca/e/databells-immersive-installation-tickets-1991736228676)
 
-**Press**: [The Main -Databells rings statistics into song (May 2026)](https://www.themain.com/articles/databells-montreal-sound-art-installation) · [Ottawa Citizen -profile (Sept. 2025)](https://ottawacitizen.com/entertainment/local-arts/rich-loen-banana-sign) ([paywall-free mirror](https://ca.news.yahoo.com/whats-behind-big-banana-sign-080054291.html)) · [Apartment613 -preview (Sept. 2025)](https://apt613.ca/salon-des-bananes-to-unveil-new-databell-exhibit-sept-20-2025/) · [CBC -"statistical symphony" video](https://www.cbc.ca/player/play/video/9.6893957) · [Radio-Canada -video (FR)](https://ici.radio-canada.ca/info/videos/1-10479287/cloches-qui-resonnent-au-rythme-statistiques) · [Cult MTL -event listing](https://cultmtl.com/event/databells-immersive-installation/) · [Tourisme Montréal -immersive exhibitions](https://www.mtl.org/fr/experience/expositions-immersives)
+**Press**: [The Main — Databells rings statistics into song (May 2026)](https://www.themain.com/articles/databells-montreal-sound-art-installation) · [Ottawa Citizen — profile (Sept. 2025)](https://ottawacitizen.com/entertainment/local-arts/rich-loen-banana-sign) ([paywall-free mirror](https://ca.news.yahoo.com/whats-behind-big-banana-sign-080054291.html)) · [Apartment613 — preview (Sept. 2025)](https://apt613.ca/salon-des-bananes-to-unveil-new-databell-exhibit-sept-20-2025/) · [CBC — "statistical symphony" video](https://www.cbc.ca/player/play/video/9.6893957) · [Radio-Canada — video (FR)](https://ici.radio-canada.ca/info/videos/1-10479287/cloches-qui-resonnent-au-rythme-statistiques) · [Cult MTL — event listing](https://cultmtl.com/event/databells-immersive-installation/) · [Tourisme Montréal — immersive exhibitions](https://www.mtl.org/fr/experience/expositions-immersives)
 
 **Photos**: all mine, taken on site July 17, 2026. The work and its design belong to Rich Loen / Loen.Design.
