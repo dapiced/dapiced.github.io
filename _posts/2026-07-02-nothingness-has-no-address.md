@@ -3,6 +3,7 @@ layout: post
 title: "Nothingness Has No Address - a dialogue on the greatest enigma"
 date: 2026-07-02 17:00:00 -0400
 tags: [philosophy, cosmology, dialogue]
+description: "Why is there something rather than nothing? A late-night dialogue with Claude on Leibniz's riddle - from quantum vacuums to a theorem, and one strange image."
 ---
 
 <p style="text-align:center; font-family: Georgia, serif; font-style: italic; color: var(--muted); font-size: 1.05rem;">
@@ -114,7 +115,7 @@ A note in passing: in three messages, you reconstructed on your own the essentia
 
 <figure style="margin: 2rem 0; text-align: center;">
   <a href="/assets/img/nothingness-has-no-address.svg" target="_blank" rel="noopener">
-    <img src="/assets/img/nothingness-has-no-address.svg" alt="Poster 'Nothingness Has No Address': model A where the void is drawn then stamped CONTRADICTION, model B where the diagram begins at the boundary t₀, three topologies of the past, root commit / root CA / empty set, temporal and modal double lock" style="width: 100%; border-radius: 12px;" />
+    <img src="/assets/img/nothingness-has-no-address.svg" alt="Poster 'Nothingness Has No Address': model A where the void is drawn then stamped CONTRADICTION, model B where the diagram begins at the boundary t₀, three topologies of the past, root commit / root CA / empty set, temporal and modal double lock" loading="lazy" style="width: 100%; border-radius: 12px;" />
   </a>
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Four messages, one theorem. Click for full resolution.</figcaption>
 </figure>

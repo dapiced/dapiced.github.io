@@ -1,9 +1,10 @@
 ---
 layout: post
-title: "The Oldest System in Production"
+title: "The Oldest System in Production: 49 Years of Voyager 1"
 date: 2026-07-13 20:00:00 -0400
 tags: [astronomy, dataops, engineering]
-description: "Forty-nine years of uptime, 23 watts of transmit power, a 45-hour deploy loop, and a risky change window scheduled for this month. Voyager 1, read with infrastructure eyes."
+description: "Voyager 1, read with infrastructure eyes: 49 years of uptime, 23 watts of transmit power, a 45-hour deploy loop, and July 2026's riskiest change window."
+image: /assets/img/voyager1-interstellar.jpg
 ---
 
 Two days ago I wrote about [the newest system in production](/blog/2026/07/the-universe-just-went-to-production/): the Vera C. Rubin Observatory, ten million alerts a night, a 60-second SLO, Kafka under the stars. Tonight I want to look at the other end of the spectrum.
@@ -80,7 +81,7 @@ That is a canary deploy. A staged rollout with the healthier node first, on a di
 
 Somewhere at JPL right now, someone is watching 160 bits per second of telemetry and deciding whether to proceed. I hope their change ticket gets approved. I have never meant that sentence more sincerely.
 
-[![Diagram: the Voyager 1 operations timeline read as infrastructure - launch in 1977, Pale Blue Dot in 1990, roll thrusters written off in 2004, interstellar space in 2012, then a zoom on the busy years 2023–2026: the memory-chip incident and its patch, the 21-year thruster rollback, load shedding, the Big Bang canary, and the one-light-day milestone of November 2026](/assets/img/voyager-ops-timeline.svg)](/assets/img/voyager-ops-timeline.svg)
+[![Diagram: the Voyager 1 operations timeline read as infrastructure - launch in 1977, Pale Blue Dot in 1990, roll thrusters written off in 2004, interstellar space in 2012, then a zoom on the busy years 2023–2026: the memory-chip incident and its patch, the 21-year thruster rollback, load shedding, the Big Bang canary, and the one-light-day milestone of November 2026](/assets/img/voyager-ops-timeline.svg){: loading="lazy" }](/assets/img/voyager-ops-timeline.svg)
 
 *Forty-nine years of uptime, read as a change log. Click for full resolution.*
 
@@ -104,11 +105,11 @@ Forty-nine years of uptime. The diff is still running.
 
 **Voyager 1, alone in interstellar space** *(artist's concept, NASA/JPL-Caltech)*
 
-[![Artist's concept of Voyager 1 in interstellar space, its white high-gain dish antenna pointed back toward a distant Sun](/assets/img/voyager1-interstellar.jpg)](/assets/img/voyager1-interstellar.jpg)
+[![Artist's concept of Voyager 1 in interstellar space, its white high-gain dish antenna pointed back toward a distant Sun](/assets/img/voyager1-interstellar.jpg){: width="1800" height="1381" loading="lazy" }](/assets/img/voyager1-interstellar.jpg)
 
 **The Pale Blue Dot** *(1990, reprocessed in 2020, NASA/JPL-Caltech)*
 
-[![The Pale Blue Dot: Earth as a fraction of a pixel caught in a scattered ray of sunlight, photographed by Voyager 1 from 6 billion kilometres away](/assets/img/pale-blue-dot.jpg)](/assets/img/pale-blue-dot.jpg)
+[![The Pale Blue Dot: Earth as a fraction of a pixel caught in a scattered ray of sunlight, photographed by Voyager 1 from 6 billion kilometres away](/assets/img/pale-blue-dot.jpg){: width="1280" height="1266" loading="lazy" }](/assets/img/pale-blue-dot.jpg)
 
 ---
 

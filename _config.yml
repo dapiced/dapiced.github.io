@@ -3,11 +3,26 @@ tagline: Developer - Azure Infrastructure AI
 description: >-
   Developer - Azure Infrastructure AI in Montréal, Canada. 25+ years automating
   complex systems: Azure, Databricks, Ansible, Terraform, MLOps & DataOps.
-url: "https://dapiced.github.io"
+url: "https://dominicdapice.com"
 author:
   name: Dominic D'Apice
 lang: en
 timezone: America/Toronto
+
+# Default social share image (og:image / twitter:image) for pages without their own
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/img/og-default.jpg
+
+social:
+  name: Dominic D'Apice
+  links:
+    - https://github.com/dapiced
+    - https://www.linkedin.com/in/dapiced/
+    - https://www.kaggle.com/dominicdapice
+    - https://huggingface.co/dapiced
 
 permalink: /blog/:year/:month/:title/
 

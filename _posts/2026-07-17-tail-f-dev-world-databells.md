@@ -3,7 +3,8 @@ layout: post
 title: "Reverse-Engineering Databells, a 104-Node Cluster That Plays Reality"
 date: 2026-07-17 20:00:00 -0400
 tags: [iot, esp8266, arduino, python, sqlite, data-engineering, poisson-distribution, distributed-systems, sonification, montreal]
-description: "Field notes from someone else's machine room: the full teardown of Databells, event streams, poisson-distribution processes, pairing, a fleet of ESP8266s, and the art installation that renders the state of the world as sound."
+description: "Full teardown of Databells: 104 ESP8266 nodes, Poisson processes, SQLite and one Python orchestrator - the Montreal art installation that plays reality."
+image: /assets/img/databells/databells-12-clip-poster.jpg
 ---
 
 The world emits events. It has always emitted events; births, deaths, supernovae, package deliveries at rates we mostly consume through dashboards, if we consume them at all. A number in a report has no mass. It doesn't displace air.
@@ -20,7 +21,7 @@ I went to see an art installation. I found a production-grade distributed system
 ```
 ---
 
-![The Databells room at Salon des Bananes, Old Montreal](/assets/img/databells/databells-01-salle.jpg)
+![The Databells room at Salon des Bananes, Old Montreal](/assets/img/databells/databells-01-salle.webp){: width="1600" height="1200" }
 *[Databells](https://www.databells.ca/), by Ottawa artist Rich Loen (a former programmer - it shows), at the [Salon des Bananes](https://www.salondesbananes.com/), 220 Saint-Paul St W. Until August 16, 2026, daily 12-8 pm, free. Photo: me.*
 
 **Method, before anything else.** Every claim below traces to one of three sources: my own on-site observations and photos, the artist's [official documentary](https://www.youtube.com/watch?v=OTikIqsn9X0), or press coverage (all linked at the bottom). Some Passages are my own inferences, consistent with the evidence, unconfirmed by the team. In this house we label our confidence levels.
@@ -40,13 +41,13 @@ Every source carries two fields that drive the whole machine:
 | Suicide (worldwide) | 1 / ring | 1.3 / min |
 | Supernova occurs (observable universe) | 1,000 / ring | 1.8 / min |
 | New star is born (observable universe) | 1,000,000 / ring | 411 / day |
-| Voyager 1 distance travelled | 1,000 km / ring | 1.025 / min |
+| [Voyager 1](/blog/2026/07/the-oldest-system-in-production/) distance travelled | 1,000 km / ring | 1.025 / min |
 | Videos viewed on TikTok | 100,000 / ring | 7 / min |
 | Videos uploaded to YouTube | 1,000 / ring | 2.6 / min |
 | City of Montreal repairs a pothole | 1 / ring | 18.3 / hour |
 | New millionaires (worldwide) | 1 / ring | 5,000,000 / year |
 
-![Supernova placard: 1,000 per ring, 1.8 rings per minute](/assets/img/databells/databells-07-supernova.jpg)
+![Supernova placard: 1,000 per ring, 1.8 rings per minute](/assets/img/databells/databells-07-supernova.webp){: width="1600" height="2133" loading="lazy" }
 *The decimation factor, printed in black and white. The small index in the corner is the bell's primary key.*
 
 ### QA pass: I validated an art installation's dataset
@@ -70,7 +71,7 @@ Internal:     "57.077626/min (30,000,000/yr) - 1051 ms between rings"
 
 That last line was photographed straight off the control screen, the software *shows its work*, converting an annual volume to a per-minute rate to an inter-ring interval, live. A data pipeline that exposes its unit conversions in the UI has my whole heart.
 
-![The Voyager 1 bell](/assets/img/databells/databells-06-voyager1.jpg)
+![The Voyager 1 bell, labeled 1,000 km per ring](/assets/img/databells/databells-06-voyager1.webp){: width="1600" height="2133" loading="lazy" }
 *1,000 km per ring. The fastest bell in the solar system.*
 
 ## 2. The math nobody printed on the placards
@@ -130,7 +131,7 @@ End to end: an annual statistic lands in SQLite → the orchestrator normalizes 
 
 Each bell gets a dedicated controller: the custom **LD05** board, designed by the artist's brother (an electronics builder) and hand-assembled in a run of **~120 units**, a hundred deployed, the rest spares. That spare pool neatly explains a forensic detail from my photos: bell IDs run past 111 while the fleet counter shows 104.
 
-![The LD05 rev 02 board with its ESP8266 module](/assets/img/databells/databells-04-carte-ld05.jpg)
+![The LD05 rev 02 board with its ESP8266 module](/assets/img/databells/databells-04-carte-ld05.webp){: width="1600" height="2133" loading="lazy" }
 *LD05 rev 02, dated 2022-10-18. MAC + hostname + static IP on the label, banana in the silkscreen.*
 
 | Element | Read directly off the board |
@@ -198,7 +199,7 @@ sequenceDiagram
 
 The orchestrator runs on a Mac, and the screen I photographed is the most honest fleet dashboard I've seen this year:
 
-![The Bell Grid control software](/assets/img/databells/databells-05-logiciel-controle.jpg)
+![The Bell Grid control software](/assets/img/databells/databells-05-logiciel-controle.webp){: width="1600" height="1200" loading="lazy" }
 *The Bell Grid: 99/104 connected, sortable by Bell ID, with the config dialog open on node "TreasureofSierraMadre".*
 
 Field-by-field, because every field earns its place:
@@ -215,7 +216,7 @@ Stack evidence: the Dock shows Python, VS Code, GitHub, and what looks exactly l
 
 The persistence layer is a **SQLite** file, and the workload profile makes it the objectively correct call, not the lazy one: single writer (the orchestrator), read-heavy, a dataset that's a rounding error by database standards, 300–400 topics, ~120 bell configs with macros and rate ceilings and moods, the bilingual photo catalogue behind the gallery touchscreen (that EN/FR toggle is a pair of i18n columns), assignment state. No concurrency to arbitrate, no server to operate, no migrations to run at load-in. **The database is a file, and the file tours with the show.** In Python it's stdlib `sqlite3` zero dependencies, matching the zero-dependency UI toolkit.
 
-![The bilingual touchscreen catalogue](/assets/img/databells/databells-02-catalogue-tactile.jpg)
+![The bilingual touchscreen catalogue](/assets/img/databells/databells-02-catalogue-tactile.webp){: width="1600" height="1200" loading="lazy" }
 *~100 bells, photographed and catalogued. Find the artist's self-portrait hiding in the last row.*
 
 This system renders the *entire planet's* event stream with one file, one script, and a fleet of \$3 microcontrollers. I refuse to draw a smug conclusion from this. But I did stand there a while.
@@ -230,19 +231,19 @@ What's observable regardless: a permanent heartbeat rolling up into that 99/104 
 
 At the end of the chain the data has to move metal, and the team (industrial designers, a software engineer, data researchers - the documentary credits Matt Norman, Zeph Van Iterson, Aelynn Loen, Brooke Cameron, with Jenny Cerullo on bell mechanisms) built several actuator families instead of forcing one pattern onto every bell:
 
-![The drum-pedal mechanism on the suicides bell](/assets/img/databells/databells-03-mecanisme-pedale.jpg)
+![The drum-pedal mechanism on the suicides bell](/assets/img/databells/databells-03-mecanisme-pedale.webp){: width="1200" height="1600" loading="lazy" }
 *Bass-drum pedal frame, push-pull solenoid in a 3D-printed cradle, adjustable return spring per-bell strike-force tuning, in hardware.*
 
 **Modified drum pedals** for the heavy bells and gongs, where the spring tension is literally a tunable gain parameter matched to bell mass. **3D-printed mallet levers** for xylophone bars. **Shakers** for sleigh-bell chains. And for natively electric bells, fire alarms, counter buzzers,  no striker at all: the relay drives them directly, which is the real reason the power bus runs anywhere from 8 to 28 VDC.
 
-![3D-printed mallet mechanisms on the xylophone bars](/assets/img/databells/databells-11-xylophones.jpg)
+![3D-printed mallet mechanisms on the xylophone bars](/assets/img/databells/databells-11-xylophones.webp){: width="1200" height="1600" loading="lazy" }
 *Iteration made visible: orange and blue PLA, exposed fasteners, no varnish on the process and it performs daily.*
 
 The documentary states the durability spec outright: every mechanism is engineered for **one million rings**. Run the numbers and the spec stops sounding generous: the 36-rings/min bell I photographed burns ~17,300 rings per 8-hour day, its million is spent in **58 days**. The Montreal run is 77 days long. That spec isn't margin; it's the budget.
 
 And the last source class, my favorite: some bells subscribe to *the room*. A church bell is labeled **"People walking in this room"**, a presence sensor on the node's IN1/IN2 jacks, feeding a local topic. You walk in to observe the dataset and the dataset ingests you at the door. Somewhere, an observability engineer just felt seen.
 
-![The bell that rings for the room's visitors](/assets/img/databells/databells-08-capteur-local.jpg)
+![The bell that rings for the room's visitors](/assets/img/databells/databells-08-capteur-local.webp){: width="1600" height="2133" loading="lazy" }
 *Local telemetry: the only bell whose data source is you.*
 
 ## 11. What I'm stealing for my day job

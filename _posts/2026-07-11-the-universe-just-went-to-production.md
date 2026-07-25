@@ -1,9 +1,10 @@
 ---
 layout: post
-title: "The Universe Just Went to Production"
+title: "Vera Rubin Observatory: The Universe Just Went to Production"
 date: 2026-07-11 13:00:00 -0400
 tags: [astronomy, dataops, mlops]
 description: "Ten million alerts a night, a 60-second SLO, and Kafka under the stars, the Vera C. Rubin Observatory, read with infrastructure eyes."
+image: /assets/img/RubinObs.jpg
 ---
 
 On June 30, 2026, the most ambitious scientific instrument went to production.
@@ -101,13 +102,15 @@ I used to keep infrastructure work and looking at the night sky in separate comp
 
 Somewhere above Chile tonight, the shutter is closing every forty seconds, The diff is running!
 
+*Companion post: [The Oldest System in Production: 49 Years of Voyager 1](/blog/2026/07/the-oldest-system-in-production/) - the same infrastructure eyes, pointed at the other end of the spectrum.*
+
 **The Rubin Observatory**
 
-[![rubinobservatory](/assets/img/RubinObs.jpg)](/assets/img/RubinObs.jpg)
+[![The Vera C. Rubin Observatory dome on Cerro Pachón in Chile, under a twilight sky](/assets/img/RubinObs.jpg){: width="789" height="522" loading="lazy" }](/assets/img/RubinObs.jpg)
 
 **The Rubin Data Flow**
 
-[![rubindata](/assets/img/RubinData.jpg)](/assets/img/RubinData.jpg)
+[![Diagram of the Rubin Observatory nightly data flow, from the telescope on Cerro Pachón to processing centers and alert brokers](/assets/img/RubinData.jpg){: width="767" height="672" loading="lazy" }](/assets/img/RubinData.jpg)
 
 ---
 

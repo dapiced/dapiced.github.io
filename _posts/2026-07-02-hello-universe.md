@@ -3,6 +3,7 @@ layout: post
 title: "Hello, Universe: why this site exists"
 date: 2026-07-02 12:00:00 -0400
 tags: [meta, career]
+description: "Why this site exists: 25+ years of Azure, Databricks and Linux infrastructure distilled into MLOps and DataOps field notes - plus astronomy after dark."
 ---
 
 After 25+ years of building infrastructure for other people's ideas, I decided it was
@@ -32,7 +33,9 @@ when I hit these problems myself:
   Science and competing on [Kaggle](https://www.kaggle.com/dominicdapice)
 
 And occasionally, because old habits die hard: astronomy. After a career of managing
-clouds, I still spend my clearest nights looking at the real ones.
+clouds, I still spend my clearest nights looking at the real ones. (It happened faster
+than expected - see [the Vera Rubin Observatory read with infrastructure eyes](/blog/2026/07/the-universe-just-went-to-production/)
+and [49 years of Voyager 1 operations](/blog/2026/07/the-oldest-system-in-production/).)
 
 ## Where to find me
 

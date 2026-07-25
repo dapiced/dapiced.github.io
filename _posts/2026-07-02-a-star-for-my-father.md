@@ -3,6 +3,8 @@ layout: post
 title: "A Star for My Father"
 date: 2026-07-02 14:00:00 -0400
 tags: [tribute, family, stars]
+description: "A tribute to my father Vincenzo D'Apice - and the real star registered in his name in the Andromeda constellation, visible to the naked eye."
+image: /assets/img/vincenzo-et-dominic.jpg
 ---
 
 <p style="text-align:center; font-family: Georgia, serif; font-style: italic; color: var(--muted); font-size: 1.05rem;">
@@ -10,7 +12,7 @@ Vincenzo D'Apice · September 12, 1937 - August 8, 2022
 </p>
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/vincenzo-et-dominic.jpg" alt="Vincenzo D'Apice and his son Dominic, arms around each other, smiling" style="max-width: 480px; width: 100%; border-radius: 12px; box-shadow: 0 8px 40px rgba(88,166,255,0.15);" />
+  <img src="/assets/img/vincenzo-et-dominic.jpg" alt="Vincenzo D'Apice and his son Dominic, arms around each other, smiling" width="1200" height="1211" style="max-width: 480px; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 40px rgba(88,166,255,0.15);" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">My father and me. Two well-dressed guys, one family smile.</figcaption>
 </figure>
 
@@ -45,7 +47,7 @@ up.
 That very day, a star was registered in his name.
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/etoile-vincenzo.svg" alt="Animated celestial chart: the star Vincenzo D'Apice in the Andromeda constellation, beside galaxy M31" style="width: 100%; border-radius: 12px;" />
+  <img src="/assets/img/etoile-vincenzo.svg" alt="Animated celestial chart: the star Vincenzo D'Apice in the Andromeda constellation, beside galaxy M31" loading="lazy" style="width: 100%; border-radius: 12px;" />
 </figure>
 
 It is real. It has coordinates, like an address in the sky:
@@ -70,7 +72,7 @@ I spend my days on GitHub. It is where I work, where I build, where I learn. So 
 where I wanted him to be - not in a drawer, not in a frame you eventually stop seeing.
 Here, close to me.
 
-Look carefully at this site's starry sky: among all the white twinkling stars, there is
+Look carefully at [this site's starry sky](/): among all the white twinkling stars, there is
 **one golden star, gently pulsing**. That's him. He is on every page, he watches over
 every visitor, and he watches me work - like before. And at the bottom of every page,
 his name shines, forever.
@@ -80,12 +82,12 @@ My father will not be forgotten. Not while this site exists. Not while I exist.
 ## The certificate
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/certificat-vincenzo.jpg" alt="Star registration certificate for Vincenzo D'Apice - August 8, 2022" style="max-width: 480px; width: 100%; border-radius: 12px;" />
+  <img src="/assets/img/certificat-vincenzo.jpg" alt="Star registration certificate for Vincenzo D'Apice - August 8, 2022" width="960" height="1349" loading="lazy" style="max-width: 480px; width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">The official certificate, registered the day he left us. The dedication - <em>« À bientôt Papa! »</em> (See you soon, Papa!) - says it all.</figcaption>
 </figure>
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/carte-celeste-vincenzo.jpg" alt="Star map showing the position of the star Vincenzo D'Apice in Andromeda" style="max-width: 480px; width: 100%; border-radius: 12px;" />
+  <img src="/assets/img/carte-celeste-vincenzo.jpg" alt="Star map showing the position of the star Vincenzo D'Apice in Andromeda" width="960" height="1349" loading="lazy" style="max-width: 480px; width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">His exact position in the sky - the crosshair points to Andromeda.</figcaption>
 </figure>
 
