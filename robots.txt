@@ -1,4 +1,23 @@
 User-agent: *
 Allow: /
 
+# Bloquer les pages inutiles
+Disallow: /404.html
+Disallow: /drafts/
+Disallow: /tmp/
+Disallow: /private/
+
+# Bloquer les ressources techniques
+Disallow: /*.css$
+Disallow: /*.js$
+Disallow: /*.png$
+Disallow: /*.jpg$
+Disallow: /*.jpeg$
+Disallow: /*.svg$
+
+# Autoriser ton blog
+Allow: /blog/
+Allow: /blog/*
+
+# Sitemap
 Sitemap: https://dominicdapice.com/sitemap.xml
