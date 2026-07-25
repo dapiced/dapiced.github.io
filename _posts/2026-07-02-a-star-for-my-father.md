@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "A Star for My Father"
+title: "A Star for My Father - Vincenzo D'Apice"
 date: 2026-07-02 14:00:00 -0400
 tags: [tribute, family, stars]
 description: "A tribute to my father Vincenzo D'Apice - and the real star registered in his name in the Andromeda constellation, visible to the naked eye."
@@ -104,3 +104,26 @@ Take a second. Say hello. He would have poured you a glass of wine.
 <em style="color: var(--faint);">(Safe travels among the stars, Papa. I love you, today and forever.)</em>
 
 **À bientôt Papa.**
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "{{ site.url }}{{ page.url }}#vincenzo",
+  "name": "Vincenzo D'Apice",
+  "birthDate": "1937-09-12",
+  "deathDate": "2022-08-08",
+  "children": [
+    {
+      "@type": "Person",
+      "@id": "{{ site.url }}/#person",
+      "name": "Dominic D'Apice"
+    }
+  ],
+  "subjectOf": {
+    "@type": "BlogPosting",
+    "headline": "{{ page.title }}",
+    "url": "{{ site.url }}{{ page.url }}"
+  }
+}
+</script>
