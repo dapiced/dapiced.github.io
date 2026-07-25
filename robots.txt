@@ -1,21 +1,19 @@
 User-agent: *
 Allow: /
 
-# Bloquer les pages inutiles
+# Empêcher l’indexation des fichiers techniques
+Disallow: /assets/
+Disallow: /css/
+Disallow: /js/
+Disallow: /images/
+
+# Empêcher l’indexation des pages inutiles
 Disallow: /404.html
 Disallow: /drafts/
 Disallow: /tmp/
 Disallow: /private/
 
-# Bloquer les ressources techniques
-Disallow: /*.css$
-Disallow: /*.js$
-Disallow: /*.png$
-Disallow: /*.jpg$
-Disallow: /*.jpeg$
-Disallow: /*.svg$
-
-# Autoriser ton blog
+# Autoriser explicitement ton blog
 Allow: /blog/
 Allow: /blog/*
 
