@@ -1,21 +1,4 @@
 User-agent: *
 Allow: /
 
-# Empêcher l’indexation des fichiers techniques
-Disallow: /assets/
-Disallow: /css/
-Disallow: /js/
-Disallow: /images/
-
-# Empêcher l’indexation des pages inutiles
-Disallow: /404.html
-Disallow: /drafts/
-Disallow: /tmp/
-Disallow: /private/
-
-# Autoriser explicitement ton blog
-Allow: /blog/
-Allow: /blog/*
-
-# Sitemap
 Sitemap: https://dominicdapice.com/sitemap.xml

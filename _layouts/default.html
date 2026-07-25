@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ page.lang | default: site.lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,8 +12,9 @@
   {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": "{{ site.url }}/#person",
     "name": "Dominic D'Apice",
-    "url": "https://dapiced.github.io",
+    "url": "{{ site.url }}/",
     "jobTitle": "Developer - Azure Infrastructure AI",
     "address": {
       "@type": "PostalAddress",

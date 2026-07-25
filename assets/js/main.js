@@ -257,8 +257,8 @@
         });
       })
       .catch(function () {
-        grid.innerHTML = '<p class="projects-note">Telemetry link temporarily down - ' +
-          'browse everything directly on <a href="https://github.com/dapiced?tab=repositories">GitHub</a>.</p>';
+        /* API unreachable (rate limit, offline): keep the static fallback cards
+           already rendered in the HTML instead of replacing them with an error. */
       });
   }
 
