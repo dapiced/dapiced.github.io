@@ -15,6 +15,11 @@ defaults:
       path: ""
     values:
       image: /assets/img/og-default.jpg
+  - scope:
+      path: ""
+      type: notes
+    values:
+      layout: note
 
 social:
   name: Dominic D'Apice
@@ -30,6 +35,9 @@ collections:
   portfolio:
     output: true
     permalink: /portfolio/:name/
+  notes:
+    output: true
+    permalink: /notes/:name/
 
 markdown: kramdown
 plugins:

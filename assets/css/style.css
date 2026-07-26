@@ -118,7 +118,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   cursor: pointer;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .nav-toggle { display: block; }
   .nav-links {
     display: none;
@@ -459,6 +459,17 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 .post-item p.excerpt { margin: 0; font-size: 0.9rem; color: var(--muted); }
 
 .all-posts-link { display: inline-block; margin-top: 1.4rem; font-family: var(--mono); font-size: 0.9rem; }
+
+/* ---------- resources ---------- */
+
+.res-group { margin-top: 2.4rem; max-width: 780px; }
+.res-group h2 { font-size: 1.05rem; color: var(--lightblue); margin: 0 0 1rem; letter-spacing: 0.03em; }
+.res-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+.res-list li { border-left: 2px solid var(--border); padding-left: 1rem; }
+.res-list li:hover { border-left-color: rgba(88, 166, 255, 0.55); }
+.res-title { font-weight: 700; color: var(--cyan); }
+.res-by { display: block; font-family: var(--mono); font-size: 0.76rem; color: var(--faint); margin-top: 0.15rem; }
+.res-list p { margin: 0.3rem 0 0; font-size: 0.88rem; color: var(--muted); }
 
 /* ---------- post page ---------- */
 
