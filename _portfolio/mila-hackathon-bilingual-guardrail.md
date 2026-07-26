@@ -1,6 +1,6 @@
 ---
 layout: portfolio
-title: "Mila Hackathon — Detecting a Crisis in Two Languages: A Hybrid mmBERT × Mistral Guardrail"
+title: "Mila Hackathon - Detecting a Crisis in Two Languages: A Hybrid mmBERT × Mistral Guardrail"
 date: 2026-07-26 08:00:00 -0400
 lang: en
 tags: [ai-safety, nlp, mental-health, hackathon, mlops]
