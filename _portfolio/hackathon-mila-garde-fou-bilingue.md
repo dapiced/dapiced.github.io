@@ -123,3 +123,9 @@ Un rappel de 92,3 % signifie qu'environ 60 des 65 conversations à haut risque s
 ## Conclusion et takeaways
 
 Ce projet condense ce que j'aime dans l'ingénierie ML appliquée : un cycle complet - données, fine-tuning, fusion, évaluation - sous contraintes réelles de latence, de résilience et d'éthique, avec une discipline MLOps de bout en bout (artefacts S3 vérifiés par SHA-256, évaluation reproductible, seeds fixés). Il illustre aussi qu'en sécurité de l'IA, le coût d'une erreur n'est pas symétrique : concevoir pour le rappel est un choix moral autant que technique. Prochaines pistes : distiller le juge Mistral dans un encodeur plus gros pour réduire la latence, calibrer les scores (Platt / temperature scaling), encoder la structure multi-tours, et auditer l'équité par sous-groupe DEI.
+
+## Le projet Github Mila_Hackathon_AI
+
+[Mila Hackathon AI](https://github.com/dapiced/Mila_Hackathon_AI)
+
+
