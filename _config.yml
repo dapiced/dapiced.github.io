@@ -26,6 +26,11 @@ social:
 
 permalink: /blog/:year/:month/:title/
 
+collections:
+  portfolio:
+    output: true
+    permalink: /portfolio/:name/
+
 markdown: kramdown
 plugins:
   - jekyll-feed

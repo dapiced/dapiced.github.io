@@ -1,0 +1,31 @@
+---
+layout: default
+title: Portfolio - Case Studies in AI, Data & Infrastructure
+description: >-
+  Deep-dive case studies: AI safety hackathons, machine learning under real-world
+  constraints, MLOps pipelines. The stories behind the code.
+---
+
+<section class="section">
+  <p class="eyebrow">MISSION DOSSIERS</p>
+  <h1 class="section-title">Portfolio</h1>
+  <p style="color: var(--muted); max-width: 640px;">
+    Case studies with the full story: the problem, the architecture, the experiments
+    that failed, and the numbers that survived. For the raw repositories, see the
+    <a href="/#projects">live GitHub projects</a> on the home page.
+  </p>
+  <ul class="post-list" style="margin-top: 2rem;">
+    {% assign entries = site.portfolio | where: "lang", "en" | sort: "date" | reverse %}
+    {% for entry in entries %}
+    <li class="post-item">
+      <a class="post-link" href="{{ entry.url }}">{{ entry.title }}</a>
+      <p class="post-meta">
+        <time datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%B %-d, %Y" }}</time>
+        {% if entry.tags and entry.tags.size > 0 %} · {% for tag in entry.tags %}#{{ tag }} {% endfor %}{% endif %}
+        {% if entry.translation_url %} · <a href="{{ entry.translation_url }}">version française 🇫🇷</a>{% endif %}
+      </p>
+      <p class="excerpt">{{ entry.description }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
