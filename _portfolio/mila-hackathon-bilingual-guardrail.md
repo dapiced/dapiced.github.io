@@ -123,3 +123,7 @@ A recall of 92.3% means roughly 60 of the 65 high-risk conversations are correct
 ## Conclusion and takeaways
 
 This project condenses what I enjoy most in applied ML engineering: a complete cycle - data, fine-tuning, fusion, evaluation - under real constraints of latency, resilience, and ethics, with end-to-end MLOps discipline (versioned artifacts on S3 with SHA-256 verification, a reproducible evaluation pipeline, fixed seeds). It also illustrates that in AI safety the cost of an error is not symmetric: designing for recall is a moral choice as much as a technical one. Next steps worth exploring: distilling the Mistral judge into a larger encoder to cut latency, score calibration (Platt / temperature scaling), encoding multi-turn structure, and per-subgroup fairness audits across DEI slices.
+
+## Mila_Hackathon_AI Github project
+
+[Mila Hackathon AI](https://github.com/dapiced/Mila_Hackathon_AI)
