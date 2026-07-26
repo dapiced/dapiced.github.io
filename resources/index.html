@@ -1,0 +1,98 @@
+---
+layout: default
+title: Resources - DS/ML/MLOps Reading List for Infrastructure People
+description: >-
+  An annotated data science, ML and MLOps reading list with one angle:
+  the DevOps to MLOps bridge, curated for infrastructure people who are pivoting.
+---
+
+<section class="section">
+  <p class="eyebrow">STAR CHARTS</p>
+  <h1 class="section-title">Resources</h1>
+  <p style="color: var(--muted); max-width: 640px;">
+    An annotated reading list for people crossing the same bridge I am:
+    infrastructure and DevOps folks pivoting toward data science and MLOps.
+    Not a link dump - a shortlist, with a note on why each one matters
+    when you come from the machine room.
+  </p>
+
+  <div class="res-group">
+    <h2>⛩ The bridge - DevOps → MLOps</h2>
+    <ul class="res-list">
+      <li>
+        <a class="res-title" href="https://papers.neurips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems.pdf" target="_blank" rel="noopener">Hidden Technical Debt in Machine Learning Systems</a>
+        <span class="res-by">Sculley et al. · NeurIPS 2015 · paper</span>
+        <p>The paper that explains why ML systems rot: the model is a tiny box in the diagram - the other 95% is infrastructure you already know how to build.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://developers.google.com/machine-learning/guides/rules-of-ml" target="_blank" rel="noopener">Rules of Machine Learning</a>
+        <span class="res-by">Martin Zinkevich · Google · guide</span>
+        <p>43 rules, and the first one is "don't be afraid to launch a product without machine learning". Ops pragmatism, applied to models.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://huyenchip.com/books/" target="_blank" rel="noopener">Designing Machine Learning Systems</a>
+        <span class="res-by">Chip Huyen · O'Reilly · book</span>
+        <p>The system view: data, deployment, monitoring, drift. Reads like an SRE book that happens to be about ML - the fastest mental mapping for infra people.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://github.com/DataTalksClub/mlops-zoomcamp" target="_blank" rel="noopener">MLOps Zoomcamp</a>
+        <span class="res-by">DataTalksClub · free course</span>
+        <p>Hands-on and free: experiment tracking, orchestration, deployment, monitoring. Your CI/CD reflexes translate almost one-to-one.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://ml-ops.org/" target="_blank" rel="noopener">ml-ops.org</a>
+        <span class="res-by">INNOQ · reference site</span>
+        <p>Patterns and principles - the closest thing MLOps has to a twelve-factor manifesto.</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class="res-group">
+    <h2>🔭 Foundations - stats &amp; ML</h2>
+    <ul class="res-list">
+      <li>
+        <a class="res-title" href="https://www.statlearning.com/" target="_blank" rel="noopener">An Introduction to Statistical Learning</a>
+        <span class="res-by">James, Witten, Hastie, Tibshirani · free book</span>
+        <p>The statistical backbone, free in PDF, with R and Python editions - pairs naturally with a TÉLUQ data science curriculum.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://github.com/ageron/handson-ml3" target="_blank" rel="noopener">Hands-On Machine Learning</a>
+        <span class="res-by">Aurélien Géron · O'Reilly · book + notebooks</span>
+        <p>From scikit-learn to deep learning with runnable code. The notebooks double as a reference you'll keep grepping.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">StatQuest</a>
+        <span class="res-by">Josh Starmer · videos</span>
+        <p>Every ML concept, dismantled one small step at a time. When a Kaggle metric confuses you, this is where you go first.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://karpathy.ai/zero-to-hero.html" target="_blank" rel="noopener">Neural Networks: Zero to Hero</a>
+        <span class="res-by">Andrej Karpathy · videos + code</span>
+        <p>Backpropagation to GPT, built from scratch in code. The closest ML gets to "read the source, understand the system".</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class="res-group">
+    <h2>🛰 The platform - data &amp; pipelines</h2>
+    <ul class="res-list">
+      <li>
+        <a class="res-title" href="https://mlflow.org/docs/latest/" target="_blank" rel="noopener">MLflow documentation</a>
+        <span class="res-by">Databricks / Linux Foundation · docs</span>
+        <p>Experiment tracking and the model registry - the artifact repository of the ML world, and the backbone of MLOps on Databricks.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/" target="_blank" rel="noopener">Fundamentals of Data Engineering</a>
+        <span class="res-by">Joe Reis &amp; Matt Housley · O'Reilly · book</span>
+        <p>The data lifecycle end-to-end, refreshingly tool-agnostic. Explains where your pipelines sit in the bigger picture.</p>
+      </li>
+      <li>
+        <a class="res-title" href="https://www.kaggle.com/learn" target="_blank" rel="noopener">Kaggle Learn</a>
+        <span class="res-by">Kaggle · free micro-courses</span>
+        <p>Short, practical, immediately applicable in competitions - the fastest feedback loop between theory and a leaderboard.</p>
+      </li>
+    </ul>
+  </div>
+
+  <p class="projects-note" style="margin-top: 2.2rem;">// curated by a human, revised as the journey progresses - suggestions welcome via <a href="https://github.com/dapiced" target="_blank" rel="noopener">GitHub</a></p>
+</section>

@@ -1,0 +1,31 @@
+---
+layout: default
+title: Notes - Today I Learned
+description: >-
+  Short, dated learnings from the terminal: ML concepts, Databricks and
+  Terraform tricks, CI/CD tips - field notes too small for a full blog post.
+---
+
+<section class="section">
+  <p class="eyebrow">FIELD NOTES</p>
+  <h1 class="section-title">Notes / TIL</h1>
+  <p style="color: var(--muted); max-width: 640px;">
+    Short, dated learnings - too small for a blog post, too useful to lose.
+    ML concepts, Databricks &amp; Terraform tricks, and whatever the terminal
+    taught me today. For the long-form stories, see the <a href="/blog/">blog</a>.
+  </p>
+  <ul class="post-list" style="margin-top: 2rem;">
+    {% assign notes = site.notes | sort: "date" | reverse %}
+    {% for note in notes %}
+    <li class="post-item">
+      <a class="post-link" href="{{ note.url }}">{{ note.title }}</a>
+      <p class="post-meta">
+        <time datetime="{{ note.date | date_to_xmlschema }}">{{ note.date | date: "%B %-d, %Y" }}</time>
+        {% if note.tags and note.tags.size > 0 %} · {% for tag in note.tags %}#{{ tag }} {% endfor %}{% endif %}
+      </p>
+      <p class="excerpt">{{ note.excerpt | strip_html | truncate: 220 }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="projects-note">// one file per lesson - the learning curve, committed to git</p>
+</section>
