@@ -1,6 +1,6 @@
 ---
 layout: portfolio
-title: "Hackathon Mila — Détecter une crise en deux langues : un garde-fou hybride mmBERT × Mistral"
+title: "Hackathon Mila - Détecter une crise en deux langues : un garde-fou hybride mmBERT × Mistral"
 date: 2026-07-26 08:00:00 -0400
 lang: fr
 tags: [ai-safety, nlp, mental-health, hackathon, mlops]
