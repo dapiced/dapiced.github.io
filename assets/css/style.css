@@ -93,7 +93,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 1.4rem;
+  gap: 1.1rem;
   margin: 0;
   padding: 0;
   align-items: center;
@@ -118,7 +118,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   cursor: pointer;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
   .nav-toggle { display: block; }
   .nav-links {
     display: none;
