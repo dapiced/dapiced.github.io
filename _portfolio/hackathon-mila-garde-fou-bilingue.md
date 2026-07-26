@@ -16,7 +16,7 @@ translation_label: "🇬🇧 Read this article in English"
 
 Neuf mots, en français québécois, tapés par un adolescent à un assistant virtuel. Un système d'IA dispose d'environ une seconde pour trancher : fatigue ordinaire, ou signal de crise exigeant l'intervention d'un humain ? C'est le problème que notre équipe a attaqué en mars 2026 au premier hackathon « sécurité de l'IA » de [Mila](https://mila.quebec/fr/nouvelle/mila-lance-son-premier-hackathon-securite-de-ia-contexte-sante-mentale), l'Institut québécois d'intelligence artificielle.
 
-Au sein de l'équipe 021 — *404HarmNotFound* — j'ai principalement porté le pipeline de données bilingue (dont 600 conversations synthétiques issues de mon projet [CEDD](https://github.com/dapiced/cedd-hackathon)), le fine-tuning du classifieur mmBERT et le harnais d'expérimentation qui nous a permis de tester plus de 30 configurations en deux jours. Résultat : **F1 = 0,876** sur le jeu d'évaluation caché et une place dans le **top 15 sur 80 équipes**.
+Au sein de l'équipe 021 — *404HarmNotFound* — j'ai principalement porté le pipeline de données bilingue (dont 600 conversations synthétiques), le fine-tuning du classifieur mmBERT et le harnais d'expérimentation qui nous a permis de tester plus de 30 configurations en deux jours. Résultat : **F1 = 0,876** sur le jeu d'évaluation caché et une place dans le **top 15 sur 80 équipes**.
 
 ## Le contexte : sécuriser un assistant virtuel pour Jeunesse, J'écoute
 
@@ -26,7 +26,7 @@ Organisé par Mila avec Bell et Kids Help Phone (Jeunesse, J'écoute), le hackat
 
 Deux difficultés dominent ce type de classification. La première est l'**asymétrie des erreurs** : un faux négatif (crise manquée) laisse un jeune en danger sans escalade ; un faux positif crée de la friction et de la fatigue d'alerte chez les intervenants. On optimise donc le rappel d'abord, la précision ensuite. La seconde est la **langue** : les signaux de crise sont souvent indirects (« tout le monde serait mieux sans moi »), euphémiques (« dormir pour toujours »), en argot jeunesse (« unalive », « kms ») ou en français québécois, quand ils n'alternent pas entre les deux langues au fil d'une conversation multi-tours.
 
-Nous avons assemblé un jeu d'entraînement de **784 conversations bilingues** (3 à 35 tours, 13,4 en moyenne) : 94 conversations *seed* annotées par KHP, 35 cas construits à la main, 600 conversations synthétiques générées via l'API Claude par le pipeline CEDD (300 EN + 300 FR, 4 paliers de risque projetés en binaire), 36 cas adversariaux (sarcasme, négation, code-switching) et 19 conversations comblant les trous de taxonomie. Au total : 53,7 % `high_risk` ; 414 conversations en anglais, 352 en français, 18 mixtes. Le principe directeur de l'annotation : **le sujet n'est pas le risque** — une conversation sur le suicide peut être `low_risk` (recherche scolaire), un stress d'école peut être `high_risk` (effondrement fonctionnel). Le jeu couvre explicitement des scénarios 2ELGBTQ+, autochtones, nouveaux arrivants, neurodivergents et jeunes en famille d'accueil.
+Nous avons assemblé un jeu d'entraînement de **784 conversations bilingues** (3 à 35 tours, 13,4 en moyenne) : 94 conversations *seed* annotées par KHP, 35 cas construits à la main, 600 conversations synthétiques générées via l'API Claude par le script de pipeline Python (300 EN + 300 FR, 4 paliers de risque projetés en binaire), 36 cas adversariaux (sarcasme, négation, code-switching) et 19 conversations comblant les trous de taxonomie. Au total : 53,7 % `high_risk` ; 414 conversations en anglais, 352 en français, 18 mixtes. Le principe directeur de l'annotation : **le sujet n'est pas le risque** — une conversation sur le suicide peut être `low_risk` (recherche scolaire), un stress d'école peut être `high_risk` (effondrement fonctionnel). Le jeu couvre explicitement des scénarios 2ELGBTQ+, autochtones, nouveaux arrivants, neurodivergents et jeunes en famille d'accueil.
 
 ## L'architecture : pourquoi deux modèles plutôt qu'un
 
@@ -78,7 +78,7 @@ Côté entraînement et évaluation, le flux est entièrement reproductible :
 ```mermaid
 flowchart LR
     S1["Seed KHP · 94"] --> D0["Dataset bilingue<br/>784 conversations"]
-    S2["Synthétique CEDD · 600"] --> D0
+    S2["Conversations synthétiques · 600"] --> D0
     S3["Custom + adversarial<br/>+ gap-filling · 90"] --> D0
     D0 --> T["Fine-tuning mmBERT<br/>HF Trainer · 3 epochs · lr 5e-5"]
     T --> A1["Artefact S3<br/>mbert_finetuned.tar.gz + SHA-256"]
