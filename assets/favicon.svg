@@ -1,15 +1,13 @@
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="p" cx="35%" cy="30%" r="80%">
+    <linearGradient id="d" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#79c0ff"/>
-      <stop offset="55%" stop-color="#1f6feb"/>
-      <stop offset="100%" stop-color="#0d2b5c"/>
-    </radialGradient>
+      <stop offset="100%" stop-color="#1f6feb"/>
+    </linearGradient>
   </defs>
   <rect width="64" height="64" rx="14" fill="#04060f"/>
-  <circle cx="14" cy="12" r="1.5" fill="#dbe9ff"/>
-  <circle cx="52" cy="18" r="1" fill="#dbe9ff"/>
-  <circle cx="46" cy="52" r="1.2" fill="#dbe9ff"/>
-  <ellipse cx="32" cy="34" rx="24" ry="6" fill="none" stroke="#bc8cff" stroke-width="2.5" transform="rotate(-16 32 34)"/>
-  <circle cx="32" cy="34" r="13" fill="url(#p)"/>
+  <circle cx="13" cy="14" r="1.4" fill="#dbe9ff"/>
+  <circle cx="47" cy="53" r="1.2" fill="#dbe9ff"/>
+  <path fill="url(#d)" fill-rule="evenodd" d="M18 16 H30 A16 16 0 0 1 30 48 H18 Z M25 23 V41 H30 A9 9 0 0 0 30 23 Z"/>
+  <path fill="#ffd21e" d="M48 6 C48.9 11.4 51.1 13.6 56.5 14.5 C51.1 15.4 48.9 17.6 48 23 C47.1 17.6 44.9 15.4 39.5 14.5 C44.9 13.6 47.1 11.4 48 6 Z"/>
 </svg>
