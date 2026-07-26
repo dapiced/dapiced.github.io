@@ -244,13 +244,16 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 
 .btn-ghost {
   color: var(--lightblue);
-  background: rgba(13, 21, 38, 0.6);
-  border-color: rgba(88, 166, 255, 0.45);
+  border-color: transparent;
+  background:
+    linear-gradient(rgba(13, 21, 38, 0.92), rgba(13, 21, 38, 0.92)) padding-box,
+    linear-gradient(90deg, #1f6feb, #7c3aed) border-box;
+  box-shadow: 0 0 16px rgba(31, 111, 235, 0.2);
 }
 .btn-ghost:hover {
-  border-color: var(--cyan);
+  border-color: transparent;
   color: #fff;
-  box-shadow: 0 4px 20px rgba(88, 166, 255, 0.25);
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.4);
 }
 
 .hero-coords {
