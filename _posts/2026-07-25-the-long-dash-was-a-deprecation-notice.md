@@ -4,6 +4,7 @@ title: "The Long Dash Was a Deprecation Notice"
 date: 2026-07-25 20:00:00 -0400
 tags: [metrology, time, infrastructure, engineering]
 description: "Canada switched off CHU on 22 June 2026. No instrument on Earth outputs UTC: the authoritative value is a monthly PDF, published weeks in arrears."
+image: /assets/img/long-dash-og.jpg
 ---
 ## The Last Thirty-Six Seconds
 
