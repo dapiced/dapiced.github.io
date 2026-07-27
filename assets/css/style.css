@@ -274,7 +274,19 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 .about-text p { margin: 0 0 1rem; color: var(--text); }
 .about-text strong { color: var(--lightblue); }
 
-.stat-chips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+.about-side { display: grid; gap: 1.4rem; justify-items: center; }
+
+.about-portrait {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: linear-gradient(var(--panel), var(--panel)) padding-box,
+              linear-gradient(135deg, var(--cyan), var(--violet)) border-box;
+  box-shadow: 0 0 34px rgba(88, 166, 255, 0.18);
+}
+
+.stat-chips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; width: 100%; }
 
 .chip {
   background: linear-gradient(135deg, var(--panel), var(--panel-2));
@@ -439,6 +451,29 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   margin: 0 0 1.6rem;
   color: var(--muted);
   font-style: italic;
+}
+
+.offduty-intro {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.8rem;
+  align-items: center;
+  margin-bottom: 1.8rem;
+}
+.offduty-intro .quote { margin: 0; font-size: 1.05rem; }
+
+.astro-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 34px rgba(188, 140, 255, 0.14);
+}
+
+@media (max-width: 640px) {
+  .offduty-intro { grid-template-columns: 1fr; }
+  .astro-photo { max-width: 320px; margin: 0 auto; }
 }
 
 /* ---------- blog ---------- */
