@@ -14,7 +14,42 @@ description: >-
     Azure DevOps → GitHub Actions migrations, MLOps / DataOps and the occasional detour
     into astronomy, physics, and the night sky.
   </p>
-  <ul class="post-list" style="margin-top: 2rem;">
+
+  <div class="beyond-grid" style="margin-top: 2rem;">
+    <a class="beyond-card reveal" href="/blog/infrastructure/">
+      <span class="icon">🛰️</span>
+      <h3>IT Infrastructure</h3>
+      <p>Azure &amp; Databricks operations, Ansible and Terraform at scale, CI/CD, DataOps - systems read with infrastructure eyes.</p>
+      <span class="beyond-more">Read articles →</span>
+    </a>
+    <a class="beyond-card reveal" href="/blog/machine-learning/">
+      <span class="icon">🤖</span>
+      <h3>Machine Learning</h3>
+      <p>MLOps in practice: model lifecycle, monitoring, data science and Kaggle experiments on real infrastructure.</p>
+      <span class="beyond-more">Read articles →</span>
+    </a>
+    <a class="beyond-card reveal" href="/blog/astronomy/">
+      <span class="icon">🌌</span>
+      <h3>Astronomy</h3>
+      <p>Exploring celestial objects and following the latest discoveries - from JWST deep fields to backyard skies.</p>
+      <span class="beyond-more">Read articles →</span>
+    </a>
+    <a class="beyond-card reveal" href="/blog/ai/">
+      <span class="icon">🧠</span>
+      <h3>Artificial Intelligence</h3>
+      <p>Studying ML advances and how they translate into real-world impact - then testing myself on Kaggle.</p>
+      <span class="beyond-more">Read articles →</span>
+    </a>
+    <a class="beyond-card reveal" href="/blog/physics/">
+      <span class="icon">⚛️</span>
+      <h3>Physics</h3>
+      <p>Fascinated by the fundamental laws that describe our universe - the original distributed system.</p>
+      <span class="beyond-more">Read articles →</span>
+    </a>
+  </div>
+
+  <p class="eyebrow" style="margin-top: 3rem;">ALL POSTS</p>
+  <ul class="post-list" style="margin-top: 1rem;">
     {% for post in site.posts %}
     <li class="post-item">
       <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
