@@ -266,7 +266,7 @@
   /* ---------- live gists from GitHub API ---------- */
   var gistsGrid = document.getElementById("gists-grid");
   if (gistsGrid) {
-    fetch("https://api.github.com/users/dapiced/gists?per_page=30")
+    fetch("https://api.github.com/users/dapiced/gists?per_page=100")
       .then(function (r) {
         if (!r.ok) throw new Error("GitHub API " + r.status);
         return r.json();
@@ -274,7 +274,7 @@
       .then(function (gists) {
         if (!gists.length) return; /* no public gists yet: keep the fallback card */
         gistsGrid.innerHTML = "";
-        gists.slice(0, 6).forEach(function (gist) {
+        gists.forEach(function (gist) {
           var files = Object.keys(gist.files);
           var first = gist.files[files[0]] || {};
 
