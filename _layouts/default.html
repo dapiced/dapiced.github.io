@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="xRBmKZ2Bo5NPBP8hoDyEF5khW3MNRqa9hSbtATuFgR0">
+  {% assign kw = page.keywords | default: page.topics | default: page.tags | default: site.keywords %}
+  {% if kw %}<meta name="keywords" content="{{ kw | join: ', ' }}">{% endif %}
   {% seo %}
   {% feed_meta %}
   <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -13,23 +15,38 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "@id": "{{ site.url }}/#person",
-    "name": "Dominic D'Apice",
-    "url": "{{ site.url }}/",
-    "jobTitle": "Developer - Azure Infrastructure AI",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Montréal",
-      "addressRegion": "QC",
-      "addressCountry": "CA"
-    },
-    "knowsAbout": ["Microsoft Azure", "Databricks", "MLOps", "DataOps", "Ansible", "Terraform", "Infrastructure as Code", "Data Science", "Machine Learning"],
-    "sameAs": [
-      "https://github.com/dapiced",
-      "https://www.linkedin.com/in/dapiced/",
-      "https://www.kaggle.com/dominicdapice",
-      "https://huggingface.co/dapiced"
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "{{ site.url }}/#person",
+        "name": "Dominic D'Apice",
+        "alternateName": ["Dominic DApice", "dapiced"],
+        "url": "{{ site.url }}/",
+        "jobTitle": "Developer - Azure Infrastructure AI",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Montréal",
+          "addressRegion": "QC",
+          "addressCountry": "CA"
+        },
+        "knowsAbout": ["Microsoft Azure", "Databricks", "MLOps", "DataOps", "Ansible", "Terraform", "Infrastructure as Code", "Data Science", "Machine Learning", "Azure DevOps", "GitHub Actions", "CI/CD", "Linux", "Red Hat Enterprise Linux", "Python", "PowerShell", "Cloud Computing", "AI Infrastructure"],
+        "sameAs": [
+          "https://github.com/dapiced",
+          "https://www.linkedin.com/in/dapiced/",
+          "https://www.kaggle.com/dominicdapice",
+          "https://huggingface.co/dapiced"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "{{ site.url }}/#website",
+        "url": "{{ site.url }}/",
+        "name": "Dominic D'Apice",
+        "alternateName": ["dominicdapice.com", "dapiced"],
+        "description": {{ site.description | jsonify }},
+        "inLanguage": "en",
+        "publisher": { "@id": "{{ site.url }}/#person" }
+      }
     ]
   }
   </script>

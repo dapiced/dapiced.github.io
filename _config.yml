@@ -4,6 +4,23 @@ description: >-
   Developer - Azure Infrastructure AI in Montréal, Canada. 25+ years automating
   complex systems: Azure, Databricks, Ansible, Terraform, MLOps & DataOps.
 url: "https://dominicdapice.com"
+
+# Default meta keywords (used by Bing; pages can override with their own
+# `keywords:` list - `topics:` and `tags:` are used as fallbacks per page)
+keywords:
+  - Dominic D'Apice
+  - dapiced
+  - Azure Infrastructure AI
+  - Databricks
+  - MLOps
+  - DataOps
+  - Ansible
+  - Terraform
+  - Infrastructure as Code
+  - DevOps
+  - Data Science
+  - Machine Learning
+  - Montréal
 author:
   name: Dominic D'Apice
 lang: en
