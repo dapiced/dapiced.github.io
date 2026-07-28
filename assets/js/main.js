@@ -196,15 +196,16 @@
   }
 
   /* ---------- live projects from GitHub API ---------- */
+  var LANG_COLORS = {
+    Python: "#3572A5", R: "#198CE7", HTML: "#e34c26", CSS: "#563d7c",
+    Shell: "#89e051", JavaScript: "#f1e05a", PowerShell: "#012456",
+    Jinja: "#a52a22", Dockerfile: "#384d54", Perl: "#0298c3",
+    "Jupyter Notebook": "#DA5B0B", Markdown: "#083fa1", YAML: "#cb171e",
+    Text: "#6e7681"
+  };
+
   var grid = document.getElementById("projects-grid");
   if (grid) {
-    var LANG_COLORS = {
-      Python: "#3572A5", R: "#198CE7", HTML: "#e34c26", CSS: "#563d7c",
-      Shell: "#89e051", JavaScript: "#f1e05a", PowerShell: "#012456",
-      Jinja: "#a52a22", Dockerfile: "#384d54", Perl: "#0298c3",
-      "Jupyter Notebook": "#DA5B0B"
-    };
-
     fetch("https://api.github.com/users/dapiced/repos?per_page=100&sort=updated")
       .then(function (r) {
         if (!r.ok) throw new Error("GitHub API " + r.status);
@@ -259,6 +260,59 @@
       .catch(function () {
         /* API unreachable (rate limit, offline): keep the static fallback cards
            already rendered in the HTML instead of replacing them with an error. */
+      });
+  }
+
+  /* ---------- live gists from GitHub API ---------- */
+  var gistsGrid = document.getElementById("gists-grid");
+  if (gistsGrid) {
+    fetch("https://api.github.com/users/dapiced/gists?per_page=30")
+      .then(function (r) {
+        if (!r.ok) throw new Error("GitHub API " + r.status);
+        return r.json();
+      })
+      .then(function (gists) {
+        if (!gists.length) return; /* no public gists yet: keep the fallback card */
+        gistsGrid.innerHTML = "";
+        gists.slice(0, 6).forEach(function (gist) {
+          var files = Object.keys(gist.files);
+          var first = gist.files[files[0]] || {};
+
+          var card = document.createElement("a");
+          card.className = "project-card reveal";
+          card.href = gist.html_url;
+          card.target = "_blank";
+          card.rel = "noopener";
+
+          var name = document.createElement("span");
+          name.className = "project-name";
+          name.textContent = first.filename || "gist";
+
+          var desc = document.createElement("span");
+          desc.className = "project-desc";
+          var d = gist.description || files.join(" · ");
+          desc.textContent = d.length > 130 ? d.slice(0, 129) + "…" : d;
+
+          var meta = document.createElement("span");
+          meta.className = "project-meta";
+          var parts = [];
+          if (first.language) {
+            parts.push('<span class="lang-dot" style="background:' +
+              (LANG_COLORS[first.language] || "#bc8cff") + '"></span>' + first.language);
+          }
+          parts.push(files.length + (files.length > 1 ? " files" : " file"));
+          if (gist.comments > 0) parts.push("💬 " + gist.comments);
+          meta.innerHTML = parts.map(function (p) { return "<span>" + p + "</span>"; }).join("");
+
+          card.appendChild(name);
+          card.appendChild(desc);
+          card.appendChild(meta);
+          gistsGrid.appendChild(card);
+          requestAnimationFrame(function () { card.classList.add("visible"); });
+        });
+      })
+      .catch(function () {
+        /* API unreachable: keep the static fallback card. */
       });
   }
 
