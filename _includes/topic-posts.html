@@ -1,0 +1,26 @@
+{% assign matched = "" | split: "" %}
+{% for post in site.posts %}
+  {% assign hit = false %}
+  {% for t in page.topics %}
+    {% if post.tags contains t %}{% assign hit = true %}{% break %}{% endif %}
+  {% endfor %}
+  {% if hit %}{% assign matched = matched | push: post %}{% endif %}
+{% endfor %}
+{% if matched.size > 0 %}
+<ul class="post-list" style="margin-top: 2rem;">
+  {% for post in matched %}
+  <li class="post-item">
+    <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
+    <p class="post-meta">
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span>
+      {% if post.tags and post.tags.size > 0 %} · {% for tag in post.tags %}#{{ tag }} {% endfor %}{% endif %}
+    </p>
+    <p class="excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p style="margin-top: 2rem; color: var(--muted); font-style: italic;">
+  No articles on this topic yet - they are on the launch pad. Check back soon.
+</p>
+{% endif %}
