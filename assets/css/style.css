@@ -445,6 +445,25 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 .beyond-card h3 { margin: 0.5rem 0 0.4rem; font-size: 1.05rem; color: var(--lightblue); }
 .beyond-card p { margin: 0; font-size: 0.88rem; color: var(--muted); }
 
+a.beyond-card {
+  display: block;
+  color: var(--text);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+a.beyond-card:hover {
+  text-decoration: none;
+  transform: translateY(-3px);
+  border-color: rgba(88, 166, 255, 0.55);
+  box-shadow: 0 8px 30px rgba(31, 111, 235, 0.18);
+}
+.beyond-card .beyond-more {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--cyan);
+}
+
 .quote {
   border-left: 3px solid var(--violet);
   padding: 0.2rem 0 0.2rem 1.1rem;
