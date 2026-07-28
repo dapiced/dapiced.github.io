@@ -1,0 +1,41 @@
+name: IndexNow - notify search engines
+
+# Submits every URL from the live sitemap to the IndexNow API (used by Bing
+# and other engines) after each publish to main. Google does not support
+# IndexNow: it re-crawls the sitemap registered in Search Console on its own.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for GitHub Pages deploy
+        run: sleep 120
+
+      - name: Submit sitemap URLs to IndexNow
+        run: |
+          set -euo pipefail
+          urls=$(curl -fsSL https://dominicdapice.com/sitemap.xml \
+            | grep -o '<loc>[^<]*</loc>' | sed 's/<[^>]*>//g')
+          echo "Submitting $(echo "$urls" | wc -l) URLs:"
+          echo "$urls"
+          payload=$(echo "$urls" | jq -R . | jq -s '{
+            host: "dominicdapice.com",
+            key: "3678563103b4f11c9ed1cb8d806c655d",
+            keyLocation: "https://dominicdapice.com/3678563103b4f11c9ed1cb8d806c655d.txt",
+            urlList: .
+          }')
+          code=$(curl -sS -o /tmp/indexnow-response.txt -w '%{http_code}' \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "$payload")
+          echo "IndexNow response: HTTP $code"
+          cat /tmp/indexnow-response.txt || true
+          # 200 = submitted, 202 = accepted (key validation pending)
+          [ "$code" = "200" ] || [ "$code" = "202" ]
