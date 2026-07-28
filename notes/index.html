@@ -1,40 +1,17 @@
 ---
-layout: default
-title: Notes - Today I Learned
-description: >-
-  Short, dated learnings from the terminal: ML concepts, Databricks and
-  Terraform tricks, CI/CD tips - field notes too small for a full blog post.
-keywords:
-  - TIL
-  - today I learned
-  - Databricks tips
-  - Terraform tips
-  - CI/CD tips
-  - machine learning notes
-  - DevOps notes
-  - Dominic D'Apice
+layout: null
+sitemap: false
 ---
-
-<section class="section">
-  <p class="eyebrow">FIELD NOTES</p>
-  <h1 class="section-title">Notes / TIL</h1>
-  <p style="color: var(--muted); max-width: 640px;">
-    Short, dated learnings - too small for a blog post, too useful to lose.
-    ML concepts, Databricks &amp; Terraform tricks, and whatever the terminal
-    taught me today. For the long-form stories, see the <a href="/blog/">blog</a>.
-  </p>
-  <ul class="post-list" style="margin-top: 2rem;">
-    {% assign notes = site.notes | sort: "date" | reverse %}
-    {% for note in notes %}
-    <li class="post-item">
-      <a class="post-link" href="{{ note.url }}">{{ note.title }}</a>
-      <p class="post-meta">
-        <time datetime="{{ note.date | date_to_xmlschema }}">{{ note.date | date: "%B %-d, %Y" }}</time>
-        {% if note.tags and note.tags.size > 0 %} · {% for tag in note.tags %}#{{ tag }} {% endfor %}{% endif %}
-      </p>
-      <p class="excerpt">{{ note.excerpt | strip_html | truncate: 220 }}</p>
-    </li>
-    {% endfor %}
-  </ul>
-  <p class="projects-note">// one file per lesson - the learning curve, committed to git</p>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting…</title>
+  <link rel="canonical" href="https://dominicdapice.com/gists/">
+  <meta http-equiv="refresh" content="0; url=/gists/">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <p>Notes have moved. <a href="/gists/">Continue to Gists →</a></p>
+</body>
+</html>
