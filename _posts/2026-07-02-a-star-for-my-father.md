@@ -66,6 +66,29 @@ And everything about this star is him:
   great **Andromeda Galaxy** with the naked eye. My father's star points the way to an
   entire galaxy. Just like he pointed the way for us, all his life.
 
+## Two stars, inseparable
+
+The sky had kept one more secret for me. This star is known to astronomers as
+[Nu Andromedae](https://en.wikipedia.org/wiki/Nu_Andromedae) - and it turns out it is
+not one star. It is **two**.
+
+Nu Andromedae is a **binary star**: two suns bound together by gravity, circling each
+other so closely that from Earth their light merges into a single point. Even through a
+telescope you cannot tell them apart. Two stars, one light - and nothing in the universe
+can pull them away from each other.
+
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/etoile-binaire-vincenzo.jpg" alt="Artist's impression of a binary star system: two stars orbiting each other in front of the Andromeda galaxy" width="1408" height="768" loading="lazy" style="width: 100%; border-radius: 12px; box-shadow: 0 8px 40px rgba(88,166,255,0.15);" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Two stars dancing together in front of the Andromeda Galaxy - inseparable, forever.</figcaption>
+</figure>
+
+When I learned that, I smiled. Of course his star is a binary. Astronomers call the two
+stars *companions* - I call them a father and his son. Inseparable, like my father and
+me. So when you find his star in the sky, remember: you are not looking at one light.
+You are looking at two, holding on to each other, shining as one.
+
+That's us. That's forever.
+
 ## Why here, on this site
 
 I spend my days on GitHub. It is where I work, where I build, where I learn. So this is
