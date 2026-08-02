@@ -475,26 +475,31 @@ a.beyond-card:hover {
 }
 
 .offduty-intro {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 1.8rem;
-  align-items: center;
-  margin-bottom: 1.8rem;
+  margin-bottom: 2rem;
 }
-.offduty-intro .quote { margin: 0; font-size: 1.05rem; }
 
 .astro-photo {
   display: block;
   width: 100%;
-  height: auto;
-  border-radius: 12px;
+  height: 400px;
+  object-fit: cover;
+  object-position: 50% 28%;
+  border-radius: 14px;
   border: 1px solid var(--border);
   box-shadow: 0 0 34px rgba(188, 140, 255, 0.14);
 }
 
+.offduty-intro .quote {
+  margin: 1.3rem auto 0;
+  padding: 0;
+  border-left: none;
+  text-align: center;
+  max-width: 720px;
+  font-size: 1.05rem;
+}
+
 @media (max-width: 640px) {
-  .offduty-intro { grid-template-columns: 1fr; }
-  .astro-photo { max-width: 320px; margin: 0 auto; }
+  .astro-photo { height: 280px; }
 }
 
 /* ---------- blog ---------- */
