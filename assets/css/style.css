@@ -190,6 +190,18 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   padding: 5rem 1.2rem 3rem;
 }
 
+.hero-portrait {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: linear-gradient(var(--panel), var(--panel)) padding-box,
+              linear-gradient(135deg, var(--cyan), var(--violet)) border-box;
+  box-shadow: 0 0 34px rgba(88, 166, 255, 0.18);
+  margin-bottom: 1.2rem;
+}
+@media (max-width: 600px) { .hero-portrait { width: 110px; height: 110px; } }
+
 .hero h1 {
   font-size: clamp(2.4rem, 7vw, 4.2rem);
   font-weight: 800;
@@ -274,17 +286,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 .about-text p { margin: 0 0 1rem; color: var(--text); }
 .about-text strong { color: var(--lightblue); }
 
-.about-side { display: grid; gap: 1.4rem; justify-items: center; }
-
-.about-portrait {
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  background: linear-gradient(var(--panel), var(--panel)) padding-box,
-              linear-gradient(135deg, var(--cyan), var(--violet)) border-box;
-  box-shadow: 0 0 34px rgba(88, 166, 255, 0.18);
-}
+.about-side { display: grid; gap: 1.4rem; justify-items: center; align-content: start; }
 
 .stat-chips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; width: 100%; }
 
