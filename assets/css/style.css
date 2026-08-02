@@ -475,12 +475,7 @@ a.beyond-card:hover {
 }
 
 .offduty-intro {
-  position: relative;
   margin-bottom: 2rem;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: 0 0 34px rgba(188, 140, 255, 0.14);
 }
 
 .astro-photo {
@@ -489,25 +484,22 @@ a.beyond-card:hover {
   height: 400px;
   object-fit: cover;
   object-position: 50% 28%;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 34px rgba(188, 140, 255, 0.14);
 }
 
 .offduty-intro .quote {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 3rem 1.8rem 1.5rem;
+  margin: 1.3rem auto 0;
+  padding: 0;
   border-left: none;
   text-align: center;
-  color: #e6edf3;
-  font-size: 1.12rem;
-  background: linear-gradient(transparent, rgba(4, 8, 18, 0.94));
+  max-width: 720px;
+  font-size: 1.05rem;
 }
 
 @media (max-width: 640px) {
   .astro-photo { height: 280px; }
-  .offduty-intro .quote { font-size: 0.95rem; padding: 2.4rem 1.1rem 1.1rem; }
 }
 
 /* ---------- blog ---------- */
