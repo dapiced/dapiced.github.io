@@ -1,0 +1,104 @@
+<svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The history of tabular machine learning drawn as a git commit graph with two branches: an amber 'tabular' main line of tree methods running from Fisher's linear discriminant in 1936 through CART 1984, AdaBoost 1997, Random Forests and Gradient Boosting 2001, XGBoost 2016 and LightGBM 2017, and a cyan 'neural-nets' side branch that wins images with AlexNet in 2012, questions itself at NeurIPS 2022, ships TabPFN v1 at ICLR 2023, and finally merges into the main line on 8 January 2025 when TabPFN v2 lands in Nature, followed by TabPFN-2.5 in November 2025 and Google's TabFM at HEAD on 30 June 2026">
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+    .am  { fill:#FFB454; }
+    .cy  { fill:#5FC9F8; }
+    .sm  { font-size:12px; }
+    .xs  { font-size:10px; }
+  </style>
+
+  <!-- page + terminal window -->
+  <rect x="0" y="0" width="1200" height="675" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="659" rx="12" fill="#0A0F1C" stroke="#263450"/>
+
+  <!-- terminal title bar -->
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> git log --graph --date=short ml/tabular</tspan></text>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">TABULAR ML · 1936 → 2026</text>
+
+  <!-- lanes: main (amber, trees) x=90 · neural-nets (cyan) x=132 -->
+  <!-- main lane, full height -->
+  <line x1="90" y1="96" x2="90" y2="591" stroke="#FFB454" stroke-width="2" opacity="0.55"/>
+  <!-- side lane: from merge (2025) down to fork (1936) -->
+  <line x1="132" y1="208" x2="132" y2="568" stroke="#5FC9F8" stroke-width="2" opacity="0.55"/>
+  <!-- merge curve: side lane joins main between rows 2025-01 and 2023 -->
+  <path d="M132,208 C132,193 108,188 90,186" fill="none" stroke="#5FC9F8" stroke-width="2" opacity="0.55"/>
+  <!-- fork curve at the root, 1936 -->
+  <path d="M90,591 C90,578 114,574 132,568" fill="none" stroke="#5FC9F8" stroke-width="2" opacity="0.55"/>
+
+  <!-- AI winters annotation, rotated along the sparse stretch of the neural lane -->
+  <text x="150" y="560" class="xs dim" transform="rotate(-90 150 560)">// two AI winters: no commits</text>
+
+  <!-- ============ rows, newest first ============ -->
+
+  <!-- 2026-06-30 TabFM (post-merge: cyan core, amber ring) -->
+  <circle cx="90" cy="96" r="7" fill="#5FC9F8" stroke="#FFB454" stroke-width="2"/>
+  <text x="170" y="93" class="sm"><tspan class="dim">3e6f0a1</tspan> <tspan class="am">2026-06-30</tspan> <tspan class="t" font-weight="bold">TabFM 1.0.0: the whole table in one forward pass</tspan> <tspan class="cy">(HEAD, google/research)</tspan></text>
+  <text x="170" y="108" class="xs s">zero-shot classification and regression · frozen weights · AI.PREDICT lands in BigQuery next</text>
+
+  <!-- 2025-11 TabPFN-2.5 -->
+  <circle cx="90" cy="141" r="7" fill="#5FC9F8" stroke="#FFB454" stroke-width="2"/>
+  <text x="170" y="138" class="sm"><tspan class="dim">b91f8e2</tspan> <tspan class="am">2025-11-06</tspan> <tspan class="t">TabPFN-2.5: 50 000 rows, 2 000 features</tspan> <tspan class="dim">(prior-labs)</tspan></text>
+  <text x="170" y="153" class="xs s">the "small data only" objection starts to expire</text>
+
+  <!-- 2025-01-08 merge commit -->
+  <circle cx="90" cy="186" r="8" fill="#0A0F1C" stroke="#5FC9F8" stroke-width="2.5"/>
+  <circle cx="90" cy="186" r="3" fill="#FFB454"/>
+  <text x="170" y="183" class="sm"><tspan class="dim">7d4c0aa</tspan> <tspan class="am">2025-01-08</tspan> <tspan class="t" font-weight="bold">Merge branch 'neural-nets' into ml/tabular</tspan></text>
+  <text x="170" y="198" class="xs s">TabPFN v2 published in Nature · the last unconquered benchmark falls (on small tables)</text>
+
+  <!-- 2023-02 TabPFN v1 (side lane) -->
+  <circle cx="132" cy="231" r="6" fill="#5FC9F8"/>
+  <text x="170" y="228" class="sm"><tspan class="dim">9c1f2e3</tspan> <tspan class="cy">2023-05-01</tspan> <tspan class="t">TabPFN v1 (ICLR): a transformer fits a small table in one second</tspan></text>
+  <text x="170" y="243" class="xs s">pre-trained on millions of synthetic datasets · never sees your data twice</text>
+
+  <!-- 2022-11 NeurIPS question (side lane) -->
+  <circle cx="132" cy="276" r="6" fill="#5FC9F8"/>
+  <text x="170" y="273" class="sm"><tspan class="dim">5a8d7f0</tspan> <tspan class="cy">2022-11-28</tspan> <tspan class="t">NeurIPS: "Why do tree-based models still outperform deep learning on tabular data?"</tspan></text>
+  <text x="170" y="288" class="xs s">Grinsztajn, Oyallon &amp; Varoquaux publish the autopsy of a decade of failed attempts</text>
+
+  <!-- 2017 LightGBM (main lane) -->
+  <circle cx="90" cy="321" r="6" fill="#FFB454"/>
+  <text x="170" y="318" class="sm"><tspan class="dim">b7a9d12</tspan> <tspan class="am">2017-12-04</tspan> <tspan class="t">LightGBM: histogram boosting, leaf-wise growth</tspan> <tspan class="dim">(microsoft)</tspan></text>
+
+  <!-- 2016 XGBoost (main lane) -->
+  <circle cx="90" cy="366" r="6" fill="#FFB454"/>
+  <text x="170" y="363" class="sm"><tspan class="dim">c4f8e21</tspan> <tspan class="am">2016-08-13</tspan> <tspan class="t" font-weight="bold">XGBoost (Chen &amp; Guestrin, KDD)</tspan></text>
+  <text x="170" y="381" class="xs s">17 of the 29 Kaggle winning solutions published in 2015 used it</text>
+
+  <!-- 2012 AlexNet (side lane) -->
+  <circle cx="132" cy="411" r="6" fill="#5FC9F8"/>
+  <text x="170" y="408" class="sm"><tspan class="dim">e3b0c44</tspan> <tspan class="cy">2012-09-30</tspan> <tspan class="t">AlexNet: images fall. Then speech. Then text. Then protein folding.</tspan></text>
+  <text x="170" y="423" class="xs s">the CSV does not fall</text>
+
+  <!-- 2001 RF + GBM + Two Cultures (main lane) -->
+  <circle cx="90" cy="456" r="6" fill="#FFB454"/>
+  <text x="170" y="453" class="sm"><tspan class="dim">d9e0f33</tspan> <tspan class="am">2001-10-01</tspan> <tspan class="t" font-weight="bold">Random Forests (Breiman) · Gradient Boosting (Friedman) · "Two Cultures"</tspan></text>
+  <text x="170" y="471" class="xs s">one tree becomes a forest · residuals become the target · statistics splits into two cultures</text>
+
+  <!-- 1997 AdaBoost (main lane) -->
+  <circle cx="90" cy="501" r="6" fill="#FFB454"/>
+  <text x="170" y="498" class="sm"><tspan class="dim">8f7a6b5</tspan> <tspan class="am">1997-08-01</tspan> <tspan class="t">AdaBoost (Freund &amp; Schapire): many weak trees out-vote one strong one</tspan></text>
+
+  <!-- 1984 CART (main lane) -->
+  <circle cx="90" cy="546" r="7" fill="#FFB454"/>
+  <text x="170" y="543" class="sm"><tspan class="dim">0a1b2c3</tspan> <tspan class="am">1984-01-01</tspan> <tspan class="t" font-weight="bold">CART: Classification and Regression Trees</tspan></text>
+  <text x="170" y="561" class="xs s">Breiman, Friedman, Olshen &amp; Stone · Quinlan's ID3 follows in 1986 · if/else, learned from data</text>
+
+  <!-- 1936 root (main lane) -->
+  <circle cx="90" cy="591" r="6" fill="#0A0F1C" stroke="#FFB454" stroke-width="2"/>
+  <text x="170" y="588" class="sm"><tspan class="dim">0000000</tspan> <tspan class="am">1936</tspan> <tspan class="t">Fisher, linear discriminant analysis</tspan> <tspan class="dim">(initial commit, before the fork)</tspan></text>
+
+  <!-- footer -->
+  <line x1="60" y1="618" x2="1140" y2="618" stroke="#263450"/>
+  <text x="90" y="642" class="sm dim">one lineage kept splitting columns · the other kept multiplying weights · the merge took 89 years</text>
+  <text x="1140" y="642" font-size="10" text-anchor="end"><tspan class="am">— trees</tspan> <tspan class="dim">·</tspan> <tspan class="cy">— neural nets</tspan></text>
+</svg>
