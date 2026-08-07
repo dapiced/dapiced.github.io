@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Benchmark results, ROC AUC over five stratified folds with default hyperparameters on four classic datasets. On breast-cancer-wisconsin: CART 0.900, Random Forest 0.9885, Gradient Boosting 0.9927, XGBoost 0.9935, TabPFN 0.9967. On sonar: CART 0.7119, Random Forest 0.9267, Gradient Boosting 0.9196, XGBoost 0.9249, TabPFN 0.9321. On pima-diabetes: CART 0.6721, Random Forest 0.8238, Gradient Boosting 0.8280, XGBoost 0.7914, TabPFN 0.8330. On ionosphere: CART 0.8886, Random Forest 0.9785, Gradient Boosting 0.9647, XGBoost 0.9654, TabPFN 0.9851. TabPFN wins all four; the single 1984 tree loses badly everywhere">
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+    .am  { fill:#FFB454; }
+    .cy  { fill:#5FC9F8; }
+    .sm  { font-size:11px; }
+    .xs  { font-size:10px; }
+  </style>
+
+  <!-- page + terminal window -->
+  <rect x="0" y="0" width="1200" height="675" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="659" rx="12" fill="#0A0F1C" stroke="#263450"/>
+
+  <!-- terminal title bar -->
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> python3 benchmark.py --cv 5 --seed 42</tspan></text>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">ROC AUC · STRATIFIED 5-FOLD · DEFAULTS</text>
+
+  <!-- vertical gridlines: AUC 0.6 0.7 0.8 0.9 1.0 mapped on x = 300 + (auc-0.5)*1600 -->
+  <g stroke="#1A2438" stroke-width="1">
+    <line x1="460" y1="66" x2="460" y2="596"/>
+    <line x1="620" y1="66" x2="620" y2="596"/>
+    <line x1="780" y1="66" x2="780" y2="596"/>
+    <line x1="940" y1="66" x2="940" y2="596"/>
+    <line x1="1100" y1="66" x2="1100" y2="596"/>
+  </g>
+
+  <!-- ===== panel 1: breast-cancer-wisconsin ===== -->
+  <text x="90" y="86" class="sm t" font-weight="bold">breast-cancer-wisconsin <tspan class="dim">· 1995 · 569 rows × 30 features</tspan></text>
+  <text x="290" y="109" text-anchor="end" class="xs dim">CART · 1984</text>
+  <rect x="300" y="98" width="640.0" height="14" fill="#54637F"/>
+  <text x="948" y="109" class="xs s">0.9000</text>
+  <text x="290" y="130" text-anchor="end" class="xs s">Random Forest · 2001</text>
+  <rect x="300" y="119" width="781.6" height="14" fill="#C9873A"/>
+  <text x="1089" y="130" class="xs s">0.9885</text>
+  <text x="290" y="151" text-anchor="end" class="xs s">Gradient Boosting · 2001</text>
+  <rect x="300" y="140" width="788.3" height="14" fill="#E3A34C"/>
+  <text x="1096" y="151" class="xs s">0.9927</text>
+  <text x="290" y="172" text-anchor="end" class="xs am">XGBoost · 2016</text>
+  <rect x="300" y="161" width="789.6" height="14" fill="#FFB454"/>
+  <text x="1097" y="172" class="xs s">0.9935</text>
+  <text x="290" y="193" text-anchor="end" class="xs cy">TabPFN · 2023</text>
+  <rect x="300" y="182" width="794.7" height="14" fill="#5FC9F8"/>
+  <text x="1102" y="193" class="xs cy" font-weight="bold">0.9967</text>
+
+  <!-- ===== panel 2: sonar ===== -->
+  <text x="90" y="218" class="sm t" font-weight="bold">sonar, rocks vs mines <tspan class="dim">· 1988 · 208 rows × 60 features · born a neural-net benchmark</tspan></text>
+  <text x="290" y="241" text-anchor="end" class="xs dim">CART · 1984</text>
+  <rect x="300" y="230" width="339.0" height="14" fill="#54637F"/>
+  <text x="647" y="241" class="xs s">0.7119</text>
+  <text x="290" y="262" text-anchor="end" class="xs s">Random Forest · 2001</text>
+  <rect x="300" y="251" width="682.7" height="14" fill="#C9873A"/>
+  <text x="990" y="262" class="xs s">0.9267</text>
+  <text x="290" y="283" text-anchor="end" class="xs s">Gradient Boosting · 2001</text>
+  <rect x="300" y="272" width="671.4" height="14" fill="#E3A34C"/>
+  <text x="979" y="283" class="xs s">0.9196</text>
+  <text x="290" y="304" text-anchor="end" class="xs am">XGBoost · 2016</text>
+  <rect x="300" y="293" width="679.8" height="14" fill="#FFB454"/>
+  <text x="987" y="304" class="xs s">0.9249</text>
+  <text x="290" y="325" text-anchor="end" class="xs cy">TabPFN · 2023</text>
+  <rect x="300" y="314" width="691.4" height="14" fill="#5FC9F8"/>
+  <text x="999" y="325" class="xs cy" font-weight="bold">0.9321</text>
+
+  <!-- ===== panel 3: pima-diabetes ===== -->
+  <text x="90" y="350" class="sm t" font-weight="bold">pima-diabetes <tspan class="dim">· 1988 · 768 rows × 8 features</tspan></text>
+  <text x="290" y="373" text-anchor="end" class="xs dim">CART · 1984</text>
+  <rect x="300" y="362" width="275.4" height="14" fill="#54637F"/>
+  <text x="583" y="373" class="xs s">0.6721</text>
+  <text x="290" y="394" text-anchor="end" class="xs s">Random Forest · 2001</text>
+  <rect x="300" y="383" width="518.1" height="14" fill="#C9873A"/>
+  <text x="826" y="394" class="xs s">0.8238</text>
+  <text x="290" y="415" text-anchor="end" class="xs s">Gradient Boosting · 2001</text>
+  <rect x="300" y="404" width="524.8" height="14" fill="#E3A34C"/>
+  <text x="833" y="415" class="xs s">0.8280</text>
+  <text x="290" y="436" text-anchor="end" class="xs am">XGBoost · 2016</text>
+  <rect x="300" y="425" width="466.2" height="14" fill="#FFB454"/>
+  <text x="774" y="436" class="xs s">0.7914</text>
+  <text x="290" y="457" text-anchor="end" class="xs cy">TabPFN · 2023</text>
+  <rect x="300" y="446" width="532.8" height="14" fill="#5FC9F8"/>
+  <text x="841" y="457" class="xs cy" font-weight="bold">0.8330</text>
+
+  <!-- ===== panel 4: ionosphere ===== -->
+  <text x="90" y="482" class="sm t" font-weight="bold">ionosphere <tspan class="dim">· 1989 · 351 rows × 34 features</tspan></text>
+  <text x="290" y="505" text-anchor="end" class="xs dim">CART · 1984</text>
+  <rect x="300" y="494" width="621.8" height="14" fill="#54637F"/>
+  <text x="930" y="505" class="xs s">0.8886</text>
+  <text x="290" y="526" text-anchor="end" class="xs s">Random Forest · 2001</text>
+  <rect x="300" y="515" width="765.6" height="14" fill="#C9873A"/>
+  <text x="1073" y="526" class="xs s">0.9785</text>
+  <text x="290" y="547" text-anchor="end" class="xs s">Gradient Boosting · 2001</text>
+  <rect x="300" y="536" width="743.5" height="14" fill="#E3A34C"/>
+  <text x="1051" y="547" class="xs s">0.9647</text>
+  <text x="290" y="568" text-anchor="end" class="xs am">XGBoost · 2016</text>
+  <rect x="300" y="557" width="744.6" height="14" fill="#FFB454"/>
+  <text x="1052" y="568" class="xs s">0.9654</text>
+  <text x="290" y="589" text-anchor="end" class="xs cy">TabPFN · 2023</text>
+  <rect x="300" y="578" width="776.2" height="14" fill="#5FC9F8"/>
+  <text x="1084" y="589" class="xs cy" font-weight="bold">0.9851</text>
+
+  <!-- axis ticks -->
+  <g class="xs dim">
+    <text x="300" y="612" text-anchor="middle">0.50</text>
+    <text x="460" y="612" text-anchor="middle">0.60</text>
+    <text x="620" y="612" text-anchor="middle">0.70</text>
+    <text x="780" y="612" text-anchor="middle">0.80</text>
+    <text x="940" y="612" text-anchor="middle">0.90</text>
+    <text x="1100" y="612" text-anchor="middle">1.00</text>
+  </g>
+
+  <!-- footer -->
+  <line x1="60" y1="626" x2="1140" y2="626" stroke="#263450"/>
+  <text x="90" y="648" class="xs dim">mean ROC AUC over 5 stratified folds · default hyperparameters, nothing tuned · axis starts at 0.50 · single CPU, no GPU · TabPFN is the 2023 v1 prototype</text>
+</svg>
