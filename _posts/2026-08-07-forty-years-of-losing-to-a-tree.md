@@ -95,7 +95,7 @@ for X, y in datasets:                       # vintage 1988-1995
 
 Mean ROC AUC over the five folds:
 
-| dataset | CART 1984 | Random Forest 2001 | Grad. Boosting 2001 | XGBoost 2016 | TabPFN 2023 |
+| Dataset | CART 1984 | Random Forest 2001 | Grad. Boosting 2001 | XGBoost 2016 | TabPFN 2023 |
 |:---|---:|---:|---:|---:|---:|
 | sonar (1988) | 0.712 | 0.927 | 0.920 | 0.925 | **0.932** |
 | pima-diabetes (1988) | 0.672 | 0.824 | 0.828 | 0.791 | **0.833** |
