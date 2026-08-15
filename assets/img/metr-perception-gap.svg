@@ -1,0 +1,43 @@
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diverging bar chart of the METR randomized controlled trial on AI coding tools, July 2025. Experienced open-source developers forecast a 24 percent speed-up and, after the study, believed they had been 20 percent faster - but the measured result was 19 percent slower.">
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+  </style>
+  
+  <rect x="0" y="0" width="1200" height="500" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="484" rx="12" fill="#0A0F1C" stroke="#263450"/>
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> metr --rct ai-coding-tools</tspan></text>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">METR RCT · JULY 2025</text>
+  <text x="40" y="88" font-size="21" font-weight="bold" class="t">Feeling faster is not being faster</text>
+  <text x="40" y="114" font-size="13" class="s">16 experienced open-source developers, 246 real tasks on their own repositories, early-2025 AI tools</text>
+  <line x1="380" y1="160" x2="380" y2="400" stroke="#1A2338"/>
+  <text x="380" y="152" font-size="11" text-anchor="middle" class="dim">-20%</text>
+  <line x1="520" y1="160" x2="520" y2="400" stroke="#1A2338"/>
+  <text x="520" y="152" font-size="11" text-anchor="middle" class="dim">-10%</text>
+  <line x1="660" y1="160" x2="660" y2="400" stroke="#8CA0BE"/>
+  <text x="660" y="152" font-size="11" text-anchor="middle" class="dim">0</text>
+  <line x1="800" y1="160" x2="800" y2="400" stroke="#1A2338"/>
+  <text x="800" y="152" font-size="11" text-anchor="middle" class="dim">+10%</text>
+  <line x1="940" y1="160" x2="940" y2="400" stroke="#1A2338"/>
+  <text x="940" y="152" font-size="11" text-anchor="middle" class="dim">+20%</text>
+  <text x="380" y="426" font-size="11" class="dim">&#8592; slower with AI</text>
+  <text x="940" y="426" font-size="11" text-anchor="end" class="dim">faster with AI &#8594;</text>
+  <path d="M660,210 L992.0,210 Q996.0,210 996.0,214 L996.0,240 Q996.0,244 992.0,244 L660,244 Z" fill="#1887BD"/>
+  <text x="1008" y="232" font-size="15" font-weight="bold" class="t">+24%</text>
+  <text x="646" y="231" font-size="13" text-anchor="end" class="s">Speed-up developers forecast beforehand</text>
+  <path d="M660,280 L936.0,280 Q940.0,280 940.0,284 L940.0,310 Q940.0,314 936.0,314 L660,314 Z" fill="#1887BD"/>
+  <text x="952" y="302" font-size="15" font-weight="bold" class="t">+20%</text>
+  <text x="646" y="301" font-size="13" text-anchor="end" class="s">Speed-up they believed in afterwards</text>
+  <path d="M660,350 L398.0,350 Q394.0,350 394.0,354 L394.0,380 Q394.0,384 398.0,384 L660,384 Z" fill="#C4811C"/>
+  <text x="382" y="372" font-size="15" font-weight="bold" text-anchor="end" class="t">&#8722;19%</text>
+  <text x="674" y="371" font-size="13" class="s">What the randomized trial measured</text>
+  <text x="1176" y="476" font-size="10" text-anchor="end" class="dim">Source: METR randomized controlled trial, July 2025 &#183; metr.org &#183; a 2026 follow-up with newer tools measured &#8776;0%</text>
+</svg>

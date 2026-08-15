@@ -1,0 +1,41 @@
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart of success rates on OSWorld, a benchmark of real computer-use tasks. The best AI agents scored about 12 percent in late 2024 and 66 percent in March 2026, against a human baseline of about 72 percent. Source: Stanford AI Index 2026.">
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+  </style>
+  
+  <rect x="0" y="0" width="1200" height="500" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="484" rx="12" fill="#0A0F1C" stroke="#263450"/>
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> agents --benchmark osworld</tspan></text>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">STANFORD AI INDEX · 2026</text>
+  <text x="40" y="88" font-size="21" font-weight="bold" class="t">Agents on real computer tasks: 12% &#8594; 66% in 18 months</text>
+  <text x="40" y="114" font-size="13" class="s">Success rate on the OSWorld benchmark (real software, files, multi-step office work)</text>
+  <line x1="340" y1="160" x2="340" y2="400" stroke="#1A2338"/>
+  <text x="340" y="152" font-size="11" text-anchor="middle" class="dim">0%</text>
+  <line x1="538" y1="160" x2="538" y2="400" stroke="#1A2338"/>
+  <text x="538" y="152" font-size="11" text-anchor="middle" class="dim">25%</text>
+  <line x1="735" y1="160" x2="735" y2="400" stroke="#1A2338"/>
+  <text x="735" y="152" font-size="11" text-anchor="middle" class="dim">50%</text>
+  <line x1="932" y1="160" x2="932" y2="400" stroke="#1A2338"/>
+  <text x="932" y="152" font-size="11" text-anchor="middle" class="dim">75%</text>
+  <line x1="1130" y1="160" x2="1130" y2="400" stroke="#1A2338"/>
+  <text x="1130" y="152" font-size="11" text-anchor="middle" class="dim">100%</text>
+  <text x="324" y="231" font-size="13" text-anchor="end" class="s">Best AI agents · late 2024</text>
+  <path d="M340,210 L430.8,210 Q434.8,210 434.8,214 L434.8,240 Q434.8,244 430.8,244 L340,244 Z" fill="#1887BD"/>
+  <text x="447" y="232" font-size="15" font-weight="bold" class="t">12%</text>
+  <text x="324" y="301" font-size="13" text-anchor="end" class="s">Best AI agents · March 2026</text>
+  <path d="M340,280 L857.4,280 Q861.4,280 861.4,284 L861.4,310 Q861.4,314 857.4,314 L340,314 Z" fill="#1887BD"/>
+  <text x="873" y="302" font-size="15" font-weight="bold" class="t">66%</text>
+  <text x="324" y="371" font-size="13" text-anchor="end" class="s">Human baseline</text>
+  <path d="M340,350 L904.8000000000001,350 Q908.8000000000001,350 908.8000000000001,354 L908.8000000000001,380 Q908.8000000000001,384 904.8000000000001,384 L340,384 Z" fill="#C4811C"/>
+  <text x="921" y="372" font-size="15" font-weight="bold" class="t">72%</text>
+  <text x="1176" y="476" font-size="10" text-anchor="end" class="dim">Source: Stanford AI Index 2026 &#183; hai.stanford.edu</text>
+</svg>
