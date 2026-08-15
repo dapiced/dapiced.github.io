@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The 2026 learning-rate schedule drawn as cosine annealing with warm restarts. An amber curve decays from January to the end of April (the winter session), jumps back to maximum on May 1, decays again through the spring session into the August vacation valley - where a cyan marker reads 'you are here, aug 15' at the minimum learning rate - then a bright vertical warm restart on September 1 relaunches the rate to maximum for the fall 2026 session, labeled machine learning + deep learning, shown as a dashed future curve decaying through December. Footnote cites the SGDR schedule, Loshchilov and Hutter, arXiv 1608.03983">
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+    .am  { fill:#FFB454; }
+    .cy  { fill:#5FC9F8; }
+    .sm  { font-size:11px; }
+    .xs  { font-size:10px; }
+  </style>
+
+  <!-- page + terminal window -->
+  <rect x="0" y="0" width="1200" height="675" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="659" rx="12" fill="#0A0F1C" stroke="#263450"/>
+
+  <!-- terminal title bar -->
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> python3 train.py --scheduler cosine_annealing_warm_restarts</tspan></text>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">LEARNING RATE · 2026</text>
+
+  <!-- axis + gridlines -->
+  <g stroke="#1A2438" stroke-width="1">
+    <line x1="100" y1="150" x2="1140" y2="150"/>
+    <line x1="100" y1="520" x2="1140" y2="520"/>
+  </g>
+  <line x1="100" y1="150" x2="100" y2="520" stroke="#263450" stroke-width="1"/>
+  <text x="92" y="154" text-anchor="end" class="dim xs">η_max</text>
+  <text x="92" y="524" text-anchor="end" class="dim xs">η_min</text>
+
+  <!-- month ticks -->
+  <g stroke="#1A2438" stroke-width="1">
+    <line x1="186.7" y1="520" x2="186.7" y2="527"/>
+    <line x1="273.3" y1="520" x2="273.3" y2="527"/>
+    <line x1="360" y1="520" x2="360" y2="527"/>
+    <line x1="446.7" y1="520" x2="446.7" y2="527"/>
+    <line x1="533.3" y1="520" x2="533.3" y2="527"/>
+    <line x1="620" y1="520" x2="620" y2="527"/>
+    <line x1="706.7" y1="520" x2="706.7" y2="527"/>
+    <line x1="793.3" y1="520" x2="793.3" y2="527"/>
+    <line x1="880" y1="520" x2="880" y2="527"/>
+    <line x1="966.7" y1="520" x2="966.7" y2="527"/>
+    <line x1="1053.3" y1="520" x2="1053.3" y2="527"/>
+  </g>
+  <g class="dim" font-size="10" text-anchor="middle">
+    <text x="143.3" y="592">JAN</text><text x="230" y="592">FEB</text><text x="316.7" y="592">MAR</text>
+    <text x="403.3" y="592">APR</text><text x="490" y="592">MAY</text><text x="576.7" y="592">JUN</text>
+    <text x="663.3" y="592">JUL</text><text x="750" y="592">AUG</text><text x="836.7" y="592">SEP</text>
+    <text x="923.3" y="592">OCT</text><text x="1010" y="592">NOV</text><text x="1096.7" y="592">DEC</text>
+  </g>
+
+  <!-- session labels -->
+  <text x="273.3" y="122" text-anchor="middle" class="dim sm">winter session</text>
+  <text x="620" y="122" text-anchor="middle" class="dim sm">spring session → vacation</text>
+  <text x="966.7" y="122" text-anchor="middle" class="am sm" font-weight="bold">FALL 2026 · ML + DL</text>
+
+  <!-- cycle 1: winter (past) -->
+  <polyline fill="none" stroke="#FFB454" stroke-width="2" opacity="0.4" points="100.0,150.0 108.7,150.6 117.3,152.3 126.0,155.1 134.7,159.1 143.3,164.1 152.0,170.2 160.7,177.3 169.3,185.3 178.0,194.3 186.7,204.2 195.3,214.9 204.0,226.3 212.7,238.3 221.3,251.0 230.0,264.2 238.7,277.8 247.3,291.8 256.0,306.1 264.7,320.5 273.3,335.0 282.0,349.5 290.7,363.9 299.3,378.2 308.0,392.2 316.7,405.8 325.3,419.0 334.0,431.7 342.7,443.7 351.3,455.1 360.0,465.8 368.7,475.7 377.3,484.7 386.0,492.7 394.7,499.8 403.3,505.9 412.0,510.9 420.7,514.9 429.3,517.7 438.0,519.4 446.7,520.0"/>
+  <!-- restart 1: May -->
+  <line x1="446.7" y1="520" x2="446.7" y2="150" stroke="#FFB454" stroke-width="2" opacity="0.4"/>
+
+  <!-- cycle 2: spring into vacation (this year so far) -->
+  <polyline fill="none" stroke="#FFB454" stroke-width="2.5" opacity="0.8" points="446.7,150.0 455.3,150.6 464.0,152.3 472.7,155.1 481.3,159.1 490.0,164.1 498.7,170.2 507.3,177.3 516.0,185.3 524.7,194.3 533.3,204.2 542.0,214.9 550.7,226.3 559.3,238.3 568.0,251.0 576.7,264.2 585.3,277.8 594.0,291.8 602.7,306.1 611.3,320.5 620.0,335.0 628.7,349.5 637.3,363.9 646.0,378.2 654.7,392.2 663.3,405.8 672.0,419.0 680.7,431.7 689.3,443.7 698.0,455.1 706.7,465.8 715.3,475.7 724.0,484.7 732.7,492.7 741.3,499.8 750.0,505.9 758.7,510.9 767.3,514.9 776.0,517.7 784.7,519.4 793.3,520.0"/>
+
+  <!-- restart 2: September 1 - the warm restart (glow = wide faint + narrow bright) -->
+  <line x1="793.3" y1="520" x2="793.3" y2="150" stroke="#FFB454" stroke-width="8" opacity="0.15"/>
+  <line x1="793.3" y1="520" x2="793.3" y2="150" stroke="#FFB454" stroke-width="2.5"/>
+  <polygon points="793.3,144 787.3,158 799.3,158" fill="#FFB454"/>
+  <text x="783" y="322" text-anchor="end" class="cy sm" font-weight="bold">warm restart</text>
+  <text x="783" y="340" text-anchor="end" class="cy xs">september 1</text>
+
+  <!-- cycle 3: fall session (future, dashed) -->
+  <polyline fill="none" stroke="#FFB454" stroke-width="2.5" stroke-dasharray="7 6" points="793.3,150.0 802.0,150.6 810.7,152.3 819.3,155.1 828.0,159.1 836.7,164.1 845.3,170.2 854.0,177.3 862.7,185.3 871.3,194.3 880.0,204.2 888.7,214.9 897.3,226.3 906.0,238.3 914.7,251.0 923.3,264.2 932.0,277.8 940.7,291.8 949.3,306.1 958.0,320.5 966.7,335.0 975.3,349.5 984.0,363.9 992.7,378.2 1001.3,392.2 1010.0,405.8 1018.7,419.0 1027.3,431.7 1036.0,443.7 1044.7,455.1 1053.3,465.8 1062.0,475.7 1070.7,484.7 1079.3,492.7 1088.0,499.8 1096.7,505.9 1105.3,510.9 1114.0,514.9 1122.7,517.7 1131.3,519.4 1140.0,520.0"/>
+
+  <!-- you are here: Aug 15, at the bottom of the valley -->
+  <circle cx="750" cy="505.9" r="11" fill="none" stroke="#5FC9F8" stroke-width="1.5" opacity="0.45"/>
+  <circle cx="750" cy="505.9" r="5" fill="#5FC9F8"/>
+  <text x="750" y="558" text-anchor="middle" class="cy sm" font-weight="bold">you are here · aug 15</text>
+
+  <!-- footnote -->
+  <line x1="8" y1="620" x2="1192" y2="620" stroke="#1A2438"/>
+  <text x="100" y="647" class="dim xs">the only optimizer trick that schedules its own rest</text>
+  <text x="1140" y="647" text-anchor="end" class="dim xs">η(t) = η_min + ½(η_max−η_min)(1 + cos(πt/T)) · SGDR · arXiv:1608.03983</text>
+</svg>
