@@ -1,0 +1,61 @@
+<svg viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Timeline of agentic AI milestones from November 2024 to July 2026, in two colors: capability and ecosystem events in blue - the Model Context Protocol release and its move to the Linux Foundation, METR's seven-month doubling of agent task horizons, AlphaEvolve's algorithm record, Google's AI co-scientist, agents nearing human performance on OSWorld, JPMorgan's agent plans - and governance and security events in amber: EU AI Act milestones, Gartner's cancellation forecast, Big Sleep's foiled exploit, and the first reported AI-orchestrated espionage campaign.">
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+  </style>
+  
+  <rect x="0" y="0" width="1200" height="760" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="744" rx="12" fill="#0A0F1C" stroke="#263450"/>
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> history --since 2024-11 -- agents</tspan></text>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">NOV 2024 &#8594; JUL 2026</text>
+  <text x="40" y="88" font-size="21" font-weight="bold" class="t">Twenty months that put agents on every roadmap</text>
+  <text x="40" y="114" font-size="13" class="s">Each milestone is cited, with a source link, in the article below</text>
+  <circle cx="47" cy="146" r="6" fill="#1887BD"/>
+  <text x="62" y="151" font-size="12" class="s">capability &amp; ecosystem</text>
+  <circle cx="287" cy="146" r="6" fill="#C4811C"/>
+  <text x="302" y="151" font-size="12" class="s">governance &amp; security</text>
+  <line x1="250" y1="174" x2="250" y2="694" stroke="#1A2338" stroke-width="2"/>
+  <circle cx="250" cy="192" r="6" fill="#1887BD" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="196" font-size="12" text-anchor="end" class="dim">Nov 2024</text>
+  <text x="274" y="196" font-size="13" class="s">Anthropic releases the Model Context Protocol (MCP)</text>
+  <circle cx="250" cy="236" r="6" fill="#C4811C" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="274" y="240" font-size="13" class="s">Google's Big Sleep finds its first exploitable bug in SQLite</text>
+  <circle cx="250" cy="280" r="6" fill="#C4811C" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="284" font-size="12" text-anchor="end" class="dim">Feb 2025</text>
+  <text x="274" y="284" font-size="13" class="s">EU AI Act prohibited-practices rules take effect</text>
+  <circle cx="250" cy="324" r="6" fill="#1887BD" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="274" y="328" font-size="13" class="s">Google's AI co-scientist matches an unpublished lab hypothesis</text>
+  <circle cx="250" cy="368" r="6" fill="#1887BD" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="372" font-size="12" text-anchor="end" class="dim">Mar 2025</text>
+  <text x="274" y="372" font-size="13" class="s">METR: agent task horizon doubling roughly every 7 months</text>
+  <circle cx="250" cy="412" r="6" fill="#1887BD" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="416" font-size="12" text-anchor="end" class="dim">May 2025</text>
+  <text x="274" y="416" font-size="13" class="s">AlphaEvolve beats a 56-year-old matrix-multiplication record</text>
+  <circle cx="250" cy="456" r="6" fill="#C4811C" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="460" font-size="12" text-anchor="end" class="dim">Jun 2025</text>
+  <text x="274" y="460" font-size="13" class="s">Gartner: over 40% of agentic AI projects headed for cancellation</text>
+  <circle cx="250" cy="500" r="6" fill="#C4811C" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="504" font-size="12" text-anchor="end" class="dim">Jul 2025</text>
+  <text x="274" y="504" font-size="13" class="s">Big Sleep foils a live exploitation attempt (CVE-2025-6965)</text>
+  <circle cx="250" cy="544" r="6" fill="#C4811C" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="548" font-size="12" text-anchor="end" class="dim">Nov 2025</text>
+  <text x="274" y="548" font-size="13" class="s">First reported AI-orchestrated espionage campaign disrupted</text>
+  <circle cx="250" cy="588" r="6" fill="#1887BD" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="592" font-size="12" text-anchor="end" class="dim">Dec 2025</text>
+  <text x="274" y="592" font-size="13" class="s">MCP joins the Linux Foundation's new Agentic AI Foundation</text>
+  <circle cx="250" cy="632" r="6" fill="#1887BD" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="636" font-size="12" text-anchor="end" class="dim">Apr 2026</text>
+  <text x="274" y="636" font-size="13" class="s">AI Index: agents hit 66% vs ≈72% human on real computer tasks</text>
+  <circle cx="250" cy="676" r="6" fill="#C4811C" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="226" y="680" font-size="12" text-anchor="end" class="dim">Jul 2026</text>
+  <text x="274" y="680" font-size="13" class="s">EU omnibus defers high-risk rules · stateless MCP spec ships</text>
+  <text x="1176" y="740" font-size="10" text-anchor="end" class="dim">Sources: Anthropic &#183; Google &#183; METR &#183; Gartner &#183; Stanford HAI &#183; Linux Foundation &#183; EU Official Journal &#8212; all linked in the text</text>
+</svg>
