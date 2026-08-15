@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Autonomous AI Agents in 2026: The Year the Chatbot Got Hands"
-date: 2026-08-15 09:00:00 -0400
+date: 2026-08-14 21:05:00 -0400
 tags: [ai-agents, agentic-ai, artificial-intelligence, generative-ai, intelligent-automation, future-of-work, ai-security, mcp, llm, machine-learning]
 description: "What autonomous AI agents can actually do in 2026, how they differ from chatbots, five verifiable use cases, the real risks, and how to prepare."
 ---
@@ -19,7 +19,7 @@ A chatbot answers. An agent **acts**.
 More precisely: an autonomous AI agent is a system that accepts a goal rather than a message, then runs a loop - plan, act through tools, observe the result, adjust - until the goal is met, blocked, or handed back to a human. The "tools" part is what changed everything. Modern agents call APIs, run code, query databases, drive a browser, and operate other software. The generative AI model underneath is the same family of technology behind ChatGPT or Claude; what is new is the scaffolding around it, which the industry now calls an agentic workflow.
 
 | | Chatbot | Autonomous agent |
-|---|---------|------------------|
+|:---|:---|:---|
 | Input | A message | A goal |
 | Output | A reply | Actions, then a result |
 | Steps | One exchange at a time | Plans and executes many |
