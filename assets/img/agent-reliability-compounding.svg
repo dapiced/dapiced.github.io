@@ -1,0 +1,55 @@
+<svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of the probability that a multi-step agent workflow completes, when every step must succeed. With 99 percent reliability per step the success rate falls to about 61 percent by step 50; with 95 percent per step it falls to about 8 percent. Pure arithmetic: p to the power n.">
+  <style>
+    text { font-family: "JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .t   { fill:#E6EDF7; }
+    .s   { fill:#8CA0BE; }
+    .dim { fill:#54637F; }
+  </style>
+  
+  <rect x="0" y="0" width="1200" height="560" fill="#070B14"/>
+  <rect x="8" y="8" width="1184" height="544" rx="12" fill="#0A0F1C" stroke="#263450"/>
+  <rect x="8" y="8" width="1184" height="34" rx="12" fill="#0D1526"/>
+  <rect x="8" y="30" width="1184" height="12" fill="#0D1526"/>
+  <line x1="8" y1="42" x2="1192" y2="42" stroke="#263450"/>
+  <circle cx="32" cy="25" r="5" fill="#E0655F" opacity="0.9"/>
+  <circle cx="52" cy="25" r="5" fill="#E3B341" opacity="0.9"/>
+  <circle cx="72" cy="25" r="5" fill="#57AB5A" opacity="0.9"/>
+  <text x="94" y="29" font-size="12"><tspan class="s" font-weight="bold">dominic@azure</tspan><tspan class="dim">:~$</tspan><tspan class="t"> plot p^n --steps 50</tspan></text>
+  <text x="1176" y="29" font-size="10" text-anchor="end" class="dim">RELIABILITY MATH</text>
+  <text x="40" y="88" font-size="21" font-weight="bold" class="t">Why long agent workflows fail: reliability compounds</text>
+  <text x="40" y="114" font-size="13" class="s">Probability the whole workflow succeeds when every step must &#8212; p&#8319; for n steps</text>
+  <rect x="810" y="132" width="14" height="4" rx="2" fill="#1887BD"/>
+  <text x="832" y="139" font-size="12" class="s">99% reliable per step</text>
+  <rect x="1010" y="132" width="14" height="4" rx="2" fill="#C4811C"/>
+  <text x="1032" y="139" font-size="12" class="s">95% per step</text>
+  <line x1="100" y1="470" x2="1130" y2="470" stroke="#1A2338"/>
+  <text x="90" y="474" font-size="11" text-anchor="end" class="dim">0%</text>
+  <line x1="100" y1="400" x2="1130" y2="400" stroke="#1A2338"/>
+  <text x="90" y="404" font-size="11" text-anchor="end" class="dim">25%</text>
+  <line x1="100" y1="330" x2="1130" y2="330" stroke="#1A2338"/>
+  <text x="90" y="334" font-size="11" text-anchor="end" class="dim">50%</text>
+  <line x1="100" y1="260" x2="1130" y2="260" stroke="#1A2338"/>
+  <text x="90" y="264" font-size="11" text-anchor="end" class="dim">75%</text>
+  <line x1="100" y1="190" x2="1130" y2="190" stroke="#1A2338"/>
+  <text x="90" y="194" font-size="11" text-anchor="end" class="dim">100%</text>
+  <line x1="100" y1="470" x2="100" y2="476" stroke="#263450"/>
+  <text x="100" y="494" font-size="11" text-anchor="middle" class="dim">0</text>
+  <line x1="306" y1="470" x2="306" y2="476" stroke="#263450"/>
+  <text x="306" y="494" font-size="11" text-anchor="middle" class="dim">10</text>
+  <line x1="512" y1="470" x2="512" y2="476" stroke="#263450"/>
+  <text x="512" y="494" font-size="11" text-anchor="middle" class="dim">20</text>
+  <line x1="718" y1="470" x2="718" y2="476" stroke="#263450"/>
+  <text x="718" y="494" font-size="11" text-anchor="middle" class="dim">30</text>
+  <line x1="924" y1="470" x2="924" y2="476" stroke="#263450"/>
+  <text x="924" y="494" font-size="11" text-anchor="middle" class="dim">40</text>
+  <line x1="1130" y1="470" x2="1130" y2="476" stroke="#263450"/>
+  <text x="1130" y="494" font-size="11" text-anchor="middle" class="dim">50</text>
+  <text x="615" y="518" font-size="12" text-anchor="middle" class="s">steps in the workflow</text>
+  <polyline points="100.0,190.0 120.6,192.8 141.2,195.6 161.8,198.3 182.4,201.0 203.0,203.7 223.6,206.4 244.2,209.0 264.8,211.6 285.4,214.2 306.0,216.8 326.6,219.3 347.2,221.8 367.8,224.3 388.4,226.8 409.0,229.2 429.6,231.6 450.2,234.0 470.8,236.3 491.4,238.7 512.0,241.0 532.6,243.3 553.2,245.5 573.8,247.8 594.4,250.0 615.0,252.2 635.6,254.4 656.2,256.5 676.8,258.7 697.4,260.8 718.0,262.9 738.6,265.0 759.2,267.0 779.8,269.0 800.4,271.0 821.0,273.0 841.6,275.0 862.2,277.0 882.8,278.9 903.4,280.8 924.0,282.7 944.6,284.6 965.2,286.4 985.8,288.3 1006.4,290.1 1027.0,291.9 1047.6,293.6 1068.2,295.4 1088.8,297.2 1109.4,298.9 1130.0,300.6" fill="none" stroke="#1887BD" stroke-width="2"/>
+  <polyline points="100.0,190.0 120.6,204.0 141.2,217.3 161.8,229.9 182.4,241.9 203.0,253.3 223.6,264.2 244.2,274.5 264.8,284.2 285.4,293.5 306.0,302.4 326.6,310.7 347.2,318.7 367.8,326.3 388.4,333.5 409.0,340.3 429.6,346.8 450.2,352.9 470.8,358.8 491.4,364.3 512.0,369.6 532.6,374.6 553.2,379.4 573.8,383.9 594.4,388.2 615.0,392.3 635.6,396.2 656.2,399.9 676.8,403.4 697.4,406.7 718.0,409.9 738.6,412.9 759.2,415.8 779.8,418.5 800.4,421.0 821.0,423.5 841.6,425.8 862.2,428.0 882.8,430.1 903.4,432.1 924.0,434.0 944.6,435.8 965.2,437.5 985.8,439.1 1006.4,440.7 1027.0,442.2 1047.6,443.5 1068.2,444.9 1088.8,446.1 1109.4,447.3 1130.0,448.5" fill="none" stroke="#C4811C" stroke-width="2"/>
+  <circle cx="1130.0" cy="300.6" r="5" fill="#1887BD" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="1118" y="287" font-size="14" font-weight="bold" text-anchor="end" class="t">&#8776;61% <tspan class="s" font-size="12">at step 50</tspan></text>
+  <circle cx="1130.0" cy="448.5" r="5" fill="#C4811C" stroke="#0A0F1C" stroke-width="2"/>
+  <text x="1118" y="434" font-size="14" font-weight="bold" text-anchor="end" class="t">&#8776;8% <tspan class="s" font-size="12">at step 50</tspan></text>
+  <text x="1176" y="540" font-size="10" text-anchor="end" class="dim">Arithmetic, not pessimism: 0.99&#8309;&#8304; &#8776; 0.61 &#183; 0.95&#8309;&#8304; &#8776; 0.08</text>
+</svg>
