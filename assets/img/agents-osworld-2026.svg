@@ -37,5 +37,5 @@
   <text x="324" y="371" font-size="13" text-anchor="end" class="s">Human baseline</text>
   <path d="M340,350 L904.8000000000001,350 Q908.8000000000001,350 908.8000000000001,354 L908.8000000000001,380 Q908.8000000000001,384 904.8000000000001,384 L340,384 Z" fill="#C4811C"/>
   <text x="921" y="372" font-size="15" font-weight="bold" class="t">72%</text>
-  <text x="1176" y="476" font-size="10" text-anchor="end" class="dim">Source: Stanford AI Index 2026 &#183; hai.stanford.edu</text>
+  <text x="1176" y="476" font-size="10" text-anchor="end" class="dim">Source: Stanford AI Index 2026 &#183; human baseline &#8776;72% on OSWorld</text>
 </svg>
