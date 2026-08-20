@@ -204,6 +204,9 @@
     Text: "#6e7681"
   };
 
+  /* Repos always shown first in the grid, whatever their star count */
+  var PINNED = ["titanic"];
+
   var grid = document.getElementById("projects-grid");
   if (grid) {
     fetch("https://api.github.com/users/dapiced/repos?per_page=100&sort=updated")
@@ -216,6 +219,12 @@
           return !r.fork && r.name !== "dapiced" && r.name !== "dapiced.github.io";
         });
         own.sort(function (a, b) {
+          var pa = PINNED.indexOf(a.name), pb = PINNED.indexOf(b.name);
+          if (pa !== -1 || pb !== -1) {
+            if (pa === -1) return 1;
+            if (pb === -1) return -1;
+            return pa - pb;
+          }
           var d = b.stargazers_count - a.stargazers_count;
           return d !== 0 ? d : (a.updated_at < b.updated_at ? 1 : -1);
         });
