@@ -36,8 +36,18 @@ aléatoire - plus un **gradient boosting histogramme écrit à la main** (bins d
 façon LightGBM, gains du second ordre, feuilles de Newton) et un **MLP maison** (init He
 seedée, Adam full-batch).
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ml-import-fr.png" alt="Écran d'entrée du ML Lab de LabML : zone de glisser-déposer pour fichiers CSV ou Excel, lus localement sans téléversement, à côté de cinq jeux de démonstration en un clic" width="1280" height="860" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Zéro friction à l'entrée : déposez un CSV ou un fichier Excel — lu directement dans le navigateur, rien n'est téléversé — ou lancez un jeu de démonstration en un clic.</figcaption>
+</figure>
+
 Le leaderboard n'est que le début. Ce que je voulais vraiment construire, c'est la partie
 que les démos sautent : *l'évaluation honnête*.
+
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ml-leaderboard-fr.png" alt="Leaderboard de LabML sur titanic : huit modèles classés par accuracy avec l'écart vs la baseline naïve, F1, ROC-AUC, log-loss, temps d'entraînement et latence d'inférence p50" width="1054" height="366" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Trente secondes après le chargement de titanic : huit modèles classés contre la baseline naïve, avec temps d'entraînement et latence d'inférence p50 pour chacun — l'observabilité de run incluse.</figcaption>
+</figure>
 
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/v20-uncertainty-fr.png" alt="Panneau d'incertitude de LabML : intervalles à 95 % en points-moustaches pour l'accuracy de chaque modèle, avec un verdict apparié indiquant que le gagnant bat la baseline dans 100 % des rééchantillonnages" width="1054" height="407" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
@@ -68,6 +78,11 @@ partielle, prédictions what-if en direct avec **explications de Shapley exactes
 barres somment à prédiction moins baseline), et une lecture en langage clair générée par
 règles - aucun LLM.
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ml-insights-fr.png" alt="Graphiques d'insight de LabML pour le meilleur modèle : matrice de confusion interactive, courbe ROC avec AUC, importance par permutation et dépendance partielle" width="1054" height="646" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Comprendre le gagnant : matrice de confusion, courbe ROC, importance par permutation, dépendance partielle — chaque graphique calculé from scratch dans le navigateur.</figcaption>
+</figure>
+
 Le labo ferme aussi les boucles d'un vrai workflow : **scorer un nouveau lot** avec une
 comparaison honnête test vs lot, **comparer deux runs côte à côte** (« mon nettoyage
 a-t-il servi ? » - avec verdicts d'incertitude croisés), **recherche d'hyperparamètres**
@@ -90,6 +105,11 @@ identifiantes, le tout résumé en un score déterministe sur 100 - et le répar
 détectées par un **isolation forest maison seedé**. La recette s'exporte en JSON et se
 rejoue sur le fichier du mois prochain.
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/data-studio-fr.png" alt="Data Studio de LabML sur le fichier démo sale : score de qualité passant de 48 à 92 sur 100 après la recette de nettoyage, avec un panneau de jointure pour enrichir le dataset depuis un second fichier" width="1280" height="900" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Le fichier démo sale passe de 48/100 à 92/100 via la recette rejouable — et un second fichier est à un clic d'une jointure gauche sur clé commune.</figcaption>
+</figure>
+
 Il couvre aussi les deux gestes quotidiens que la plupart des outils sautent : la
 **jointure gauche d'un second fichier** sur une clé commune (taux de correspondance,
 doublons et orphelines sont *nommés*, jamais silencieux) et un **contrôle de dérive** qui
@@ -107,6 +127,16 @@ Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
   dataset chargé - moyennes, comptages sous condition, top N, corrélations - via un
   interpréteur local déterministe, clairement étiqueté comme n'étant *pas* un modèle de
   langue. Quand il ne comprend pas, il le dit au lieu de deviner.
+
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ai-vision-fr.png" alt="Page Vision de LabML : un chat dessiné classifié localement par SqueezeNet, avec le top 5 des prédictions et une note honnête indiquant que le modèle ImageNet de 2012 ne connaît ni visages ni documents" width="1280" height="900" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">SqueezeNet, en WebAssembly, fait de son mieux sur un chat dessiné à la main — et le panneau dit clairement ce qu'un modèle 2012 à 1 000 classes peut et ne peut pas savoir. L'honnêteté plutôt que le théâtre.</figcaption>
+</figure>
+
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ai-chat-fr.png" alt="Assistant de données de LabML répondant à des questions en langage courant sur titanic : comptage des lignes où sex = female et moyenne d'âge par classe, calculés par un interpréteur local déterministe" width="1280" height="950" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">« Combien de lignes où sex est female ? » — 314, comptées localement par un interpréteur déterministe, honnêtement étiqueté comme n'étant pas un modèle de langue.</figcaption>
+</figure>
 
 ## Sous le capot
 
