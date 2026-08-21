@@ -120,17 +120,22 @@ nouvelles et disparues, verdict de sévérité. Un clic passe le résultat netto
 
 Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
 
-- **Vision** : classification d'images locale via ONNX Runtime Web (WebAssembly) -
-  déposez une photo ou utilisez la webcam ; le modèle (SqueezeNet, auto-hébergé) répond
-  avec ses 1 000 classes ImageNet et l'interface dit honnêtement ce qu'il ne sait pas.
+- **Vision** : analyse d'images locale via ONNX Runtime Web (WebAssembly) - déposez une
+  photo ou utilisez la webcam et trois réseaux auto-hébergés la lisent : un classificateur
+  EfficientNet-Lite4 nomme le sujet principal (1 000 classes ImageNet, 77,6 % top-1),
+  YOLOX-Nano dessine des boîtes autour des objets qu'il trouve (80 classes du quotidien)
+  et UltraFace localise les visages - « 1 visage détecté », compté en clair. Le calcul
+  des boîtes (décodage de grilles, IoU, suppression non maximale) est écrit à la main et
+  testé, et l'interface dit toujours honnêtement ce que les modèles ne peuvent pas
+  savoir : la détection dit où, pas qui.
 - **Assistant de données** : posez des questions en français ou en anglais sur votre
   dataset chargé - moyennes, comptages sous condition, top N, corrélations - via un
   interpréteur local déterministe, clairement étiqueté comme n'étant *pas* un modèle de
   langue. Quand il ne comprend pas, il le dit au lieu de deviner.
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/labml/ai-vision-fr.png" alt="Page Vision de LabML : un chat dessiné classifié localement par SqueezeNet, avec le top 5 des prédictions et une note honnête indiquant que le modèle ImageNet de 2012 ne connaît ni visages ni documents" width="1280" height="900" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
-  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">SqueezeNet, en WebAssembly, fait de son mieux sur un chat dessiné à la main — et le panneau dit clairement ce qu'un modèle 2012 à 1 000 classes peut et ne peut pas savoir. L'honnêteté plutôt que le théâtre.</figcaption>
+  <img src="/assets/img/labml/v23-vision-fr.jpg" alt="Vision 2 de LabML sur un portrait d'équipage NASA : boîtes sarcelle étiquetées personne autour de cinq astronautes, boîtes cuivre pointillées sur leurs visages, comptes indiquant 6 objets détectés et 5 visages détectés, le top 5 ImageNet et deux notes d'honnêteté" width="552" height="965" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Une photo d'équipage de la NASA, lue par trois réseaux dans le navigateur : une boîte par personne, une boîte pointillée par visage — « 6 objets · 5 visages détectés ». Le classificateur à étiquette unique peine sur une scène entière (« sewing machine » ?) et le panneau le dit : l'honnêteté plutôt que le théâtre, la détection dit où, pas qui.</figcaption>
 </figure>
 
 <figure style="margin: 2rem 0; text-align: center;">
@@ -143,12 +148,13 @@ Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
 La contrainte d'ingénierie qui a tout façonné : **si ça calcule, c'est écrit à la main et
 c'est déterministe**. Gradient boosting, MLP, k-means++, ACP par itération de puissance,
 Holt-Winters, isolation forest, PSI, valeurs de Shapley, intervalles bootstrap, courbes
-PR/ROC et de calibration - tout est implémenté from scratch en TypeScript, seedé de bout
-en bout, et testé unitairement contre des résultats connus. Tout ce qui est lourd tourne
+PR/ROC et de calibration, décodage des boîtes de détection (grilles, IoU, suppression
+non maximale) - tout est implémenté from scratch en TypeScript, seedé de bout en bout,
+et testé unitairement contre des résultats connus. Tout ce qui est lourd tourne
 dans des Web Workers derrière des protocoles de messages typés : l'interface ne bloque
 jamais.
 
-La barre de qualité est tenue en CI : 237 tests unitaires, 49 tests bout-en-bout
+La barre de qualité est tenue en CI : 248 tests unitaires, 50 tests bout-en-bout
 Playwright (dont un test PWA hors-ligne, un test webcam factice et des vérifications
 d'accessibilité WCAG par axe-core), TypeScript strict et budgets Lighthouse - la page
 `/ml` atteint ≈ 0,99 sur mobile en throttling réel grâce à des coquilles statiques
@@ -157,7 +163,7 @@ prérendues qui peignent avant l'arrivée du JavaScript.
 Et la promesse de confidentialité est architecturale, pas déclarative : une
 Content-Security-Policy stricte n'autorise aucun appel tiers, les liens de partage portent
 les métriques dans le *fragment* d'URL (que les navigateurs n'envoient jamais aux
-serveurs), et toute l'application - démos et modèle de vision compris - continue de
+serveurs), et toute l'application - démos et modèles de vision compris - continue de
 fonctionner câble réseau débranché.
 
 **Essayez : [app.dominicdapice.com](https://app.dominicdapice.com)** - chargez la démo
