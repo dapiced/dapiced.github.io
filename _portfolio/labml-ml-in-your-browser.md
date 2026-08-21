@@ -34,8 +34,18 @@ Bayes, decision tree, random forest - plus a **hand-written histogram gradient b
 (LightGBM-style quantile bins, second-order gains, Newton leaves) and a **hand-written MLP**
 (seeded He init, full-batch Adam).
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ml-import-en.png" alt="LabML's ML Lab entry screen: a drag-and-drop zone for CSV or Excel files, read locally with nothing uploaded, next to five one-click demo datasets" width="1280" height="860" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Zero friction in: drop a CSV or Excel file — read right in the browser, nothing uploaded — or hit one of the demo datasets and go.</figcaption>
+</figure>
+
 The leaderboard is only the beginning. What I really wanted to build is the part most demos
 skip: *honest evaluation*.
+
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ml-leaderboard-en.png" alt="LabML leaderboard on titanic: eight models ranked by accuracy with delta versus the naive baseline, F1, ROC-AUC, log-loss, training time and p50 inference latency" width="1054" height="366" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Thirty seconds after loading titanic: eight models ranked against the naive baseline, with training time and p50 inference latency for each — run observability included.</figcaption>
+</figure>
 
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/v20-uncertainty-en.png" alt="LabML uncertainty panel: dot-and-whisker 95% intervals for each model's accuracy, with a paired verdict stating the winner beats the baseline in 100% of resamples" width="1054" height="387" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
@@ -64,6 +74,11 @@ Understanding tools round it out: permutation importance, partial dependence, li
 predictions with **exact Shapley explanations** (the bars sum to prediction minus baseline),
 and a rule-generated plain-language read of every run - no LLM involved.
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ml-insights-en.png" alt="LabML insight charts for the winning model: interactive confusion matrix, ROC curve with AUC, permutation-importance bars and partial dependence plots" width="1054" height="646" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Understanding the winner: confusion matrix, ROC curve, permutation importance, partial dependence — every chart computed from scratch in the browser.</figcaption>
+</figure>
+
 The lab also closes the loops a real workflow needs: **score a new batch** with an honest
 test-vs-batch comparison, **compare two runs side by side** ("did my cleaning help?" -
 with cross-run uncertainty verdicts), **hyperparameter search** by seeded random search
@@ -84,6 +99,11 @@ impute, clamp outliers, force column types, expand dates, and drop multivariate 
 found by a hand-written, seeded **isolation forest**. The recipe exports as JSON and
 replays on next month's file.
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/data-studio-en.png" alt="LabML Data Studio on the dirty demo file: quality score improving from 48 to 92 out of 100 after the cleaning recipe, with a join panel to enrich the dataset from a second file" width="1280" height="900" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">The dirty demo file goes from 48/100 to 92/100 through the replayable recipe — and a second file is one click away from a left join on a shared key.</figcaption>
+</figure>
+
 It also covers the two everyday data gestures most tools skip: **left-joining a second
 file** on a shared key (match rate, duplicates and orphans are *named*, never silent) and
 a **drift check** that compares a new batch against the reference - schema diff, PSI per
@@ -101,6 +121,16 @@ Two smaller experiments in on-device AI, same privacy rules:
   averages, counts under a condition, top-N, correlations - answered by a deterministic
   local interpreter, clearly labeled as *not* a language model. When it does not
   understand, it says so instead of guessing.
+
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ai-vision-en.png" alt="LabML Vision page: a drawn cat sketch classified locally by SqueezeNet, with top-5 predictions and an honest note that the 2012 ImageNet model knows nothing about faces or documents" width="1280" height="900" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">SqueezeNet, in WebAssembly, does its best on a hand-drawn cat — and the panel says plainly what a 1,000-class 2012 model can and cannot know. Honesty over theater.</figcaption>
+</figure>
+
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/ai-chat-en.png" alt="LabML data assistant answering plain-language questions on titanic: a row count for sex = female and average age by passenger class, computed by a local deterministic interpreter" width="1280" height="950" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">"How many rows where sex is female?" — 314, counted locally by a deterministic interpreter that is honestly labeled as not a language model.</figcaption>
+</figure>
 
 ## Under the hood
 
