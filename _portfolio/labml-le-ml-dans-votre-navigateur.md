@@ -134,7 +134,7 @@ Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
   langue. Quand il ne comprend pas, il le dit au lieu de deviner.
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/labml/v23-vision-fr.jpg" alt="Vision 2 de LabML sur un portrait d'équipage NASA : boîtes sarcelle étiquetées personne autour de cinq astronautes, boîtes cuivre pointillées sur leurs visages, comptes indiquant 6 objets détectés et 5 visages détectés, le top 5 ImageNet et deux notes d'honnêteté" width="552" height="965" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <img src="/assets/img/labml/v23-detection-fr.jpg" alt="Vision 2 de LabML sur un portrait d'équipage NASA : boîtes sarcelle étiquetées personne autour de cinq astronautes, boîtes cuivre pointillées sur leurs visages, comptes indiquant 6 objets détectés et 5 visages détectés, le top 5 ImageNet et deux notes d'honnêteté" width="552" height="965" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Une photo d'équipage de la NASA, lue par trois réseaux dans le navigateur : une boîte par personne, une boîte pointillée par visage — « 6 objets · 5 visages détectés ». Le classificateur à étiquette unique peine sur une scène entière (« sewing machine » ?) et le panneau le dit : l'honnêteté plutôt que le théâtre, la détection dit où, pas qui.</figcaption>
 </figure>
 
