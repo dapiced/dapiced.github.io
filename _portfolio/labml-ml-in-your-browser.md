@@ -114,17 +114,21 @@ to the ML Lab.
 
 Two smaller experiments in on-device AI, same privacy rules:
 
-- **Vision**: image classification running locally through ONNX Runtime Web (WebAssembly)
-  - drop a photo or use the webcam; the model (SqueezeNet, self-hosted) answers with its
-  1,000 ImageNet classes and the UI honestly says what it does not know.
+- **Vision**: image analysis running locally through ONNX Runtime Web (WebAssembly) -
+  drop a photo or use the webcam and three self-hosted networks read it: an
+  EfficientNet-Lite4 classifier names the main subject (1,000 ImageNet classes, 77.6%
+  top-1), YOLOX-Nano draws boxes around the objects it finds (80 everyday classes) and
+  UltraFace locates faces - "1 face detected", counted in plain language. The box math
+  (grid decode, IoU, non-maximum suppression) is hand-written and unit-tested, and the
+  UI still says honestly what the models cannot know: detection says where, not who.
 - **Data assistant**: ask plain English or French questions about your loaded dataset -
   averages, counts under a condition, top-N, correlations - answered by a deterministic
   local interpreter, clearly labeled as *not* a language model. When it does not
   understand, it says so instead of guessing.
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/labml/ai-vision-en.png" alt="LabML Vision page: a drawn cat sketch classified locally by SqueezeNet, with top-5 predictions and an honest note that the 2012 ImageNet model knows nothing about faces or documents" width="1280" height="900" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
-  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">SqueezeNet, in WebAssembly, does its best on a hand-drawn cat — and the panel says plainly what a 1,000-class 2012 model can and cannot know. Honesty over theater.</figcaption>
+  <img src="/assets/img/labml/v23-vision-en.jpg" alt="LabML Vision 2 on a NASA crew portrait: teal boxes labeled person around five astronauts, dashed copper boxes on their faces, counts reading 6 objects detected and 5 faces detected, the ImageNet top-5 list and two honesty notes" width="552" height="949" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">A NASA crew photo, read by three networks in the browser: a box per person, a dashed box per face — "6 objects · 5 faces detected". The single-label classifier struggles with a whole scene ("sewing machine"?) and the panel says so: honesty over theater, detection says where, not who.</figcaption>
 </figure>
 
 <figure style="margin: 2rem 0; text-align: center;">
@@ -137,11 +141,12 @@ Two smaller experiments in on-device AI, same privacy rules:
 The engineering constraint that shaped everything: **if it computes, it was written by
 hand and it is deterministic**. Gradient boosting, MLP, k-means++, power-iteration PCA,
 Holt-Winters, isolation forest, PSI, Shapley values, bootstrap intervals, PR/ROC and
-calibration curves - all implemented from scratch in TypeScript, seeded end to end, and
-unit-tested against known results. Everything heavy runs in Web Workers behind typed
+calibration curves, detection box decoding (grids, IoU, non-maximum suppression) - all
+implemented from scratch in TypeScript, seeded end to end, and unit-tested against known
+results. Everything heavy runs in Web Workers behind typed
 message protocols, so the UI never blocks.
 
-The quality bar is enforced in CI: 237 unit tests, 49 Playwright end-to-end tests
+The quality bar is enforced in CI: 248 unit tests, 50 Playwright end-to-end tests
 (including an offline-PWA test, a fake-webcam test and axe-core WCAG accessibility
 checks), strict TypeScript, and Lighthouse budgets - the `/ml` page scores ≈ 0.99 on
 mobile under real throttling thanks to prerendered static shells that paint before
@@ -149,7 +154,7 @@ JavaScript arrives.
 
 And the privacy claim is architectural, not a promise: a strict Content-Security-Policy
 allows zero third-party calls, share links carry metrics in the URL *fragment* (which
-browsers never send to servers), and the whole app - demo datasets and vision model
+browsers never send to servers), and the whole app - demo datasets and vision models
 included - keeps working with the network cable pulled.
 
 **Try it: [app.dominicdapice.com](https://app.dominicdapice.com)** - load the titanic
