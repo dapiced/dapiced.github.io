@@ -127,7 +127,7 @@ Two smaller experiments in on-device AI, same privacy rules:
   understand, it says so instead of guessing.
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/labml/v23-vision-en.jpg" alt="LabML Vision 2 on a NASA crew portrait: teal boxes labeled person around five astronauts, dashed copper boxes on their faces, counts reading 6 objects detected and 5 faces detected, the ImageNet top-5 list and two honesty notes" width="552" height="949" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <img src="/assets/img/labml/v23-detection-en.jpg" alt="LabML Vision 2 on a NASA crew portrait: teal boxes labeled person around five astronauts, dashed copper boxes on their faces, counts reading 6 objects detected and 5 faces detected, the ImageNet top-5 list and two honesty notes" width="552" height="949" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">A NASA crew photo, read by three networks in the browser: a box per person, a dashed box per face — "6 objects · 5 faces detected". The single-label classifier struggles with a whole scene ("sewing machine"?) and the panel says so: honesty over theater, detection says where, not who.</figcaption>
 </figure>
 
