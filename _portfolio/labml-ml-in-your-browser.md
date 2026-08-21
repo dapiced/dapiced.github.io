@@ -1,7 +1,7 @@
 ---
 layout: portfolio
 title: "LabML - ML in Your Browser: a Complete Machine Learning Lab With No Backend"
-date: 2026-08-21 07:00:00 -0400
+date: 2026-08-21 01:00:00 -0400
 lang: en
 tags: [machine-learning, typescript, privacy, web-workers, react, pwa]
 description: >-
