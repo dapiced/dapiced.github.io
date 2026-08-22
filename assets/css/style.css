@@ -106,6 +106,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 }
 .nav-links a:hover { color: var(--lightblue); text-decoration: none; }
 .nav-gh { color: var(--cyan) !important; }
+.nav-labml { color: var(--gold) !important; }
 
 .nav-toggle {
   display: none;
@@ -267,6 +268,14 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   color: #fff;
   box-shadow: 0 4px 24px rgba(124, 58, 237, 0.4);
 }
+
+.btn-labml {
+  background: linear-gradient(90deg, #e3b341, #f2994a);
+  color: #0d0a04;
+  border: none;
+  box-shadow: 0 4px 24px rgba(227, 179, 65, 0.4);
+}
+.btn-labml:hover { color: #0d0a04; box-shadow: 0 6px 30px rgba(227, 179, 65, 0.6); }
 
 .hero-coords {
   margin-top: 3.2rem;
