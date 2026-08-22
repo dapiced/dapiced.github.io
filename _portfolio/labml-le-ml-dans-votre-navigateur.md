@@ -170,3 +170,5 @@ fonctionner câble réseau débranché.
 titanic, entraînez, et faites défiler : le leaderboard, les intervalles, l'analyse par
 segments et les outils de seuil racontent l'histoire honnête d'un modèle en une trentaine
 de secondes.
+
+**Code source : [github.com/dapiced/LabML](https://github.com/dapiced/LabML)**
