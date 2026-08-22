@@ -160,3 +160,5 @@ included - keeps working with the network cable pulled.
 **Try it: [app.dominicdapice.com](https://app.dominicdapice.com)** - load the titanic
 demo, train, and scroll: the leaderboard, the intervals, the segment analysis and the
 threshold tools tell one honest story about a model in about thirty seconds.
+
+**Source code: [github.com/dapiced/LabML](https://github.com/dapiced/LabML)**
