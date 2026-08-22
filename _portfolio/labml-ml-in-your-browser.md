@@ -8,7 +8,8 @@ description: >-
   LabML is a full tabular ML platform - data quality, training, evaluation, explanation,
   model reuse - that runs entirely in the browser: hand-written, seeded algorithms in Web
   Workers, no backend, no accounts, no uploads. Live at app.dominicdapice.com, with an ML
-  Lab, a Data Studio and an AI playground.
+  Lab, a Data Studio with in-browser analytical SQL, and an AI playground with on-device
+  vision and a local language model.
 translation_url: /portfolio/labml-le-ml-dans-votre-navigateur/
 translation_label: "🇫🇷 Lire cet article en français"
 image: /assets/img/labml/v20-uncertainty-en.png
@@ -89,6 +90,18 @@ groups it finds; a date column unlocks **Holt-Winters forecasting** validated by
 rolling-origin backtest. Runs persist locally (IndexedDB) with all their artifacts, and a
 dataset can opt in to persistence under an explicit 50 MB budget.
 
+Three later waves pushed it past demo scale. **Free-text columns** stopped being skipped:
+they enter the pipeline through a hand-written bilingual TF-IDF, fitted on the training
+split only, so the explanations speak in words - on the demo review file, *fast* and
+*excellent* push the prediction up, *refund* pulls it down. **Scale** was measured before
+it was engineered: a one-million-row file trains the whole zoo in about 130 seconds, and
+past 100,000 usable rows a seeded, stratified sample takes over - announced on the
+leaderboard, never silent, with every capped model still scored on the same full test
+set. And a **learning curve** answers the classic budget question - "would more data help
+this model?" - by retraining it on growing seeded fractions of the training split, with a
+confidence band and a plain-language verdict: still climbing, or flattened - work on
+features instead.
+
 ## The Data Studio - `/data`
 
 Real datasets are messy, so the lab has a dedicated repair shop. The Data Studio audits a
@@ -110,6 +123,15 @@ a **drift check** that compares a new batch against the reference - schema diff,
 column, new and vanished categories, severity verdict. One click hands the cleaned result
 to the ML Lab.
 
+The studio also carries a real analytical engine now: **SQL in the browser**, through
+DuckDB compiled to WebAssembly - joins, window functions, aggregations over the file you
+just dropped, plus any extra CSV, **Parquet** or JSON file attached in the same session,
+each exposed as a view named after the file. The file is queried as dropped, *before* the
+cleaning recipe, so every result stays traceable to a file you can reopen; a result
+exports to CSV or moves to the ML Lab in one click, and SQL errors show DuckDB's own
+message, which names the line and the token. No server involved - the engine itself is
+self-hosted and runs inside the tab.
+
 ## The AI Playground - `/ai`
 
 Two smaller experiments in on-device AI, same privacy rules:
@@ -122,9 +144,16 @@ Two smaller experiments in on-device AI, same privacy rules:
   (grid decode, IoU, non-maximum suppression) is hand-written and unit-tested, and the
   UI still says honestly what the models cannot know: detection says where, not who.
 - **Data assistant**: ask plain English or French questions about your loaded dataset -
-  averages, counts under a condition, top-N, correlations - answered by a deterministic
-  local interpreter, clearly labeled as *not* a language model. When it does not
-  understand, it says so instead of guessing.
+  averages, counts under a condition, top-N, correlations. A deterministic local
+  interpreter reads every question first: it can only name a column that exists and a
+  value that actually occurs in it, and when it does not understand, it says so instead
+  of guessing. On explicit consent, a **real language model** - Qwen3-0.6B, 355 MB,
+  Apache-2.0, self-hosted, running locally on WebGPU - steps in as a rescue for the
+  phrasings the interpreter gives up on. It never computes: it only translates the
+  question into a closed query grammar, the deterministic engine produces every number,
+  and a badge under each answer names which engine did the reading. Measured on six
+  reference questions over titanic, the pair now answers five - and the sixth failure is
+  recorded in the plan as a limit of a 0.6B model, not papered over.
 
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/v23-detection-en.jpg" alt="LabML Vision 2 on a NASA crew portrait: teal boxes labeled person around five astronauts, dashed copper boxes on their faces, counts reading 6 objects detected and 5 faces detected, the ImageNet top-5 list and two honesty notes" width="552" height="949" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
@@ -133,7 +162,7 @@ Two smaller experiments in on-device AI, same privacy rules:
 
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/ai-chat-en.png" alt="LabML data assistant answering plain-language questions on titanic: a row count for sex = female and average age by passenger class, computed by a local deterministic interpreter" width="1280" height="950" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
-  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">"How many rows where sex is female?" — 314, counted locally by a deterministic interpreter that is honestly labeled as not a language model.</figcaption>
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">"How many rows where sex is female?" — 314, counted locally by the deterministic interpreter that reads every question first; a local language model can be enabled, on explicit consent, to rescue the phrasings it gives up on.</figcaption>
 </figure>
 
 ## Under the hood
@@ -146,7 +175,14 @@ implemented from scratch in TypeScript, seeded end to end, and unit-tested again
 results. Everything heavy runs in Web Workers behind typed
 message protocols, so the UI never blocks.
 
-The quality bar is enforced in CI: 248 unit tests, 50 Playwright end-to-end tests
+Some constraints came from the host rather than the math. The deploy target refuses any
+single file over 25 MiB - so the 355 MB language model is fetched at deploy time and
+split into 24 MiB parts the browser glues back together, every part checked against
+pinned byte sizes (a mismatch fails the build, never the visitor), and DuckDB is pinned
+to the last version whose WebAssembly still fits under the limit. Measured, and written
+down in the plan, so the next upgrade re-measures instead of rediscovering.
+
+The quality bar is enforced in CI: 352 unit tests, 61 Playwright end-to-end tests
 (including an offline-PWA test, a fake-webcam test and axe-core WCAG accessibility
 checks), strict TypeScript, and Lighthouse budgets - the `/ml` page scores ≈ 0.99 on
 mobile under real throttling thanks to prerendered static shells that paint before
@@ -155,7 +191,11 @@ JavaScript arrives.
 And the privacy claim is architectural, not a promise: a strict Content-Security-Policy
 allows zero third-party calls, share links carry metrics in the URL *fragment* (which
 browsers never send to servers), and the whole app - demo datasets and vision models
-included - keeps working with the network cable pulled.
+included - keeps working with the network cable pulled. A dedicated
+**[/privacy](https://app.dominicdapice.com/privacy)** page goes one step further and
+hands the reader a four-step DevTools protocol to verify all of it without trusting a
+word of it - and the policy it quotes is pinned to the actually-served header by a unit
+test, so the page cannot claim a protection the site quietly dropped.
 
 **Try it: [app.dominicdapice.com](https://app.dominicdapice.com)** - load the titanic
 demo, train, and scroll: the leaderboard, the intervals, the segment analysis and the

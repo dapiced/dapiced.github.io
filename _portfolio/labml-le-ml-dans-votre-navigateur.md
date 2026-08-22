@@ -9,7 +9,8 @@ description: >-
   évaluation, explication, réutilisation de modèles - qui tourne entièrement dans le
   navigateur : algorithmes écrits à la main et seedés dans des Web Workers, sans backend,
   sans compte, sans upload. En ligne sur app.dominicdapice.com : un ML Lab, un Data Studio
-  et un terrain de jeu IA.
+  avec SQL analytique dans le navigateur, et un terrain de jeu IA avec vision sur
+  l'appareil et modèle de langue local.
 translation_url: /portfolio/labml-ml-in-your-browser/
 translation_label: "🇬🇧 Read this article in English"
 image: /assets/img/labml/v20-uncertainty-fr.png
@@ -94,6 +95,20 @@ colonne de dates déverrouille des **prévisions Holt-Winters** validées par ba
 origine glissante. Les runs persistent localement (IndexedDB) avec tous leurs artefacts,
 et un dataset peut être conservé sur consentement, sous un budget explicite de 50 Mo.
 
+Trois vagues ultérieures l'ont poussé au-delà de l'échelle démo. Les **colonnes de texte
+libre** ne sont plus sautées : elles entrent dans le pipeline via un TF-IDF bilingue écrit
+à la main, ajusté sur le seul split d'entraînement, et les explications parlent en mots -
+sur le fichier démo d'avis clients, *fast* et *excellent* poussent la prédiction vers le
+haut, *refund* la tire vers le bas. L'**échelle** a été mesurée avant d'être construite :
+un fichier d'un million de lignes entraîne tout le zoo en environ 130 secondes, et
+au-delà de 100 000 lignes utilisables un échantillon seedé et stratifié prend le relais -
+annoncé sur le leaderboard, jamais silencieux, chaque modèle plafonné restant mesuré sur
+le même jeu de test complet. Et une **courbe d'apprentissage** répond à la question
+budgétaire classique - « est-ce que plus de données aideraient ce modèle ? » - en le
+réentraînant sur des fractions seedées croissantes du split d'entraînement, avec bande de
+confiance et verdict en clair : la courbe grimpe encore, ou elle a plafonné - travaillez
+plutôt les variables.
+
 ## Le Data Studio - `/data`
 
 Les vrais jeux de données sont sales, alors le labo a son atelier de réparation. Le Data
@@ -116,6 +131,16 @@ doublons et orphelines sont *nommés*, jamais silencieux) et un **contrôle de d
 compare un nouveau lot à la référence - diff de schéma, PSI par colonne, catégories
 nouvelles et disparues, verdict de sévérité. Un clic passe le résultat nettoyé au ML Lab.
 
+Le studio embarque désormais un vrai moteur analytique : du **SQL dans le navigateur**,
+via DuckDB compilé en WebAssembly - jointures, fonctions de fenêtrage, agrégations sur le
+fichier que vous venez de déposer, plus tout CSV, **Parquet** ou JSON attaché dans la
+même session, chacun exposé comme une vue nommée d'après le fichier. Le fichier est
+interrogé tel que déposé, *avant* la recette de nettoyage, pour que chaque résultat reste
+traçable vers un fichier qu'on peut rouvrir ; un résultat s'exporte en CSV ou passe au
+ML Lab en un clic, et les erreurs SQL affichent le message de DuckDB lui-même, qui nomme
+la ligne et le symbole fautifs. Aucun serveur : le moteur lui-même est auto-hébergé et
+tourne dans l'onglet.
+
 ## Le terrain de jeu IA - `/ai`
 
 Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
@@ -129,9 +154,17 @@ Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
   testé, et l'interface dit toujours honnêtement ce que les modèles ne peuvent pas
   savoir : la détection dit où, pas qui.
 - **Assistant de données** : posez des questions en français ou en anglais sur votre
-  dataset chargé - moyennes, comptages sous condition, top N, corrélations - via un
-  interpréteur local déterministe, clairement étiqueté comme n'étant *pas* un modèle de
-  langue. Quand il ne comprend pas, il le dit au lieu de deviner.
+  dataset chargé - moyennes, comptages sous condition, top N, corrélations. Un
+  interpréteur local déterministe lit chaque question en premier : il ne peut nommer
+  qu'une colonne qui existe et une valeur qui s'y trouve vraiment, et quand il ne
+  comprend pas, il le dit au lieu de deviner. Sur consentement explicite, un **vrai
+  modèle de langue** - Qwen3-0.6B, 355 Mo, Apache-2.0, auto-hébergé, exécuté localement
+  sur WebGPU - prend le relais pour les formulations que l'interpréteur abandonne. Il ne
+  calcule jamais : il traduit seulement la question vers une grammaire de requêtes
+  fermée, le moteur déterministe produit chaque chiffre, et un badge sous chaque réponse
+  nomme le moteur qui a fait la lecture. Mesuré sur six questions de référence sur
+  titanic, le duo en réussit maintenant cinq - et le sixième échec est consigné au plan
+  comme une limite d'un modèle de 0,6 milliard de paramètres, pas maquillé.
 
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/v23-detection-fr.jpg" alt="Vision 2 de LabML sur un portrait d'équipage NASA : boîtes sarcelle étiquetées personne autour de cinq astronautes, boîtes cuivre pointillées sur leurs visages, comptes indiquant 6 objets détectés et 5 visages détectés, le top 5 ImageNet et deux notes d'honnêteté" width="552" height="965" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
@@ -140,7 +173,7 @@ Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
 
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/ai-chat-fr.png" alt="Assistant de données de LabML répondant à des questions en langage courant sur titanic : comptage des lignes où sex = female et moyenne d'âge par classe, calculés par un interpréteur local déterministe" width="1280" height="950" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
-  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">« Combien de lignes où sex est female ? » — 314, comptées localement par un interpréteur déterministe, honnêtement étiqueté comme n'étant pas un modèle de langue.</figcaption>
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">« Combien de lignes où sex est female ? » — 314, comptées localement par l'interpréteur déterministe qui lit chaque question en premier ; un modèle de langue local peut être activé, sur consentement explicite, pour rattraper les formulations qu'il abandonne.</figcaption>
 </figure>
 
 ## Sous le capot
@@ -154,7 +187,15 @@ et testé unitairement contre des résultats connus. Tout ce qui est lourd tourn
 dans des Web Workers derrière des protocoles de messages typés : l'interface ne bloque
 jamais.
 
-La barre de qualité est tenue en CI : 248 tests unitaires, 50 tests bout-en-bout
+Certaines contraintes sont venues de l'hébergeur, pas des maths. La cible de déploiement
+refuse tout fichier de plus de 25 Mio - alors le modèle de langue de 355 Mo est récupéré
+au moment du déploiement et découpé en morceaux de 24 Mio que le navigateur recolle,
+chaque morceau vérifié contre des tailles d'octets épinglées (un écart fait échouer le
+build, jamais le visiteur), et DuckDB est épinglé à la dernière version dont le
+WebAssembly passe encore sous la limite. Mesuré, et consigné au plan, pour que la
+prochaine mise à niveau re-mesure au lieu de redécouvrir.
+
+La barre de qualité est tenue en CI : 352 tests unitaires, 61 tests bout-en-bout
 Playwright (dont un test PWA hors-ligne, un test webcam factice et des vérifications
 d'accessibilité WCAG par axe-core), TypeScript strict et budgets Lighthouse - la page
 `/ml` atteint ≈ 0,99 sur mobile en throttling réel grâce à des coquilles statiques
@@ -164,7 +205,12 @@ Et la promesse de confidentialité est architecturale, pas déclarative : une
 Content-Security-Policy stricte n'autorise aucun appel tiers, les liens de partage portent
 les métriques dans le *fragment* d'URL (que les navigateurs n'envoient jamais aux
 serveurs), et toute l'application - démos et modèles de vision compris - continue de
-fonctionner câble réseau débranché.
+fonctionner câble réseau débranché. Une page
+**[/privacy](https://app.dominicdapice.com/privacy)** dédiée va un cran plus loin et
+tend au lecteur un protocole DevTools en quatre étapes pour tout vérifier sans croire un
+mot de la promesse - et la politique qu'elle cite est épinglée à l'en-tête réellement
+servi par un test unitaire : la page ne peut pas revendiquer une protection que le site
+aurait abandonnée en silence.
 
 **Essayez : [app.dominicdapice.com](https://app.dominicdapice.com)** - chargez la démo
 titanic, entraînez, et faites défiler : le leaderboard, les intervalles, l'analyse par
