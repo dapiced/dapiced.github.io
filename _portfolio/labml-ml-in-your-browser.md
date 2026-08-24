@@ -35,6 +35,16 @@ Bayes, decision tree, random forest - plus a **hand-written histogram gradient b
 (LightGBM-style quantile bins, second-order gains, Newton leaves) and a **hand-written MLP**
 (seeded He init, full-batch Adam).
 
+Rather than describe it, here is the whole loop running, unedited:
+
+<video controls preload="metadata" width="100%"
+       poster="/assets/img/labml/ml-lab-run-poster.webp">
+  <source src="/assets/videos/labml-ml-lab-run.webm" type="video/webm">
+  Your browser doesn't support HTML5 video -
+  <a href="/assets/videos/labml-ml-lab-run.webm">download the clip</a>.
+</video>
+*Thirty-seven seconds, no cuts: `titanic.csv` dropped, `survived` picked, the `alive` column caught as target leakage and excluded on its own, eight model families and an ensemble trained in the browser, then the leaderboard, the per-segment failure analysis and the explanations. Nothing is uploaded — open the network tab and watch it stay quiet.*
+
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/ml-import-en.png" alt="LabML's ML Lab entry screen: a drag-and-drop zone for CSV or Excel files, read locally with nothing uploaded, next to five one-click demo datasets" width="1280" height="860" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Zero friction in: drop a CSV or Excel file — read right in the browser, nothing uploaded — or hit one of the demo datasets and go.</figcaption>
