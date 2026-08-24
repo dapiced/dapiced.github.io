@@ -142,6 +142,11 @@ exports to CSV or moves to the ML Lab in one click, and SQL errors show DuckDB's
 message, which names the line and the token. No server involved - the engine itself is
 self-hosted and runs inside the tab.
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/data-sql-en.png" alt="LabML SQL console: a GROUP BY query over the loaded cafe-sales file, run by DuckDB in the browser, returning five rows with product, order count and average unit price" width="1120" height="642" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">A real <code>GROUP BY</code>, answered by DuckDB inside the tab. The file is queried as dropped, before the cleaning recipe — which is why both spellings of <code>Latte</code> are still there, and why the average one of them carries is the outlier the studio flagged.</figcaption>
+</figure>
+
 ## The AI Playground - `/ai`
 
 Two smaller experiments in on-device AI, same privacy rules:
