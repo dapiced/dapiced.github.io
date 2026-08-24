@@ -187,7 +187,7 @@ Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
 </figure>
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/labml/ai-chat-fr.png" alt="Assistant de données de LabML sur titanic : un comptage des lignes où sex = female et une moyenne d'âge par classe, chacun signé « répondu par l'interpréteur déterministe », puis une question sur les icebergs qu'il refuse au lieu d'y répondre" width="1280" height="1181" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <img src="/assets/img/labml/ai-chat-refusal-fr.png" alt="Assistant de données de LabML sur titanic : un comptage des lignes où sex = female et une moyenne d'âge par classe, chacun signé « répondu par l'interpréteur déterministe », puis une question sur les icebergs qu'il refuse au lieu d'y répondre" width="1280" height="1181" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Trois questions, et c'est la troisième qui compte : 314 lignes comptées, une moyenne par classe calculée — chacune signée du moteur qui l'a produite — puis une demande de blague que l'interpréteur refuse tout simplement. « Je préfère le dire plutôt que d'inventer une réponse » n'est pas un message de repli : c'est le parti pris.</figcaption>
 </figure>
 

@@ -176,7 +176,7 @@ Two smaller experiments in on-device AI, same privacy rules:
 </figure>
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/labml/ai-chat-en.png" alt="LabML data assistant on titanic: a row count for sex = female and an average age by passenger class, each badged as answered by the deterministic interpreter, then a question about icebergs it refuses rather than answers" width="1280" height="1133" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <img src="/assets/img/labml/ai-chat-refusal-en.png" alt="LabML data assistant on titanic: a row count for sex = female and an average age by passenger class, each badged as answered by the deterministic interpreter, then a question about icebergs it refuses rather than answers" width="1280" height="1133" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Three questions, and the third is the one that matters: 314 rows counted, an average per class computed — each with the engine that produced it named underneath — and then a joke request the interpreter simply refuses. "I would rather say so than invent an answer" is not a fallback message; it is the design.</figcaption>
 </figure>
 
