@@ -151,6 +151,11 @@ ML Lab en un clic, et les erreurs SQL affichent le message de DuckDB lui-même, 
 la ligne et le symbole fautifs. Aucun serveur : le moteur lui-même est auto-hébergé et
 tourne dans l'onglet.
 
+<figure style="margin: 2rem 0; text-align: center;">
+  <img src="/assets/img/labml/data-sql-fr.png" alt="Console SQL de LabML : une requête GROUP BY sur le fichier cafe-sales chargé, exécutée par DuckDB dans le navigateur, renvoyant cinq lignes avec le produit, le nombre de commandes et le prix unitaire moyen" width="1120" height="642" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
+  <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Un vrai <code>GROUP BY</code>, calculé par DuckDB dans l'onglet. Le fichier est interrogé tel que déposé, avant la recette : c'est pourquoi les deux orthographes de <code>Latte</code> y sont encore, et pourquoi la moyenne de l'une d'elles porte la valeur aberrante que le studio a signalée.</figcaption>
+</figure>
+
 ## Le terrain de jeu IA - `/ai`
 
 Deux expériences d'IA sur l'appareil, mêmes règles de confidentialité :
