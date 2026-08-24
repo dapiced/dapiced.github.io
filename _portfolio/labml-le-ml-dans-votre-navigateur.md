@@ -37,6 +37,16 @@ aléatoire - plus un **gradient boosting histogramme écrit à la main** (bins d
 façon LightGBM, gains du second ordre, feuilles de Newton) et un **MLP maison** (init He
 seedée, Adam full-batch).
 
+Plutôt que de le décrire, voici la boucle complète qui tourne, sans montage :
+
+<video controls preload="metadata" width="100%"
+       poster="/assets/img/labml/ml-lab-run-poster.webp">
+  <source src="/assets/videos/labml-ml-lab-run.webm" type="video/webm">
+  Votre navigateur ne lit pas la vidéo HTML5 —
+  <a href="/assets/videos/labml-ml-lab-run.webm">télécharger le clip</a>.
+</video>
+*Trente-sept secondes, sans coupe : `titanic.csv` déposé, `survived` choisi, la colonne `alive` repérée comme fuite de cible et exclue toute seule, huit familles de modèles plus un ensemble entraînés dans le navigateur, puis le leaderboard, l'analyse par segments et les explications. Rien n'est téléversé — ouvrez l'onglet Réseau et regardez-le rester muet.*
+
 <figure style="margin: 2rem 0; text-align: center;">
   <img src="/assets/img/labml/ml-import-fr.png" alt="Écran d'entrée du ML Lab de LabML : zone de glisser-déposer pour fichiers CSV ou Excel, lus localement sans téléversement, à côté de cinq jeux de démonstration en un clic" width="1280" height="860" loading="lazy" style="width: 100%; height: auto; border-radius: 12px;" />
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Zéro friction à l'entrée : déposez un CSV ou un fichier Excel — lu directement dans le navigateur, rien n'est téléversé — ou lancez un jeu de démonstration en un clic.</figcaption>
