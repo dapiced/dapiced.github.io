@@ -22,6 +22,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   cosmic-daily:
@@ -129,3 +130,27 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --squash --delete-branch
+
+      - name: Report failure by email (via GitHub issue notification)
+        # Opens an issue with error details whenever any prior step in this
+        # job failed (fetch error, rejected rights, validation failure,
+        # failed auto-merge, etc.). GitHub emails watchers of this repo when
+        # a new issue is created — check github.com/settings/notifications
+        # to confirm email delivery is enabled for "Issues".
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          log_tail="$(tail -n 60 /tmp/cosmic-daily.log 2>/dev/null || echo 'Aucun log cosmic-daily disponible.')"
+          pr_ref="${{ steps.create-pr.outputs.pull-request-number && format('#{0}', steps.create-pr.outputs.pull-request-number) || 'aucune' }}"
+          body="$(printf '%s\n\n- Date ciblee : `%s`\n- Declencheur : `%s`\n- Execution : %s\n- PR creee : %s\n\nDernieres lignes du log :\n```\n%s\n```\n' \
+            "Le workflow Cosmic Daily a echoue et n'a pas ete publie." \
+            "${{ steps.target.outputs.value }}" \
+            "${{ github.event_name }}" \
+            "$run_url" \
+            "$pr_ref" \
+            "$log_tail")"
+          gh issue create \
+            --title "Cosmic Daily: echec le ${{ steps.target.outputs.value }} (run ${{ github.run_id }})" \
+            --body "$body" || echo "Failed to open failure issue; see run logs: $run_url"
