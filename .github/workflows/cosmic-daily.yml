@@ -58,7 +58,7 @@ jobs:
         shell: bash
         run: |
           # Manual runs use the publish input; scheduled runs always publish
-          # (i.e. generate + open a PR for review, never auto-merge).
+          # (i.e. generate, open a PR, and auto-merge it once validated).
           if [ "${{ github.event_name }}" = "schedule" ]; then
             echo "publish=true" >> "$GITHUB_OUTPUT"
           else
