@@ -90,11 +90,6 @@ def generate(date_value: str | None = None) -> int:
         _emit_github_output(apod_date=apod.date, result="unsupported_media", post_path="", image_path="")
         print(decision.reason)
         return EXIT_ERROR
-    if decision.status == "review_required":
-        _emit_github_output(apod_date=apod.date, result="review_required", post_path="", image_path="")
-        print(decision.reason)
-        return EXIT_ERROR
-
     duplicates = repo.find_duplicates(apod.date, apod.apod_url)
     if duplicates:
         _emit_github_output(apod_date=apod.date, result="duplicate", post_path="", image_path="")

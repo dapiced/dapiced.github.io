@@ -31,5 +31,5 @@ The default mode is `preview`.
 - `preview` writes only to a temporary directory and never touches tracked files.
 - `generate` creates a Jekyll post and the corresponding WebP image when the media is eligible.
 - `check` validates front matter and image references for a generated article.
-- Video entries and external-copyright cases are treated as human review only.
+- Video entries are treated as human review only.
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.
