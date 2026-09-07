@@ -14,13 +14,15 @@ on:
         type: boolean
   schedule:
     # 12:00 UTC (08:00 EDT / 07:00 EST) — APOD for the current US day is
-    # already published by then. Always opens a PR for human review; it
-    # never auto-merges.
+    # already published by then. Runs generate the article, validate it
+    # (rights, duplicates, front matter, image), open a PR, then squash-merge
+    # it automatically once validation has passed.
     - cron: "0 12 * * *"
 
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   cosmic-daily:
@@ -93,6 +95,7 @@ jobs:
 
       - name: Create pull request
         if: ${{ steps.mode.outputs.publish == 'true' && steps.apod.outputs.post_path != '' }}
+        id: create-pr
         uses: peter-evans/create-pull-request@v6
         with:
           branch: "cosmic-daily/${{ steps.target.outputs.value }}"
@@ -101,7 +104,53 @@ jobs:
             Automated APOD article for ${{ steps.target.outputs.value }}.
 
             - Generated from NASA APOD data
-            - Validated with the local checker
-            - Preview-only runs remain available through workflow dispatch
+            - Validated with the local checker (rights, duplicates, front matter, image)
+            - This PR is auto-merged once validation passes; no manual approval step
           commit-message: "Add Cosmic Daily APOD post for ${{ steps.target.outputs.value }}"
           delete-branch: true
+
+      - name: Request Copilot review
+        # Best-effort audit trail only: Copilot code review just leaves
+        # comments, it never gates the merge below.
+        if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr edit "${{ steps.create-pr.outputs.pull-request-number }}" --add-reviewer Copilot
+
+      - name: Auto-merge validated post
+        # The real safety gate is the "Validate generated post" step above:
+        # rights policy, duplicate detection, front matter/tags, and image
+        # presence must all pass before this step is even reached (the job
+        # stops at the first failed step). Once that passes, merge without
+        # waiting on a human.
+        if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --squash --delete-branch
+
+      - name: Report failure by email (via GitHub issue notification)
+        # Opens an issue with error details whenever any prior step in this
+        # job failed (fetch error, rejected rights, validation failure,
+        # failed auto-merge, etc.). GitHub emails watchers of this repo when
+        # a new issue is created — check github.com/settings/notifications
+        # to confirm email delivery is enabled for "Issues".
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          log_tail="$(tail -n 60 /tmp/cosmic-daily.log 2>/dev/null || echo 'Aucun log cosmic-daily disponible.')"
+          pr_ref="${{ steps.create-pr.outputs.pull-request-number && format('#{0}', steps.create-pr.outputs.pull-request-number) || 'aucune' }}"
+          body="$(printf '%s\n\n- Date ciblee : `%s`\n- Declencheur : `%s`\n- Execution : %s\n- PR creee : %s\n\nDernieres lignes du log :\n```\n%s\n```\n' \
+            "Le workflow Cosmic Daily a echoue et n'a pas ete publie." \
+            "${{ steps.target.outputs.value }}" \
+            "${{ github.event_name }}" \
+            "$run_url" \
+            "$pr_ref" \
+            "$log_tail")"
+          gh issue create \
+            --title "Cosmic Daily: echec le ${{ steps.target.outputs.value }} (run ${{ github.run_id }})" \
+            --body "$body" || echo "Failed to open failure issue; see run logs: $run_url"
