@@ -12,6 +12,11 @@ on:
         required: true
         default: false
         type: boolean
+  schedule:
+    # 12:00 UTC (08:00 EDT / 07:00 EST) — APOD for the current US day is
+    # already published by then. Always opens a PR for human review; it
+    # never auto-merges.
+    - cron: "0 12 * * *"
 
 permissions:
   contents: write
@@ -46,6 +51,18 @@ jobs:
           fi
           echo "value=$target" >> "$GITHUB_OUTPUT"
 
+      - name: Resolve publish flag
+        id: mode
+        shell: bash
+        run: |
+          # Manual runs use the publish input; scheduled runs always publish
+          # (i.e. generate + open a PR for review, never auto-merge).
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=${{ inputs.publish }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Preview or generate APOD content
         id: apod
         if: always()
@@ -55,7 +72,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ inputs.publish }}" = "true" ]; then
+          if [ "${{ steps.mode.outputs.publish }}" = "true" ]; then
             python -m cosmic_daily generate --date "${{ steps.target.outputs.value }}" | tee /tmp/cosmic-daily.log
           else
             python -m cosmic_daily preview --date "${{ steps.target.outputs.value }}" | tee /tmp/cosmic-daily.log
@@ -67,7 +84,7 @@ jobs:
           fi
 
       - name: Validate generated post
-        if: ${{ inputs.publish == true && steps.apod.outputs.post_path != '' }}
+        if: ${{ steps.mode.outputs.publish == 'true' && steps.apod.outputs.post_path != '' }}
         working-directory: tools/cosmic-daily
         shell: bash
         run: |
@@ -75,7 +92,7 @@ jobs:
           python -m cosmic_daily check --post-path "${{ steps.apod.outputs.post_path }}"
 
       - name: Create pull request
-        if: ${{ inputs.publish == true && steps.apod.outputs.post_path != '' }}
+        if: ${{ steps.mode.outputs.publish == 'true' && steps.apod.outputs.post_path != '' }}
         uses: peter-evans/create-pull-request@v6
         with:
           branch: "cosmic-daily/${{ steps.target.outputs.value }}"
