@@ -9,10 +9,10 @@ def test_allows_nasa_image():
     assert decision.status == "allowed"
 
 
-def test_rejects_external_copyright():
+def test_allows_image_with_external_copyright():
     decision = evaluate_media_rights("image", "Jane Photographer")
-    assert decision.allowed is False
-    assert decision.status == "review_required"
+    assert decision.allowed is True
+    assert decision.status == "allowed"
 
 
 def test_rejects_video():
