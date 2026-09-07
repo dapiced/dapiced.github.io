@@ -14,8 +14,9 @@ on:
         type: boolean
   schedule:
     # 12:00 UTC (08:00 EDT / 07:00 EST) — APOD for the current US day is
-    # already published by then. Always opens a PR for human review; it
-    # never auto-merges.
+    # already published by then. Runs generate the article, validate it
+    # (rights, duplicates, front matter, image), open a PR, then squash-merge
+    # it automatically once validation has passed.
     - cron: "0 12 * * *"
 
 permissions:
@@ -102,18 +103,29 @@ jobs:
             Automated APOD article for ${{ steps.target.outputs.value }}.
 
             - Generated from NASA APOD data
-            - Validated with the local checker
-            - Preview-only runs remain available through workflow dispatch
+            - Validated with the local checker (rights, duplicates, front matter, image)
+            - This PR is auto-merged once validation passes; no manual approval step
           commit-message: "Add Cosmic Daily APOD post for ${{ steps.target.outputs.value }}"
           delete-branch: true
 
       - name: Request Copilot review
-        # Best-effort only: Copilot code review must be enabled for this
-        # repo/org, and it never auto-approves or merges — a human still
-        # decides whether to merge the daily post.
+        # Best-effort audit trail only: Copilot code review just leaves
+        # comments, it never gates the merge below.
         if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr edit "${{ steps.create-pr.outputs.pull-request-number }}" --add-reviewer Copilot
+
+      - name: Auto-merge validated post
+        # The real safety gate is the "Validate generated post" step above:
+        # rights policy, duplicate detection, front matter/tags, and image
+        # presence must all pass before this step is even reached (the job
+        # stops at the first failed step). Once that passes, merge without
+        # waiting on a human.
+        if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --squash --delete-branch
