@@ -93,6 +93,7 @@ jobs:
 
       - name: Create pull request
         if: ${{ steps.mode.outputs.publish == 'true' && steps.apod.outputs.post_path != '' }}
+        id: create-pr
         uses: peter-evans/create-pull-request@v6
         with:
           branch: "cosmic-daily/${{ steps.target.outputs.value }}"
@@ -105,3 +106,14 @@ jobs:
             - Preview-only runs remain available through workflow dispatch
           commit-message: "Add Cosmic Daily APOD post for ${{ steps.target.outputs.value }}"
           delete-branch: true
+
+      - name: Request Copilot review
+        # Best-effort only: Copilot code review must be enabled for this
+        # repo/org, and it never auto-approves or merges — a human still
+        # decides whether to merge the daily post.
+        if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr edit "${{ steps.create-pr.outputs.pull-request-number }}" --add-reviewer Copilot
