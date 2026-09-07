@@ -1,0 +1,90 @@
+name: Cosmic Daily
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: APOD date to process (YYYY-MM-DD). Leave blank for today.
+        required: false
+        default: ""
+      publish:
+        description: Create a PR for the generated post instead of previewing only.
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  cosmic-daily:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Cosmic Daily
+        working-directory: tools/cosmic-daily
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev]
+
+      - name: Resolve target date
+        id: target
+        shell: bash
+        run: |
+          target="${{ inputs.date }}"
+          if [ -z "$target" ]; then
+            target="$(date -u +%F)"
+          fi
+          echo "value=$target" >> "$GITHUB_OUTPUT"
+
+      - name: Preview or generate APOD content
+        id: apod
+        if: always()
+        working-directory: tools/cosmic-daily
+        env:
+          NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ inputs.publish }}" = "true" ]; then
+            python -m cosmic_daily generate --date "${{ steps.target.outputs.value }}" | tee /tmp/cosmic-daily.log
+          else
+            python -m cosmic_daily preview --date "${{ steps.target.outputs.value }}" | tee /tmp/cosmic-daily.log
+          fi
+
+          if grep -q "Generated post:" /tmp/cosmic-daily.log; then
+            post_path="$(grep 'Generated post:' /tmp/cosmic-daily.log | sed 's#.*Generated post: ##')"
+            echo "post_path=$post_path" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate generated post
+        if: ${{ inputs.publish == true && steps.apod.outputs.post_path != '' }}
+        working-directory: tools/cosmic-daily
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m cosmic_daily check --post-path "${{ steps.apod.outputs.post_path }}"
+
+      - name: Create pull request
+        if: ${{ inputs.publish == true && steps.apod.outputs.post_path != '' }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: "cosmic-daily/${{ steps.target.outputs.value }}"
+          title: "Cosmic Daily: ${{ steps.target.outputs.value }}"
+          body: |
+            Automated APOD article for ${{ steps.target.outputs.value }}.
+
+            - Generated from NASA APOD data
+            - Validated with the local checker
+            - Preview-only runs remain available through workflow dispatch
+          commit-message: "Add Cosmic Daily APOD post for ${{ steps.target.outputs.value }}"
+          delete-branch: true
