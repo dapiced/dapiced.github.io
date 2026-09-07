@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import time
 from dataclasses import dataclass
 from datetime import date
 from typing import Any, Dict, Optional
@@ -10,6 +11,11 @@ import requests
 
 
 APOD_ENDPOINT = "https://api.nasa.gov/planetary/apod"
+# DEMO_KEY is a shared, rate-limited key; requests can be slow under load, so
+# use a generous read timeout and retry a couple of times before giving up.
+REQUEST_TIMEOUT = (10, 45)
+MAX_ATTEMPTS = 3
+RETRY_BACKOFF_SECONDS = 5
 
 
 @dataclass
@@ -51,15 +57,25 @@ def fetch_apod(day: str | date | None = None, api_key: str | None = None) -> APO
     target_day = day.isoformat() if isinstance(day, date) else (str(day) if day else date.today().isoformat())
     configured_key = api_key or os.getenv("NASA_API_KEY") or "DEMO_KEY"
 
-    try:
-        response = requests.get(
-            APOD_ENDPOINT,
-            params={"api_key": configured_key, "date": target_day},
-            timeout=20,
-            allow_redirects=False,
-        )
-    except requests.RequestException as exc:
-        raise RuntimeError(f"Failed to fetch APOD for {target_day}: {exc}") from exc
+    response = None
+    last_error: requests.RequestException | None = None
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            response = requests.get(
+                APOD_ENDPOINT,
+                params={"api_key": configured_key, "date": target_day},
+                timeout=REQUEST_TIMEOUT,
+                allow_redirects=False,
+            )
+            break
+        except requests.RequestException as exc:
+            last_error = exc
+            if attempt < MAX_ATTEMPTS:
+                time.sleep(RETRY_BACKOFF_SECONDS * attempt)
+    if response is None:
+        raise RuntimeError(
+            f"Failed to fetch APOD for {target_day} after {MAX_ATTEMPTS} attempts: {last_error}"
+        ) from last_error
 
     if response.status_code != 200:
         raise RuntimeError(f"NASA API returned HTTP {response.status_code} for {target_day}")
