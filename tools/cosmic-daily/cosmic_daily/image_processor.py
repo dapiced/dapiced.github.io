@@ -99,9 +99,14 @@ def process_apod_image(image_url: str, target_directory: str | Path, output_name
                             f"(limit={MAX_IMAGE_BYTES} bytes, min_quality={WEBP_QUALITY_MIN}, "
                             f"min_side={MIN_IMAGE_SIDE}px)."
                         )
-                    scale_to_min_side = MIN_IMAGE_SIDE / min(original.size)
-                    next_width = max(1, int(round(original.size[0] * scale_to_min_side)))
-                    next_height = max(1, int(round(original.size[1] * scale_to_min_side)))
+                    if original.size[0] <= original.size[1]:
+                        scale_ratio = MIN_IMAGE_SIDE / original.size[0]
+                        next_width = MIN_IMAGE_SIDE
+                        next_height = max(1, int(round(original.size[1] * scale_ratio)))
+                    else:
+                        scale_ratio = MIN_IMAGE_SIDE / original.size[1]
+                        next_height = MIN_IMAGE_SIDE
+                        next_width = max(1, int(round(original.size[0] * scale_ratio)))
                 if next_width == original.size[0] and next_height == original.size[1]:
                     raise ValueError(
                         "Image optimization could not satisfy configured size limit "
