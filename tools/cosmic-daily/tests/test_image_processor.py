@@ -55,6 +55,7 @@ def test_process_apod_image_under_limit_stays_single_pass(monkeypatch, tmp_path,
 
     output = capsys.readouterr().out
     assert target.exists()
+    assert target.stat().st_size <= image_processor.MAX_IMAGE_BYTES
     assert "Optimization pass 1" in output
     assert "Optimization pass 2" not in output
 
