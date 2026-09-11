@@ -115,7 +115,7 @@ def process_apod_image(image_url: str, target_directory: str | Path, output_name
                         "after exhausting quality and resize attempts."
                     )
                 original = original.resize((next_width, next_height), Image.Resampling.LANCZOS)
-                quality = WEBP_QUALITY_MIN
+                quality = WEBP_QUALITY_START
                 pass_number += 1
     except OSError as exc:
         raise ValueError("Image file format is not recognized or not supported.") from exc
