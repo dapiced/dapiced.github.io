@@ -9,6 +9,7 @@ from PIL import Image, ImageOps
 import requests
 
 
+MAX_DOWNLOAD_BYTES = 32 * 1024 * 1024
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_IMAGE_SIDE = 1600
 WEBP_QUALITY_START = 85
@@ -33,7 +34,23 @@ def _download_bytes(image_url: str) -> bytes:
     content_type = response.headers.get("Content-Type", "")
     if not content_type.startswith("image/"):
         raise ValueError(f"Unexpected image content type: {content_type}")
-    return response.content
+    content_length = response.headers.get("Content-Length")
+    if content_length and int(content_length) > MAX_DOWNLOAD_BYTES:
+        raise ValueError(
+            "Downloaded image exceeds configured input size limit "
+            f"(limit={MAX_DOWNLOAD_BYTES} bytes)."
+        )
+    image_bytes = bytearray()
+    for chunk in response.iter_content(chunk_size=64 * 1024):
+        if not chunk:
+            continue
+        image_bytes.extend(chunk)
+        if len(image_bytes) > MAX_DOWNLOAD_BYTES:
+            raise ValueError(
+                "Downloaded image exceeds configured input size limit "
+                f"(limit={MAX_DOWNLOAD_BYTES} bytes)."
+            )
+    return bytes(image_bytes)
 
 
 def _encode_webp_bytes(image: Image.Image, quality: int) -> bytes:
@@ -46,7 +63,7 @@ def process_apod_image(image_url: str, target_directory: str | Path, output_name
     target_path = Path(target_directory)
     target_path.mkdir(parents=True, exist_ok=True)
     image_bytes = _download_bytes(image_url)
-    print(f"Original downloaded image size: {len(image_bytes)} bytes (limit: {MAX_IMAGE_BYTES} bytes)")
+    print(f"Original downloaded image size: {len(image_bytes)} bytes (limit: {MAX_DOWNLOAD_BYTES} bytes)")
 
     try:
         with Image.open(io.BytesIO(image_bytes)) as image:
