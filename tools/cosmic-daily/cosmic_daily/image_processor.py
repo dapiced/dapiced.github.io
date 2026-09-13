@@ -35,11 +35,17 @@ def _download_bytes(image_url: str) -> bytes:
     if not content_type.startswith("image/"):
         raise ValueError(f"Unexpected image content type: {content_type}")
     content_length = response.headers.get("Content-Length")
-    if content_length and int(content_length) > MAX_DOWNLOAD_BYTES:
-        raise ValueError(
-            "Downloaded image exceeds configured input size limit "
-            f"(limit={MAX_DOWNLOAD_BYTES} bytes)."
-        )
+    if content_length:
+        try:
+            parsed_content_length = int(content_length)
+        except ValueError:
+            pass
+        else:
+            if parsed_content_length > MAX_DOWNLOAD_BYTES:
+                raise ValueError(
+                    "Downloaded image exceeds configured input size limit "
+                    f"(limit={MAX_DOWNLOAD_BYTES} bytes)."
+                )
     image_bytes = bytearray()
     for chunk in response.iter_content(chunk_size=64 * 1024):
         if not chunk:
