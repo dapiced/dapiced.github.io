@@ -41,7 +41,7 @@ def _download_bytes(image_url: str) -> bytes:
         except ValueError:
             pass
         else:
-            if parsed_content_length > MAX_DOWNLOAD_BYTES:
+            if parsed_content_length >= 0 and parsed_content_length > MAX_DOWNLOAD_BYTES:
                 raise ValueError(
                     "Downloaded image exceeds configured input size limit "
                     f"(limit={MAX_DOWNLOAD_BYTES} bytes)."

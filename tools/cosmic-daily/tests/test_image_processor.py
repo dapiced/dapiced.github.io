@@ -112,3 +112,12 @@ def test_process_apod_image_rejects_streamed_oversized_download(monkeypatch, tmp
 
     with pytest.raises(ValueError, match="Downloaded image exceeds configured input size limit"):
         process_apod_image("https://example.com/image.png", tmp_path, "stream-too-large")
+
+
+def test_process_apod_image_ignores_negative_content_length(monkeypatch, tmp_path):
+    payload = _checkerboard_payload(400, 300)
+
+    monkeypatch.setattr("requests.get", lambda *args, **kwargs: DummyResponse(payload, content_length=-1))
+    target, _ = process_apod_image("https://example.com/image.png", tmp_path, "negative-content-length")
+
+    assert target.exists()
