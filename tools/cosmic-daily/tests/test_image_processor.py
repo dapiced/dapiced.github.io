@@ -30,6 +30,10 @@ class DummyResponse:
             self.headers["Content-Length"] = str(content_length)
         self._payload = payload
 
+    @property
+    def content(self) -> bytes:
+        return self._payload
+
     def iter_content(self, chunk_size: int = 1):
         for start in range(0, len(self._payload), chunk_size):
             yield self._payload[start : start + chunk_size]
