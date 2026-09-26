@@ -70,7 +70,7 @@ jobs:
         if: always()
         working-directory: tools/cosmic-daily
         env:
-          NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
+          NASA_API_KEY: ${{ secrets.NASA_API_KEY_OFFICIAL }}
         shell: bash
         run: |
           set -euo pipefail
