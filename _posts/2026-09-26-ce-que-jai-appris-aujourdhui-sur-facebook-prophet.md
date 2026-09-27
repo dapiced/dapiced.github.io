@@ -136,7 +136,7 @@ Trois choses que le graphique m'a apprises :
 
 Une leçon imprévue : ma première version commençait en octobre 2024, un peu moins de deux années complètes, et la composante annuelle n'apparaissait tout simplement pas. En reculant le début au 1er septembre, elle est apparue. « Plusieurs saisons d'historique », disait le README. C'était littéral.
 
-En entreprise, le pipeline que j'imagine est court :
+Le pipeline que j'imagine est court :
 
 ```mermaid
 flowchart LR
