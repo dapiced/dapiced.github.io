@@ -247,7 +247,8 @@ keywords:
   <p class="eyebrow">06 · MISSION LOG</p>
   <h2 class="section-title">Latest from the blog</h2>
   <ul class="post-list">
-    {% for post in site.posts limit: 3 %}
+    {% assign latest = site.posts | where_exp: "post", "post.lang != 'fr'" %}
+    {% for post in latest limit: 3 %}
     <li class="post-item reveal">
       <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
       <p class="post-meta"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span></p>

@@ -62,12 +62,15 @@ keywords:
 
   <p class="eyebrow" style="margin-top: 3rem;">ALL POSTS</p>
   <ul class="post-list" style="margin-top: 1rem;">
-    {% for post in site.posts %}
+    {% comment %} French versions are reached from their English post (translation_url), not listed twice {% endcomment %}
+    {% assign posts = site.posts | where_exp: "post", "post.lang != 'fr'" %}
+    {% for post in posts %}
     <li class="post-item">
       <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
       <p class="post-meta">
         <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span>
         {% if post.tags and post.tags.size > 0 %} · {% for tag in post.tags %}#{{ tag }} {% endfor %}{% endif %}
+        {% if post.translation_url %} · <a href="{{ post.translation_url }}">version française 🇫🇷</a>{% endif %}
       </p>
       <p class="excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
     </li>

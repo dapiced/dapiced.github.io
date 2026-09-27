@@ -30,7 +30,10 @@ Post content in Markdown…
 - Bilingual posts: publish two files (one per language) and cross-link them with
   `lang: fr|en`, `translation_url: /blog/YYYY/MM/other-slug/` and
   `translation_label: "🇬🇧 Read this article in English"` - the post layout renders
-  the link under the title, exactly like the portfolio does.
+  the link under the title, exactly like the portfolio does. Posts with `lang: fr`
+  are left out of the blog index, the topic pages and the homepage preview (they are
+  reached through the English post's "version française" link, as in the portfolio);
+  they still get their own URL and appear in `sitemap.xml` and `feed.xml`.
 
 Push to `main` - GitHub Pages rebuilds and publishes automatically in about a minute.
 
