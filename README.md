@@ -27,6 +27,10 @@ Post content in Markdown…
   social preview (JPG/PNG, ideally 1200x630 - falls back to `/assets/img/og-default.jpg`).
 - Photos: resize to ~1600 px max and convert to WebP before committing; always set
   `width`/`height` + `loading="lazy"` (the first image of a post can stay eager).
+- Bilingual posts: publish two files (one per language) and cross-link them with
+  `lang: fr|en`, `translation_url: /blog/YYYY/MM/other-slug/` and
+  `translation_label: "🇬🇧 Read this article in English"` - the post layout renders
+  the link under the title, exactly like the portfolio does.
 
 Push to `main` - GitHub Pages rebuilds and publishes automatically in about a minute.
 
