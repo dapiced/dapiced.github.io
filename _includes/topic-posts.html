@@ -1,5 +1,6 @@
 {% assign matched = "" | split: "" %}
 {% for post in site.posts %}
+  {% if post.lang == "fr" %}{% continue %}{% endif %}
   {% assign hit = false %}
   {% for t in page.topics %}
     {% if post.tags contains t %}{% assign hit = true %}{% break %}{% endif %}
@@ -14,6 +15,7 @@
     <p class="post-meta">
       <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span>
       {% if post.tags and post.tags.size > 0 %} · {% for tag in post.tags %}#{{ tag }} {% endfor %}{% endif %}
+      {% if post.translation_url %} · <a href="{{ post.translation_url }}">version française 🇫🇷</a>{% endif %}
     </p>
     <p class="excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
   </li>
