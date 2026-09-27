@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "What I Learned Today About Facebook Prophet"
-date: 2026-09-26 21:00:00 -0400
+date: 2026-09-26 20:00:00 -0400
 lang: en
 tags: [machine-learning, data-science, time-series, forecasting, prophet, python, kaggle]
 description: "A learning journal: Facebook Prophet through an infra guy's eyes - trend, seasonalities, holidays, limits, and a FinOps example on Azure Databricks costs."
