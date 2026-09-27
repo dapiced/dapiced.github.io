@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Ce que j'ai appris aujourd'hui sur Facebook Prophet"
+title: "Ce que j'ai appris sur Facebook Prophet"
 date: 2026-09-26 20:00:00 -0400
 lang: fr
 tags: [machine-learning, data-science, time-series, forecasting, prophet, python, kaggle]
