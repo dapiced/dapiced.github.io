@@ -9,8 +9,10 @@ image:
   path: /assets/img/prophet/prophet-card.png
   width: 1200
   height: 630
-translation_url: /blog/2026/09/ce-que-jai-appris-aujourdhui-sur-facebook-prophet/
+translation_url: /blog/2026/09/ce-que-jai-appris-sur-facebook-prophet/
 translation_label: "🇫🇷 Lire cet article en français"
+redirect_from:
+  - /blog/2026/09/what-i-learned-today-about-facebook-prophet/
 ---
 
 This morning, while working on an assignment for my data science certificate at TÉLUQ, I ran into a name I had been scrolling past in Kaggle notebooks for weeks without ever stopping: Prophet. The name annoyed me a little, honestly. A forecasting tool called "prophet," launched by Facebook, smells like marketing. I have spent twenty-five years automating infrastructure; I distrust anything that promises to predict.

@@ -37,6 +37,17 @@ Post content in Markdown…
 
 Push to `main` - GitHub Pages rebuilds and publishes automatically in about a minute.
 
+Renaming a published post changes its URL (`/blog/:year/:month/:title/` comes from the
+file name). Keep the old address alive with `jekyll-redirect-from`:
+
+```yaml
+redirect_from:
+  - /blog/2026/09/old-slug/
+```
+
+The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); update any
+`translation_url` that pointed to the old slug.
+
 ## Structure
 
 - `index.html` - homepage (hero, about, projects, skills, timeline, blog preview).
