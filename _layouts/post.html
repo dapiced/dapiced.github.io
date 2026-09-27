@@ -11,6 +11,9 @@ layout: default
       · {{ words | divided_by: 200 | plus: 1 }} min read<span id="post-views" hidden> · 👁 <span id="post-views-n"></span> visitors</span>
       {% if page.tags and page.tags.size > 0 %} · {% for tag in page.tags %}<span class="tag">#{{ tag }}</span> {% endfor %}{% endif %}
     </p>
+    {% if page.translation_url %}
+    <p class="post-meta"><a href="{{ page.translation_url }}">{{ page.translation_label | default: "Read in another language" }}</a></p>
+    {% endif %}
   </header>
   <div class="post-content">
     {{ content }}
