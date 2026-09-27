@@ -136,7 +136,7 @@ Three things the chart taught me:
 
 An unplanned lesson: my first version started in October 2024, a little under two full years, and the yearly component simply did not appear in the output. Moving the start back to September 1, it showed up. "Several seasons of historical data," the README also said. It was literal.
 
-In an enterprise, the pipeline I picture is short:
+The pipeline I picture is short:
 
 ```mermaid
 flowchart LR
