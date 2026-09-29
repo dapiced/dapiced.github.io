@@ -1,0 +1,40 @@
+# Interface strings for article pages, keyed by page.lang (falls back to en).
+# Navigation and footer stay in English on purpose: they point at English pages.
+en:
+  giscus_lang: en
+  skip_link: "Skip to content"
+  eyebrow_blog: "← MISSION LOG"
+  eyebrow_portfolio: "← PORTFOLIO"
+  min_read: "min read"
+  visitors: "visitors"
+  translation_fallback: "Read in another language"
+  comments: "Comments"
+  comments_hint: "Sign in with your GitHub account to leave a comment or a reaction."
+  back_to_posts: "← Back to all posts"
+  back_to_portfolio: "← Back to the portfolio"
+
+fr:
+  giscus_lang: fr
+  skip_link: "Aller au contenu"
+  eyebrow_blog: "← JOURNAL DE MISSION"
+  eyebrow_portfolio: "← PORTFOLIO"
+  min_read: "min de lecture"
+  visitors: "visiteurs"
+  translation_fallback: "Lire dans une autre langue"
+  comments: "Commentaires"
+  comments_hint: "Connectez-vous avec votre compte GitHub pour laisser un commentaire ou une réaction."
+  back_to_posts: "← Tous les billets"
+  back_to_portfolio: "← Retour au portfolio"
+  months:
+    - janvier
+    - février
+    - mars
+    - avril
+    - mai
+    - juin
+    - juillet
+    - août
+    - septembre
+    - octobre
+    - novembre
+    - décembre

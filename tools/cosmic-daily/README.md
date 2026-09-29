@@ -14,7 +14,8 @@ python -m pip install -e .[dev]
 
 Create a local `.env` file from `.env.example` and set `NASA_API_KEY`.
 
-For the GitHub Actions publishing flow, add the same value as a repository secret named `NASA_API_KEY` in the repository settings before enabling the manual `Cosmic Daily` workflow.
+For the GitHub Actions publishing flow, add the same value as a repository secret named
+`NASA_API_KEY_OFFICIAL` (the name the `Cosmic Daily` workflow reads) in the repository settings.
 
 ## Commands
 
@@ -31,5 +32,12 @@ The default mode is `preview`.
 - `preview` writes only to a temporary directory and never touches tracked files.
 - `generate` creates a Jekyll post and the corresponding WebP image when the media is eligible.
 - `check` validates front matter and image references for a generated article.
-- Video entries are treated as human review only.
+- Video entries are skipped, not failed: `preview` and `generate` print `Skipped: …` and exit 0,
+  and the workflow records the reason in the run summary. Publishing a video day stays a manual
+  decision.
+- The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or
+  cannot fit the size budget; the command fails only when every candidate fails.
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.
+- Scheduled runs open a PR, validate it and squash-merge it automatically. A failure opens an
+  issue titled `Cosmic Daily: echec le YYYY-MM-DD`; a re-run of the same day comments on the
+  existing open issue instead of creating another one.

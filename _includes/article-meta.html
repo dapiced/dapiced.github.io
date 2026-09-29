@@ -1,0 +1,15 @@
+{%- comment -%}
+Date, reading time, visitor count, tags and translation link under an article
+title. Shared by the post and portfolio layouts; strings come from _data/i18n.yml.
+{%- endcomment -%}
+{%- assign lang = page.lang | default: site.lang -%}
+{%- assign t = site.data.i18n[lang] | default: site.data.i18n.en -%}
+<p class="post-meta">
+  <time datetime="{{ page.date | date_to_xmlschema }}">{% include localized-date.html date=page.date lang=lang %}</time>
+  {% assign words = content | number_of_words %}
+  · {{ words | divided_by: 200 | plus: 1 }} {{ t.min_read }}<span id="post-views" hidden> · 👁 <span id="post-views-n"></span> {{ t.visitors }}</span>
+  {% if page.tags and page.tags.size > 0 %} · {% for tag in page.tags %}<span class="tag">#{{ tag }}</span> {% endfor %}{% endif %}
+</p>
+{% if page.translation_url %}
+<p class="post-meta"><a href="{{ page.translation_url }}">{{ page.translation_label | default: t.translation_fallback }}</a></p>
+{% endif %}

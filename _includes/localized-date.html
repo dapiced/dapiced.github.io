@@ -1,0 +1,13 @@
+{%- comment -%}
+Human-readable date in the page language. Liquid has no locale support, so the
+French form is assembled from _data/i18n.yml (e.g. "1er septembre 2026").
+Usage: {% include localized-date.html date=page.date lang=lang %}
+{%- endcomment -%}
+{%- assign date_lang = include.lang | default: page.lang | default: site.lang -%}
+{%- if date_lang == "fr" -%}
+  {%- assign day = include.date | date: "%-d" -%}
+  {%- assign month_index = include.date | date: "%-m" | minus: 1 -%}
+  {%- if day == "1" %}1<sup>er</sup>{% else %}{{ day }}{% endif %} {{ site.data.i18n.fr.months[month_index] }} {{ include.date | date: "%Y" }}
+{%- else -%}
+  {{ include.date | date: "%B %-d, %Y" }}
+{%- endif -%}

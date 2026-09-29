@@ -85,6 +85,16 @@ jobs:
             echo "post_path=$post_path" >> "$GITHUB_OUTPUT"
           fi
 
+          # Video days (and duplicates) exit 0 without a post: record why in
+          # the run summary so the gap is explained without a notification.
+          if grep -qE "^(Skipped:|Duplicate APOD)" /tmp/cosmic-daily.log; then
+            {
+              echo "### Cosmic Daily ${{ steps.target.outputs.value }}"
+              echo
+              echo "No post published: $(grep -E '^(Skipped:|Duplicate APOD)' /tmp/cosmic-daily.log | head -n 1)"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Validate generated post
         if: ${{ steps.mode.outputs.publish == 'true' && steps.apod.outputs.post_path != '' }}
         working-directory: tools/cosmic-daily
@@ -137,6 +147,10 @@ jobs:
         # failed auto-merge, etc.). GitHub emails watchers of this repo when
         # a new issue is created — check github.com/settings/notifications
         # to confirm email delivery is enabled for "Issues".
+        # A video APOD is not a failure: the CLI exits 0 and the run summary
+        # explains the skip. If an open issue already exists for the same
+        # date (re-run of a failed job), the details are added as a comment
+        # instead of opening a duplicate.
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -151,6 +165,13 @@ jobs:
             "$run_url" \
             "$pr_ref" \
             "$log_tail")"
-          gh issue create \
-            --title "Cosmic Daily: echec le ${{ steps.target.outputs.value }} (run ${{ github.run_id }})" \
-            --body "$body" || echo "Failed to open failure issue; see run logs: $run_url"
+          title="Cosmic Daily: echec le ${{ steps.target.outputs.value }}"
+          existing="$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty' || true)"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body" \
+              || echo "Failed to comment on issue #$existing; see run logs: $run_url"
+          else
+            gh issue create \
+              --title "$title (run ${{ github.run_id }})" \
+              --body "$body" || echo "Failed to open failure issue; see run logs: $run_url"
+          fi

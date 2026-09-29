@@ -1,0 +1,25 @@
+{%- comment -%}
+giscus comments (GitHub Discussions), in the page language.
+{%- endcomment -%}
+{%- assign lang = page.lang | default: site.lang -%}
+{%- assign t = site.data.i18n[lang] | default: site.data.i18n.en -%}
+<section class="post-comments">
+  <h2 class="comments-title">{{ t.comments }}</h2>
+  <p class="comments-hint">{{ t.comments_hint }}</p>
+  <script src="https://giscus.app/client.js"
+          data-repo="dapiced/dapiced.github.io"
+          data-repo-id="R_kgDOTL9hsA"
+          data-category="Announcements"
+          data-category-id="DIC_kwDOTL9hsM4DAbwi"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="transparent_dark"
+          data-lang="{{ t.giscus_lang }}"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+</section>

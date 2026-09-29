@@ -30,7 +30,9 @@ Post content in Markdown…
 - Bilingual posts: publish two files (one per language) and cross-link them with
   `lang: fr|en`, `translation_url: /blog/YYYY/MM/other-slug/` and
   `translation_label: "🇬🇧 Read this article in English"` - the post layout renders
-  the link under the title, exactly like the portfolio does. Posts with `lang: fr`
+  the link under the title, exactly like the portfolio does. `lang: fr` also switches the
+  page chrome to French (date, reading time, comments, giscus) and both pages get
+  `hreflang` alternates. Posts with `lang: fr`
   are left out of the blog index, the topic pages and the homepage preview (they are
   reached through the English post's "version française" link, as in the portfolio);
   they still get their own URL and appear in `sitemap.xml` and `feed.xml`.
@@ -55,9 +57,27 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `blog/index.html` - post listing
 - `404.html` - custom not-found page
 - `_posts/` - blog posts (Markdown)
-- `_layouts/` - page shells (`default.html` with Person JSON-LD, `post.html` with giscus comments + mermaid)
+- `_portfolio/` - case studies (Markdown, `layout: portfolio`)
+- `_layouts/` - page shells (`default.html` with Person JSON-LD and hreflang alternates,
+  `post.html` / `portfolio.html` for articles)
+- `_includes/` - shared fragments: `article-meta.html` (date, reading time, tags, translation
+  link), `comments.html` (giscus), `mermaid.html`, `localized-date.html`, `topic-posts.html`
+- `_data/i18n.yml` - interface strings for article pages in `en` and `fr`, picked by `page.lang`
+  (dates, "min read", comments heading, giscus language, back links)
 - `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos
 - `_config.yml` - Jekyll config: canonical `url`, SEO/feed/sitemap plugins, default og:image, social links
+- `tools/cosmic-daily/` - Python generator behind the daily APOD posts (excluded from the Jekyll build)
+- `.github/workflows/` - automation, see below
+
+## Automation
+
+- **Cosmic Daily** (`cosmic-daily.yml`, daily at 12:00 UTC) fetches NASA's Astronomy Picture of
+  the Day, converts the image to WebP, writes a post tagged `astronomy, nasa, apod`, opens a PR,
+  validates it and squash-merges it. Video days are skipped (the run summary says why); a real
+  failure opens an issue. Run it by hand from the Actions tab with a `date` to fill a gap.
+  Details in [`tools/cosmic-daily/README.md`](tools/cosmic-daily/README.md).
+- **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing after each push
+  to `main`.
 
 ## SEO setup
 

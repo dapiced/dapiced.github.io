@@ -47,6 +47,32 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 
 ::selection { background: rgba(88, 166, 255, 0.35); }
 
+/* ---------- keyboard focus ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--lightblue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) { outline: none; }
+#main:focus { outline: none; }
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, -150%);
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--lightblue);
+  border-radius: 0 0 10px 10px;
+  background: var(--panel);
+  color: var(--lightblue);
+  font-weight: 600;
+  transition: transform 0.15s ease;
+}
+.skip-link:focus { transform: translate(-50%, 0); text-decoration: none; outline-offset: -2px; }
+
 /* ---------- navigation ---------- */
 
 .nav {
