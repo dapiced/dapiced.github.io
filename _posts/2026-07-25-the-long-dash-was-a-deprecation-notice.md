@@ -14,10 +14,11 @@ image:
 On 22 June 2026 someone in Cleveland, Ohio pointed a receiver at 7.850 MHz and pressed record. The file runs thirty-six seconds and occupies 8.78 megabytes, credited to a user called Therealrak at Case Western Reserve University and published under a CC BY 4.0 licence. It is, so far as I can establish, the archival record of the end of Canada's spoken time signal on the air.
 
 <figure>
-<audio controls preload="none" src="/assets/audio/chu-canada-terminal-broadcast.wav">
-Your browser will not play this file. You can <a href="/assets/audio/chu-canada-terminal-broadcast.wav">download the recording</a> instead.
+<audio controls preload="none">
+<source src="/assets/audio/chu-canada-terminal-broadcast.mp3" type="audio/mpeg">
+Your browser will not play this file. You can <a href="/assets/audio/chu-canada-terminal-broadcast.mp3">download the recording</a> instead.
 </audio>
-<figcaption>CHU's terminal broadcast, received on 7.850 MHz in Cleveland, Ohio, 22 June 2026, recorded by Therealrak. Served from a local copy, because this post is about exactly that; the original lives on <a href="https://en.wikipedia.org/wiki/File:CHU_Canada_terminal_broadcast.wav">Wikimedia Commons</a>. Licensed CC BY 4.0.</figcaption>
+<figcaption>CHU's terminal broadcast, received on 7.850 MHz in Cleveland, Ohio, 22 June 2026, recorded by Therealrak. Served from a local copy (MP3, mono), because this post is about exactly that; the lossless original lives on <a href="https://en.wikipedia.org/wiki/File:CHU_Canada_terminal_broadcast.wav">Wikimedia Commons</a>. Licensed CC BY 4.0.</figcaption>
 </figure>
 
 I was not listening, and I did not know it was happening. I found out weeks late, from a mailing list, in the flat register mailing lists reserve for things that are already over. No transcription of the final words has been published.
