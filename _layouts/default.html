@@ -63,13 +63,16 @@
   </script>
 </head>
 <body>
+  {%- assign chrome_lang = page.lang | default: site.lang %}
+  {%- assign chrome_t = site.data.i18n[chrome_lang] | default: site.data.i18n.en %}
+  <a class="skip-link" href="#main">{{ chrome_t.skip_link }}</a>
   <canvas id="starfield" aria-hidden="true"></canvas>
 
   <header class="nav">
     <nav class="nav-inner" aria-label="Main navigation">
       <a class="brand" href="/"><span class="brand-planet" aria-hidden="true"></span>dominic@azure<span class="brand-cursor" aria-hidden="true">▌</span></a>
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
-      <ul class="nav-links">
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+      <ul class="nav-links" id="nav-links">
         <li><a href="/#about">About</a></li>
         <li><a href="/#projects">Projects</a></li>
         <li><a href="/portfolio/">Portfolios</a></li>
@@ -84,7 +87,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     {{ content }}
   </main>
 
