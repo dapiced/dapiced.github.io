@@ -60,3 +60,4 @@ feed:
 exclude:
   - README.md
   - LICENSE
+  - tools/
