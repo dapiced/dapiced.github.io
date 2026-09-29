@@ -10,8 +10,8 @@ from datetime import date
 from pathlib import Path
 
 from .article_generator import generate_article, slugify_title
-from .image_processor import process_apod_image
-from .nasa_client import fetch_apod
+from .image_processor import process_apod_image_with_fallback
+from .nasa_client import APODRecord, fetch_apod
 from .repository import RepositoryContext
 from .rights_policy import evaluate_media_rights
 
@@ -29,6 +29,10 @@ def _emit_github_output(**values: str) -> None:
             handle.write(f"{key}={value}\n")
 
 
+def _image_candidates(apod: APODRecord) -> list[str | None]:
+    return [apod.hdurl, apod.url]
+
+
 def _write_preview_files(apod, repo: RepositoryContext, output_dir: Path) -> tuple[Path, Path | None]:
     slug = slugify_title(apod.title)
     image_target_dir = output_dir / "assets" / "img" / "apod"
@@ -37,7 +41,7 @@ def _write_preview_files(apod, repo: RepositoryContext, output_dir: Path) -> tup
         decision = evaluate_media_rights(apod.media_type, apod.copyright)
         if decision.status != "allowed":
             raise ValueError(decision.reason)
-        image_path, size = process_apod_image(apod.hdurl or apod.url, image_target_dir, f"{apod.date}-{slug}")
+        image_path, size = process_apod_image_with_fallback(_image_candidates(apod), image_target_dir, f"{apod.date}-{slug}")
         article_front, article_text = generate_article(apod, f"/assets/img/apod/{apod.date}-{slug}.webp", size[0], size[1])
         post_path = output_dir / "_posts" / f"{apod.date}-apod-{slug}.md"
         post_path.parent.mkdir(parents=True, exist_ok=True)
@@ -63,6 +67,12 @@ def preview(date_value: str | None = None) -> int:
         "apod_url": apod.apod_url,
     }, indent=2))
 
+    decision = evaluate_media_rights(apod.media_type, apod.copyright)
+    if decision.status == "unsupported_media":
+        # A video day is a normal outcome, not a failure: nothing to publish.
+        print(f"Skipped: {decision.reason}")
+        return EXIT_SUCCESS
+
     try:
         with tempfile.TemporaryDirectory(prefix="cosmic-daily-") as temp_dir:
             repo = RepositoryContext(repo_root=Path.cwd())
@@ -87,9 +97,10 @@ def generate(date_value: str | None = None) -> int:
 
     decision = evaluate_media_rights(apod.media_type, apod.copyright)
     if decision.status == "unsupported_media":
+        # A video day is a normal outcome, not a failure: nothing to publish.
         _emit_github_output(apod_date=apod.date, result="unsupported_media", post_path="", image_path="")
-        print(decision.reason)
-        return EXIT_ERROR
+        print(f"Skipped: {decision.reason}")
+        return EXIT_SUCCESS
     duplicates = repo.find_duplicates(apod.date, apod.apod_url)
     if duplicates:
         _emit_github_output(apod_date=apod.date, result="duplicate", post_path="", image_path="")
@@ -99,7 +110,7 @@ def generate(date_value: str | None = None) -> int:
     slug = slugify_title(apod.title)
     image_dir = repo.ensure_directory(repo.assets_apod_dir)
     try:
-        image_path, image_size = process_apod_image(apod.hdurl or apod.url, image_dir, f"{apod.date}-{slug}")
+        image_path, image_size = process_apod_image_with_fallback(_image_candidates(apod), image_dir, f"{apod.date}-{slug}")
     except Exception as exc:
         print(f"Image processing failed: {exc}")
         return EXIT_ERROR

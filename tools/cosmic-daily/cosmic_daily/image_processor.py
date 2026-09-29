@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import io
 from pathlib import Path
-from typing import Tuple
+from typing import Iterable, Tuple
 from urllib.parse import urlparse
 
 from PIL import Image, ImageOps
@@ -121,3 +121,32 @@ def process_apod_image(image_url: str, target_directory: str | Path, output_name
         raise ValueError("Image file format is not recognized or not supported.") from exc
 
     return webp_path.resolve(), size
+
+
+def process_apod_image_with_fallback(
+    candidate_urls: Iterable[str | None], target_directory: str | Path, output_name: str
+) -> tuple[Path, tuple[int, int]]:
+    """Try each candidate URL in order (typically hdurl, then url) until one is processed.
+
+    APOD occasionally serves an HD file that answers 403/404 while the standard
+    file is fine, and an HD file can also be too large for the size budget. The
+    error from the last attempt is raised only when every candidate has failed.
+    """
+    urls: list[str] = []
+    for url in candidate_urls:
+        if url and url not in urls:
+            urls.append(url)
+    if not urls:
+        raise ValueError("No image URL available for this APOD entry.")
+
+    last_error: Exception | None = None
+    for index, url in enumerate(urls, start=1):
+        print(f"Image candidate {index}/{len(urls)}: {url}")
+        try:
+            return process_apod_image(url, target_directory, output_name)
+        except (RuntimeError, ValueError) as exc:
+            last_error = exc
+            if index < len(urls):
+                print(f"Image candidate failed ({exc}); trying the next one.")
+    assert last_error is not None
+    raise last_error

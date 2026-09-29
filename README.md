@@ -58,6 +58,18 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `_layouts/` - page shells (`default.html` with Person JSON-LD, `post.html` with giscus comments + mermaid)
 - `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos
 - `_config.yml` - Jekyll config: canonical `url`, SEO/feed/sitemap plugins, default og:image, social links
+- `tools/cosmic-daily/` - Python generator behind the daily APOD posts (excluded from the Jekyll build)
+- `.github/workflows/` - automation, see below
+
+## Automation
+
+- **Cosmic Daily** (`cosmic-daily.yml`, daily at 12:00 UTC) fetches NASA's Astronomy Picture of
+  the Day, converts the image to WebP, writes a post tagged `astronomy, nasa, apod`, opens a PR,
+  validates it and squash-merges it. Video days are skipped (the run summary says why); a real
+  failure opens an issue. Run it by hand from the Actions tab with a `date` to fill a gap.
+  Details in [`tools/cosmic-daily/README.md`](tools/cosmic-daily/README.md).
+- **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing after each push
+  to `main`.
 
 ## SEO setup
 
