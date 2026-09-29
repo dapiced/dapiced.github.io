@@ -144,7 +144,7 @@ def process_apod_image_with_fallback(
         print(f"Image candidate {index}/{len(urls)}: {url}")
         try:
             return process_apod_image(url, target_directory, output_name)
-        except (RuntimeError, ValueError) as exc:
+        except (RuntimeError, ValueError, requests.RequestException) as exc:
             last_error = exc
             if index < len(urls):
                 print(f"Image candidate failed ({exc}); trying the next one.")

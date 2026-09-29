@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 
 import pytest
+import requests
 
 from PIL import Image
 
@@ -145,6 +146,32 @@ def test_fallback_skips_duplicate_and_empty_candidates(monkeypatch, tmp_path):
     )
 
     assert calls == ["https://example.com/same.png"]
+
+
+def test_fallback_uses_next_url_when_hd_download_times_out(monkeypatch, tmp_path):
+    payload = _checkerboard_payload(400, 300)
+    calls: list[str] = []
+
+    def fake_get(url, *args, **kwargs):
+        calls.append(url)
+        if url.endswith("hd.png"):
+            raise requests.exceptions.ReadTimeout("read timed out")
+
+        class DummyResponse:
+            status_code = 200
+            headers = {"Content-Type": "image/png"}
+            content = payload
+
+        return DummyResponse()
+
+    monkeypatch.setattr("requests.get", fake_get)
+    target, size = process_apod_image_with_fallback(
+        ["https://example.com/hd.png", "https://example.com/std.png"], tmp_path, "timeout"
+    )
+
+    assert target.exists()
+    assert size == (400, 300)
+    assert calls == ["https://example.com/hd.png", "https://example.com/std.png"]
 
 
 def test_fallback_raises_last_error_when_every_url_fails(monkeypatch, tmp_path):
