@@ -139,6 +139,12 @@ def test_ci_builds_the_site(ci):
     assert run_commands(site).index("bundle exec jekyll build") < run_commands(site).index(
         "check_blog_discovery.py"
     )
+    assert uses_action(site, "actions/setup-node@v6")
+    node_setup = next(
+        s for s in steps_of(site) if str(s.get("uses", "")).startswith("actions/setup-node@v6")
+    )
+    assert node_setup["with"]["node-version"] == "lts/*"
+    assert "node --test tools/site-checks/js/*.test.js" in run_commands(site)
 
 
 def test_ci_smoke_checks_the_generated_output(ci):
@@ -148,6 +154,8 @@ def test_ci_smoke_checks_the_generated_output(ci):
         "_site/feed.xml",
         "_site/feed/apod.xml",
         "_site/blog/tag/machine-learning/index.html",
+        "_site/blog/search/index.html",
+        "_site/blog/search.json",
     ):
         assert expected in commands
 

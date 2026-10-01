@@ -12,6 +12,20 @@ en:
   comments_hint: "Sign in with your GitHub account to leave a comment or a reaction."
   back_to_posts: "← Back to all posts"
   back_to_portfolio: "← Back to the portfolio"
+  search_title: "Search authored posts"
+  search_label: "Search by title, excerpt, or tag"
+  search_placeholder: "Try Azure, MLOps, or machine learning"
+  search_button: "Search"
+  search_requires_javascript: "Search requires JavaScript."
+  search_browse_tags: "Browse posts by tag"
+  search_tags_title: "Browse all tags"
+  search_results: "{count} results for “{query}”"
+  search_one_result: "1 result for “{query}”"
+  search_none: "No results for “{query}”"
+  search_error: "Search is unavailable right now. Browse posts by tag below."
+  search_tag_label: "Browse the {tag} tag"
+  search_french_marker: "FR"
+  search_french_label: "French version"
 
 fr:
   giscus_lang: fr
@@ -25,6 +39,20 @@ fr:
   comments_hint: "Connectez-vous avec votre compte GitHub pour laisser un commentaire ou une réaction."
   back_to_posts: "← Tous les billets"
   back_to_portfolio: "← Retour au portfolio"
+  search_title: "Rechercher dans les billets"
+  search_label: "Rechercher par titre, extrait ou mot-clé"
+  search_placeholder: "Essayez Azure, MLOps ou apprentissage automatique"
+  search_button: "Rechercher"
+  search_requires_javascript: "La recherche nécessite JavaScript."
+  search_browse_tags: "Parcourir les billets par mot-clé"
+  search_tags_title: "Tous les mots-clés"
+  search_results: "{count} résultats pour « {query} »"
+  search_one_result: "1 résultat pour « {query} »"
+  search_none: "Aucun résultat pour « {query} »"
+  search_error: "La recherche est indisponible. Parcourez les billets par mot-clé ci-dessous."
+  search_tag_label: "Parcourir le mot-clé {tag}"
+  search_french_marker: "FR"
+  search_french_label: "Version française"
   months:
     - janvier
     - février

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+import json
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -23,9 +24,24 @@ class PageParser(HTMLParser):
         self.tag_classes: list[tuple[str, str, str | None]] = []
         self.post_links: list[str] = []
         self.meta_description: str | None = None
+        self.ids: set[str] = set()
+        self.forms: list[dict[str, str | None]] = []
+        self.inputs: list[dict[str, str | None]] = []
+        self.live_regions: list[str | None] = []
+        self.label_targets: set[str] = set()
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
+        if values.get("id"):
+            self.ids.add(values["id"] or "")
+        if tag == "form":
+            self.forms.append(values)
+        if tag == "input":
+            self.inputs.append(values)
+        if tag == "label" and values.get("for"):
+            self.label_targets.add(values["for"] or "")
+        if values.get("aria-live"):
+            self.live_regions.append(values.get("aria-live"))
         if tag == "meta" and values.get("name") == "description":
             self.meta_description = values.get("content")
         classes = (values.get("class") or "").split()
@@ -109,6 +125,63 @@ def check() -> list[str]:
                 errors.append(
                     f"{path.relative_to(SITE)}: portfolio .tag must remain a span, found <{tag}>"
                 )
+
+    search_json = SITE / "blog" / "search.json"
+    search_page = SITE / "blog" / "search" / "index.html"
+    if not search_json.is_file():
+        errors.append("missing generated search index: blog/search.json")
+    else:
+        try:
+            records = json.loads(search_json.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            errors.append(f"blog/search.json is invalid JSON: {error}")
+        else:
+            if not isinstance(records, list) or len(records) != 11:
+                errors.append("blog/search.json must contain all 11 authored posts")
+            else:
+                required = {"title", "url", "date", "lang", "tags", "excerpt"}
+                for record in records:
+                    if not isinstance(record, dict) or not required.issubset(record):
+                        errors.append("every search record must include title, url, date, lang, tags, excerpt")
+                        continue
+                    if not all(isinstance(record[field], str) and record[field] for field in ("title", "url", "date", "lang")):
+                        errors.append("search title, url, date, and lang values must be non-empty strings")
+                    if not isinstance(record["tags"], list) or not all(
+                        isinstance(tag, str) for tag in record["tags"]
+                    ):
+                        errors.append("search tags must be an array of strings")
+                    if not isinstance(record["excerpt"], str):
+                        errors.append("search excerpt must be plain text")
+                    if isinstance(record.get("url"), str):
+                        if "/sky/" in record["url"]:
+                            errors.append(f"search index must exclude APOD URL {record['url']}")
+                        elif not output_path_for_url(record["url"]).is_file():
+                            errors.append(f"search URL has no generated post page: {record['url']}")
+
+    if not search_page.is_file():
+        errors.append("missing generated search page: blog/search/index.html")
+    else:
+        page = parse(search_page)
+        if not any(form.get("method", "").lower() == "get" for form in page.forms):
+            errors.append("blog search page must contain a GET search form")
+        if not any(input_.get("id") == "blog-search-query" for input_ in page.inputs):
+            errors.append("blog search page must contain the labelled #blog-search-query input")
+        if "blog-search-query" not in page.label_targets:
+            errors.append("blog search input must have an associated label")
+        if "blog-search-results" not in page.ids:
+            errors.append("blog search page must contain #blog-search-results")
+        if "polite" not in page.live_regions:
+            errors.append("blog search page must contain an aria-live=polite status region")
+        if "tag-archives" not in page.ids:
+            errors.append("blog search page must include a server-rendered tag archive list")
+        source = search_page.read_text(encoding="utf-8").lower()
+        if "<noscript>" not in source or "javascript" not in source or 'href="#tag-archives"' not in source:
+            errors.append("blog search page must explain the no-JavaScript fallback and link to its tags")
+        linked_archives = {href for _, _, href in page.tag_classes if href}
+        for tag in authored_tags():
+            expected = f"/blog/tag/{tag}/"
+            if expected not in linked_archives:
+                errors.append(f"blog search fallback is missing tag archive link {expected}")
     return errors
 
 
