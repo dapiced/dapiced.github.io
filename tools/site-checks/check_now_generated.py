@@ -16,7 +16,7 @@ DATE_IN_TIME = re.compile(
 
 
 def _load_freshness_checker():
-    path = ROOT / "tools" / "site-checks" / "check_now_freshness.py"
+    path = Path(__file__).with_name("check_now_freshness.py")
     spec = importlib.util.spec_from_file_location("check_now_freshness", path)
     if not spec or not spec.loader:
         raise RuntimeError(f"cannot load freshness checker: {path}")
