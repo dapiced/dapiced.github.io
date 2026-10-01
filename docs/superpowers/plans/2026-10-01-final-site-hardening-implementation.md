@@ -1,8 +1,8 @@
 # Final Site Hardening Implementation Plan
 
-**Status:** implementation complete; final validation and publication in progress.
+**Status:** implementation and validation complete; branch published for review.
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Complete E4 by hardening browser metadata, licensing, generated APOD safety, workflow contracts, accessibility structure, and published-output validation.
 
@@ -74,78 +74,78 @@
 
 ## Task 1: Browser metadata, manifest, and analytics boundary
 
-- [ ] **Step 1: Write failing source/generated contracts** in `tests/test_generated_site.py` (or the existing site contract file): assert the default layout contains the exact theme-color, dark color-scheme, manifest link, and exactly one GoatCounter script; assert the manifest has required keys, valid JSON, root-relative icon URLs, no service-worker/install/offline fields, and only existing supported icon assets.
-- [ ] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_generated_site.py -q`; expected failures identify missing metadata/manifest.
-- [ ] **Step 3: Implement the minimal shared boundary.** Add `site.webmanifest`, the two meta tags and link in `_layouts/default.html`, and `color-scheme: dark` in `assets/css/style.css`; do not add preconnect or another analytics provider.
-- [ ] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_generated_site.py -q`; expected PASS.
-- [ ] **Step 5: Commit.** `git add site.webmanifest _layouts/default.html assets/css/style.css tests/test_generated_site.py && git commit -m "feat: add native dark site metadata" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing source/generated contracts** in `tests/test_generated_site.py` (or the existing site contract file): assert the default layout contains the exact theme-color, dark color-scheme, manifest link, and exactly one GoatCounter script; assert the manifest has required keys, valid JSON, root-relative icon URLs, no service-worker/install/offline fields, and only existing supported icon assets.
+- [x] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_generated_site.py -q`; expected failures identify missing metadata/manifest.
+- [x] **Step 3: Implement the minimal shared boundary.** Add `site.webmanifest`, the two meta tags and link in `_layouts/default.html`, and `color-scheme: dark` in `assets/css/style.css`; do not add preconnect or another analytics provider.
+- [x] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_generated_site.py -q`; expected PASS.
+- [x] **Step 5: Commit.** `git add site.webmanifest _layouts/default.html assets/css/style.css tests/test_generated_site.py && git commit -m "feat: add native dark site metadata" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 2: License and maintainer documentation
 
-- [ ] **Step 1: Write failing documentation contracts.** Add tests that require `LICENSE` to state MIT source-code scope and explicit exclusions, README to identify `_data/repos.json` as the rendered project-card source refreshed by workflow, README to describe GoatCounter as sole counter, and README to omit the completed one-time Pages migration instruction.
-- [ ] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_documentation_contract.py -q`; expected failure because the root license and corrected wording are absent.
-- [ ] **Step 3: Add the scoped license and README edits.** Keep the license human-readable and explicit about personal/third-party content; update only stale automation and ownership statements.
-- [ ] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_documentation_contract.py -q`.
-- [ ] **Step 5: Commit.** `git add LICENSE README.md tests/test_documentation_contract.py && git commit -m "docs: define site ownership and analytics boundaries" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing documentation contracts.** Add tests that require `LICENSE` to state MIT source-code scope and explicit exclusions, README to identify `_data/repos.json` as the rendered project-card source refreshed by workflow, README to describe GoatCounter as sole counter, and README to omit the completed one-time Pages migration instruction.
+- [x] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_documentation_contract.py -q`; expected failure because the root license and corrected wording are absent.
+- [x] **Step 3: Add the scoped license and README edits.** Keep the license human-readable and explicit about personal/third-party content; update only stale automation and ownership statements.
+- [x] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_documentation_contract.py -q`.
+- [x] **Step 5: Commit.** `git add LICENSE README.md tests/test_documentation_contract.py && git commit -m "docs: define site ownership and analytics boundaries" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 3: Cosmic Daily rights policy
 
-- [ ] **Step 1: Write failing rights tests.** Add cases for image + missing copyright, blank copyright, `NASA`/supported public-domain metadata, explicit third-party copyright, unknown category, and video. Assert `RightsDecision.status`, `allowed`, and a manual-review reason; update the misleading external-copyright test.
-- [ ] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_rights_policy.py -q`; expected failure because third-party and incomplete metadata currently allow.
-- [ ] **Step 3: Implement `evaluate_media_rights(...) -> RightsDecision`.** Allow only still images with the current explicit NASA/public-domain metadata shape; return `manual_review` for third-party, missing, blank, or unknown rights metadata; retain `unsupported_media` for non-images.
-- [ ] **Step 4: Run GREEN.** Run `python -m pytest tools/cosmic-daily/tests/test_rights_policy.py -q`.
-- [ ] **Step 5: Commit.** `git add tools/cosmic-daily/cosmic_daily/rights_policy.py tools/cosmic-daily/tests/test_rights_policy.py && git commit -m "fix: fail closed on APOD image rights" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing rights tests.** Add cases for image + missing copyright, blank copyright, `NASA`/supported public-domain metadata, explicit third-party copyright, unknown category, and video. Assert `RightsDecision.status`, `allowed`, and a manual-review reason; update the misleading external-copyright test.
+- [x] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_rights_policy.py -q`; expected failure because third-party and incomplete metadata currently allow.
+- [x] **Step 3: Implement `evaluate_media_rights(...) -> RightsDecision`.** Allow only still images with the current explicit NASA/public-domain metadata shape; return `manual_review` for third-party, missing, blank, or unknown rights metadata; retain `unsupported_media` for non-images.
+- [x] **Step 4: Run GREEN.** Run `python -m pytest tools/cosmic-daily/tests/test_rights_policy.py -q`.
+- [x] **Step 5: Commit.** `git add tools/cosmic-daily/cosmic_daily/rights_policy.py tools/cosmic-daily/tests/test_rights_policy.py && git commit -m "fix: fail closed on APOD image rights" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 4: Structured APOD validation and malformed regression
 
-- [ ] **Step 1: Write failing validator/CLI tests.** Add a fixture equivalent to the malformed 2026-10-01 payload (generic title, 121x102 image, APOD navigation/migration/footer boilerplate) and assert `validate_generated_article` rejects it; add accepted complete front matter, positive dimensions above the minimum, required title/explanation/source fields, missing-image, duplicate-field, and boilerplate cases.
-- [ ] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py -q`; expected failures because validation is substring-based or absent.
-- [ ] **Step 3: Implement `ValidationResult` and `validate_generated_article(content: str, image_path: Path) -> ValidationResult`.** Parse the first front-matter document, require exactly one complete set of fields, validate image dimensions against a conservative minimum and the referenced file, reject known APOD navigation/footer phrases and generic generated output, and return explicit errors.
-- [ ] **Step 4: Integrate CLI generation/check.** Invoke rights validation before image/article writes where possible and structured validation before success output; manual review creates no generated article/image, while invalid content returns `EXIT_ERROR`.
-- [ ] **Step 5: Remove the malformed tracked entry/image and run GREEN.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py tools/cosmic-daily/tests/test_article_generator.py -q`; expected PASS and no generated files from rejected fixtures.
-- [ ] **Step 6: Commit.** `git add tools/cosmic-daily _apod tests && git rm _apod/2026-10-01-nasa-science.md <exact-image-path> && git commit -m "fix: reject malformed APOD output" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing validator/CLI tests.** Add a fixture equivalent to the malformed 2026-10-01 payload (generic title, 121x102 image, APOD navigation/migration/footer boilerplate) and assert `validate_generated_article` rejects it; add accepted complete front matter, positive dimensions above the minimum, required title/explanation/source fields, missing-image, duplicate-field, and boilerplate cases.
+- [x] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py -q`; expected failures because validation is substring-based or absent.
+- [x] **Step 3: Implement `ValidationResult` and `validate_generated_article(content: str, image_path: Path) -> ValidationResult`.** Parse the first front-matter document, require exactly one complete set of fields, validate image dimensions against a conservative minimum and the referenced file, reject known APOD navigation/footer phrases and generic generated output, and return explicit errors.
+- [x] **Step 4: Integrate CLI generation/check.** Invoke rights validation before image/article writes where possible and structured validation before success output; manual review creates no generated article/image, while invalid content returns `EXIT_ERROR`.
+- [x] **Step 5: Remove the malformed tracked entry/image and run GREEN.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py tools/cosmic-daily/tests/test_article_generator.py -q`; expected PASS and no generated files from rejected fixtures.
+- [x] **Step 6: Commit.** `git add tools/cosmic-daily _apod tests && git rm _apod/2026-10-01-nasa-science.md <exact-image-path> && git commit -m "fix: reject malformed APOD output" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 5: Cosmic Daily workflow fail-closed behavior
 
-- [ ] **Step 1: Write failing workflow/CLI integration contracts.** Assert the workflow distinguishes `manual_review` from `generated`, includes an explicit human-review PR summary, gates `gh pr merge` on validated generated output only, and never merges after validation failure or manual review.
-- [ ] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_workflows.py tools/cosmic-daily/tests/test_cli.py -q`; expected failure against the unconditional merge.
-- [ ] **Step 3: Implement the smallest workflow gate.** Carry the CLI result through `GITHUB_OUTPUT`; create a PR for manual review with no merge step, preserve failure reporting, and keep permissions limited to `contents: write`/`pull-requests: write` for generation and `issues: write` for failure reporting.
-- [ ] **Step 4: Run GREEN.** Run the focused workflow and Cosmic Daily tests.
-- [ ] **Step 5: Commit.** `git add .github/workflows/cosmic-daily.yml tools/cosmic-daily/tests/test_workflows.py tools/cosmic-daily/tests/test_cli.py && git commit -m "ci: keep APOD manual review out of auto-merge" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing workflow/CLI integration contracts.** Assert the workflow distinguishes `manual_review` from `generated`, includes an explicit human-review PR summary, gates `gh pr merge` on validated generated output only, and never merges after validation failure or manual review.
+- [x] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_workflows.py tools/cosmic-daily/tests/test_cli.py -q`; expected failure against the unconditional merge.
+- [x] **Step 3: Implement the smallest workflow gate.** Carry the CLI result through `GITHUB_OUTPUT`; create a PR for manual review with no merge step, preserve failure reporting, and keep permissions limited to `contents: write`/`pull-requests: write` for generation and `issues: write` for failure reporting.
+- [x] **Step 4: Run GREEN.** Run the focused workflow and Cosmic Daily tests.
+- [x] **Step 5: Commit.** `git add .github/workflows/cosmic-daily.yml tools/cosmic-daily/tests/test_workflows.py tools/cosmic-daily/tests/test_cli.py && git commit -m "ci: keep APOD manual review out of auto-merge" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 6: Repo-card authorization and IndexNow trigger contracts
 
-- [ ] **Step 1: Write failing tests.** Assert repo-card requests use the `Authorization: Bearer` scheme and never the literal placeholder or token in logs; assert IndexNow has `workflow_run` completion plus `workflow_dispatch`, and its condition permits manual dispatch or successful main deployment completion only.
-- [ ] **Step 2: Run RED.** Run `python -m pytest tools/repo_cards/tests -q tools/cosmic-daily/tests/test_workflows.py -q`; expected failures for the placeholder header and permissive manual workflow-run condition.
-- [ ] **Step 3: Implement both fixes.** Change only the request header construction and the IndexNow event/condition; keep `permissions: {}` and avoid any deployment-less manual Pages path.
-- [ ] **Step 4: Run GREEN.** Re-run the focused tests and `git diff --check`.
-- [ ] **Step 5: Commit.** `git add tools/repo_cards .github/workflows/indexnow.yml tools/cosmic-daily/tests/test_workflows.py && git commit -m "fix: harden refresh and indexing triggers" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing tests.** Assert repo-card requests use the `Authorization: Bearer` scheme and never the literal placeholder or token in logs; assert IndexNow has `workflow_run` completion plus `workflow_dispatch`, and its condition permits manual dispatch or successful main deployment completion only.
+- [x] **Step 2: Run RED.** Run `python -m pytest tools/repo_cards/tests -q tools/cosmic-daily/tests/test_workflows.py -q`; expected failures for the placeholder header and permissive manual workflow-run condition.
+- [x] **Step 3: Implement both fixes.** Change only the request header construction and the IndexNow event/condition; keep `permissions: {}` and avoid any deployment-less manual Pages path.
+- [x] **Step 4: Run GREEN.** Re-run the focused tests and `git diff --check`.
+- [x] **Step 5: Commit.** `git add tools/repo_cards .github/workflows/indexnow.yml tools/cosmic-daily/tests/test_workflows.py && git commit -m "fix: harden refresh and indexing triggers" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 7: Heading order and editorial image dimensions
 
-- [ ] **Step 1: Write failing source contracts.** Assert `/now/` has one `h1` followed by four `h2` card headings with unchanged card classes, `/blog/` topic headings use `h2`, and the two named post images have width/height matching their SVG `viewBox` dimensions plus existing lazy/alt attributes.
-- [ ] **Step 2: Run RED.** Run `python -m pytest tests/test_now_page.py tests/test_site_data.py tests/test_editorial_images.py -q`; expected failures for heading levels and missing dimensions.
-- [ ] **Step 3: Implement semantic-only edits.** Change heading elements without changing CSS classes or copy; read exact `viewBox` values from `assets/img/etoile-vincenzo.svg` and `assets/img/nothingness-has-no-address.svg` and add those intrinsic dimensions to the corresponding `<img>` tags.
-- [ ] **Step 4: Run GREEN.** Re-run focused source tests and inspect the two SVG `viewBox`/HTML pairs.
-- [ ] **Step 5: Commit.** `git add now/index.html blog/index.html _posts/2026-07-02-a-star-for-my-father.md _posts/2026-07-02-nothingness-has-no-address.md tests && git commit -m "fix: restore heading order and image dimensions" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing source contracts.** Assert `/now/` has one `h1` followed by four `h2` card headings with unchanged card classes, `/blog/` topic headings use `h2`, and the two named post images have width/height matching their SVG `viewBox` dimensions plus existing lazy/alt attributes.
+- [x] **Step 2: Run RED.** Run `python -m pytest tests/test_now_page.py tests/test_site_data.py tests/test_editorial_images.py -q`; expected failures for heading levels and missing dimensions.
+- [x] **Step 3: Implement semantic-only edits.** Change heading elements without changing CSS classes or copy; read exact `viewBox` values from `assets/img/etoile-vincenzo.svg` and `assets/img/nothingness-has-no-address.svg` and add those intrinsic dimensions to the corresponding `<img>` tags.
+- [x] **Step 4: Run GREEN.** Re-run focused source tests and inspect the two SVG `viewBox`/HTML pairs.
+- [x] **Step 5: Commit.** `git add now/index.html blog/index.html _posts/2026-07-02-a-star-for-my-father.md _posts/2026-07-02-nothingness-has-no-address.md tests && git commit -m "fix: restore heading order and image dimensions" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 8: E3 status and full generated-output contracts
 
-- [ ] **Step 1: Write failing generated-output/site checks.** Extend the generated checker to require manifest/theme metadata on representative default-layout pages, reject the malformed APOD route/image, verify feeds/sitemap/redirects, `/now/`, `/resume/`, blog search/tags/TOC/related posts, and homepage repository-card counts; add a tracked-tree artifact/secret contract.
-- [ ] **Step 2: Run RED against the pre-build or intentionally incomplete fixture.** Run the focused generated-output suite; expected failures identify missing checks.
-- [ ] **Step 3: Implement only the reusable checks and update E3 documentation.** Keep generated-output checks deterministic and non-networked; mark E3 merged PR #90 and follow-up #91 accurately without rewriting history.
-- [ ] **Step 4: Run GREEN.** Run `python -m pytest tests -q` for the focused site tests plus all workflow/YAML contracts.
-- [ ] **Step 5: Commit.** `git add tests docs/superpowers/plans/2026-10-01-now-page-freshness-implementation.md && git commit -m "test: cover final generated site contracts" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing generated-output/site checks.** Extend the generated checker to require manifest/theme metadata on representative default-layout pages, reject the malformed APOD route/image, verify feeds/sitemap/redirects, `/now/`, `/resume/`, blog search/tags/TOC/related posts, and homepage repository-card counts; add a tracked-tree artifact/secret contract.
+- [x] **Step 2: Run RED against the pre-build or intentionally incomplete fixture.** Run the focused generated-output suite; expected failures identify missing checks.
+- [x] **Step 3: Implement only the reusable checks and update E3 documentation.** Keep generated-output checks deterministic and non-networked; mark E3 merged PR #90 and follow-up #91 accurately without rewriting history.
+- [x] **Step 4: Run GREEN.** Run `python -m pytest tests -q` for the focused site tests plus all workflow/YAML contracts.
+- [x] **Step 5: Commit.** `git add tests docs/superpowers/plans/2026-10-01-now-page-freshness-implementation.md && git commit -m "test: cover final generated site contracts" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 9: Whole-site validation and publication
 
-- [ ] **Step 1: Run full Python and Node suites.** Run `python -m pytest -q`, the separate Cosmic Daily suite from `tools/cosmic-daily`, and the repository Node tests; clean `_site` first so duplicate collection cannot mask failures. Expected: all pass.
-- [ ] **Step 2: Build with Ruby 3.4 Docker.** Run the repository's Docker build command and every generated-output checker; expected successful Jekyll output with no malformed APOD route.
-- [ ] **Step 3: Crawl and inspect.** Crawl all generated internal links/assets and inspect feed, APOD feed, sitemap, redirects, `/now/`, `/resume/`, blog search/tags/TOC/related posts, and homepage data counts. Expected: no broken internal references or missing assets.
-- [ ] **Step 4: Run final hygiene checks.** Run `git diff --check`, tracked-tree artifact/secret scans, manifest JSON/schema/content-type checks, and representative mobile Lighthouse checks when available. Record non-blocking Lighthouse limitations explicitly.
-- [ ] **Step 5: Request fresh independent whole-branch review.** Review all findings; fix Critical/Important findings test-first, assess Minor findings explicitly, and rerun affected tests plus the full validation as needed.
-- [ ] **Step 6: Commit final documentation/checklist state and verify clean tree.** `git status --short` must be empty after the final commit; every commit includes the Copilot trailer.
-- [ ] **Step 7: Push and open exactly one non-draft PR to `main`.** Use authenticated `gh` CLI, wait for checks, do not merge, and record the PR URL, final SHA, commit list, test/build/crawl/Lighthouse/artifact results, rights semantics, workflow permissions, license scope, and review dispositions.
+- [x] **Step 1: Run full Python and Node suites.** Run `python -m pytest -q`, the separate Cosmic Daily suite from `tools/cosmic-daily`, and the repository Node tests; clean `_site` first so duplicate collection cannot mask failures. Expected: all pass.
+- [x] **Step 2: Build with Ruby 3.4 Docker.** Run the repository's Docker build command and every generated-output checker; expected successful Jekyll output with no malformed APOD route.
+- [x] **Step 3: Crawl and inspect.** Crawl all generated internal links/assets and inspect feed, APOD feed, sitemap, redirects, `/now/`, `/resume/`, blog search/tags/TOC/related posts, and homepage data counts. Expected: no broken internal references or missing assets.
+- [x] **Step 4: Run final hygiene checks.** Run `git diff --check`, tracked-tree artifact/secret scans, manifest JSON/schema/content-type checks, and representative mobile Lighthouse checks when available. Record non-blocking Lighthouse limitations explicitly.
+- [x] **Step 5: Request fresh independent whole-branch review.** Review all findings; fix Critical/Important findings test-first, assess Minor findings explicitly, and rerun affected tests plus the full validation as needed.
+- [x] **Step 6: Commit final documentation/checklist state and verify clean tree.** `git status --short` must be empty after the final commit; every commit includes the Copilot trailer.
+- [x] **Step 7: Push and open exactly one non-draft PR to `main`.** Use authenticated `gh` CLI, wait for checks, do not merge, and record the PR URL, final SHA, commit list, test/build/crawl/Lighthouse/artifact results, rights semantics, workflow permissions, license scope, and review dispositions.
 
 ## Plan self-review
 
