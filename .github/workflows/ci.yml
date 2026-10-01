@@ -20,6 +20,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - name: Set up Python for site data checks
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Validate site data
+        run: |
+          python -m pip install "PyYAML==6.0.3"
+          python tools/site-checks/validate_site_data.py
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -37,14 +47,10 @@ jobs:
       - name: Test local blog search
         run: node --test tools/site-checks/js/*.test.js
 
-      - name: Set up Python for generated-site checks
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-
       - name: Check generated output
         run: |
           set -euo pipefail
+          python tools/site-checks/check_site_data_html.py
           for path in \
             _site/index.html \
             _site/sky/index.html \

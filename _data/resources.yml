@@ -1,0 +1,15 @@
+- icon: "🌌"
+  title: Astronomy
+  description: "Exploring celestial objects and following the latest discoveries - from JWST deep fields to backyard skies."
+  href: "/blog/astronomy/"
+  more: "Read articles →"
+- icon: "🧠"
+  title: Artificial Intelligence
+  description: "Studying ML advances and how they translate into real-world impact - then testing myself on Kaggle."
+  href: "/blog/ai/"
+  more: "Read articles →"
+- icon: "⚛️"
+  title: Physics
+  description: "Fascinated by the fundamental laws that describe our universe - the original distributed system."
+  href: "/blog/physics/"
+  more: "Read articles →"

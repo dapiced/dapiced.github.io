@@ -1,0 +1,39 @@
+- domain: "Cloud & Data"
+  tags:
+    - Azure
+    - Databricks
+    - VMware
+    - Azure DevOps
+- domain: "IaC & Automation"
+  tags:
+    - Ansible
+    - Terraform
+    - Packer
+    - GitHub Actions
+    - PowerShell
+    - Bash
+- domain: Languages
+  tags:
+    - Python
+    - R
+    - JavaScript
+    - Perl
+- domain: Systems
+  tags:
+    - Red Hat
+    - SUSE
+    - Windows
+    - IBM AIX
+    - Red Hat Satellite
+- domain: Databases
+  tags:
+    - PostgreSQL
+    - MSSQL
+    - MySQL
+    - Oracle
+- domain: "ML & Data"
+  tags:
+    - MLOps
+    - DataOps
+    - Machine Learning
+    - Kaggle
