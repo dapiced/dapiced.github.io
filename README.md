@@ -59,7 +59,7 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 
 - `index.html` - homepage (hero, about, projects, skills, timeline, blog preview).
   Project cards are static HTML (indexable without JS) refreshed live from the GitHub API.
-- `blog/index.html` - post listing (all posts remain in HTML; JavaScript progressively shows the first eight)
+- `blog/index.html` - post listing (all English posts remain in HTML for SEO and readers without JavaScript; JavaScript initially shows eight and provides a button to reveal the rest)
 - `blog/search/` and `blog/search.json` - local search over authored post titles, excerpts and tags
 - `404.html` - custom not-found page
 - `_posts/` - blog posts (Markdown)

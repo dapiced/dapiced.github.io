@@ -1,5 +1,6 @@
 ---
 layout: default
+blog_index: true
 title: Blog - Azure, Databricks & MLOps Field Notes
 description: >-
   Field notes from 25+ years of infrastructure: Azure, Databricks, Ansible,
@@ -62,9 +63,11 @@ keywords:
   </div>
 
   <p class="eyebrow" style="margin-top: 3rem;">ALL POSTS</p>
-  <ul class="post-list" style="margin-top: 1rem;">
-    {% comment %} French versions are reached from their English post (translation_url), not listed twice {% endcomment %}
-    {% assign posts = site.posts | where_exp: "post", "post.lang != 'fr'" %}
+  {% comment %} French versions are reached from their English post (translation_url), not listed twice {% endcomment %}
+  {% assign posts = site.posts | where_exp: "post", "post.lang != 'fr'" %}
+  {% assign blog_lang = page.lang | default: site.lang %}
+  {% assign blog_t = site.data.i18n[blog_lang] | default: site.data.i18n.en %}
+  <ul class="post-list" id="all-posts" data-initial="8" data-show-more-template="{{ blog_t.show_more | escape }}" data-hidden-count="{{ posts.size | minus: 8 | at_least: 0 }}" style="margin-top: 1rem;">
     {% for post in posts %}
       {% include post-item.html post=post %}
     {% endfor %}

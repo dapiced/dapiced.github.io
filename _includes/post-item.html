@@ -1,4 +1,4 @@
-<li class="post-item">
+<li class="post-item" id="post-{{ include.post.slug }}">
   <a class="post-link" href="{{ include.post.url }}">{{ include.post.title }}</a>
   <p class="post-meta">
     <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ include.post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span>

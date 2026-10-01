@@ -24,10 +24,13 @@ class PageParser(HTMLParser):
         self.tag_classes: list[tuple[str, str, str | None]] = []
         self.post_links: list[str] = []
         self.links: list[str] = []
+        self.post_item_ids: list[str | None] = []
+        self.unordered_lists: list[dict[str, str | None]] = []
         self.meta_description: str | None = None
         self.ids: set[str] = set()
         self.forms: list[dict[str, str | None]] = []
         self.inputs: list[dict[str, str | None]] = []
+        self.scripts: list[str] = []
         self.live_regions: list[str | None] = []
         self.label_targets: set[str] = set()
 
@@ -39,6 +42,8 @@ class PageParser(HTMLParser):
             self.forms.append(values)
         if tag == "input":
             self.inputs.append(values)
+        if tag == "script" and values.get("src"):
+            self.scripts.append(values["src"] or "")
         if tag == "label" and values.get("for"):
             self.label_targets.add(values["for"] or "")
         if values.get("aria-live"):
@@ -53,6 +58,10 @@ class PageParser(HTMLParser):
             self.tag_classes.append((tag, " ".join(classes), href))
         if tag == "a" and "post-link" in classes and href:
             self.post_links.append(href)
+        if tag == "li" and "post-item" in classes:
+            self.post_item_ids.append(values.get("id"))
+        if tag == "ul":
+            self.unordered_lists.append(values)
 
 
 def authored_tags() -> set[str]:
@@ -108,6 +117,35 @@ def check() -> list[str]:
         for path in (SITE / "blog").rglob("*.html")
         if "search" not in path.relative_to(SITE / "blog").parts
     ]
+    blog_index_path = SITE / "blog" / "index.html"
+    if blog_index_path.is_file():
+        blog_index = parse(blog_index_path)
+        if len(blog_index.post_links) != 10:
+            errors.append(
+                f"blog index must retain all 10 listed post links in HTML; found {len(blog_index.post_links)}"
+            )
+        if not any(
+            listing.get("id") == "all-posts" and listing.get("data-initial") == "8"
+            for listing in blog_index.unordered_lists
+        ):
+            errors.append("blog index must contain ul#all-posts[data-initial='8']")
+        if not any(src == "/assets/js/blog-index.js" for src in blog_index.scripts):
+            errors.append("blog index must load the deferred blog-index.js enhancement")
+        post_list = next(
+            (listing for listing in blog_index.unordered_lists if listing.get("id") == "all-posts"),
+            {},
+        )
+        template = post_list.get("data-show-more-template") or ""
+        if "{n}" not in template:
+            errors.append("blog index must provide a translated show-more label template")
+        if post_list.get("data-hidden-count") != str(max(len(blog_index.post_links) - 8, 0)):
+            errors.append("blog index must provide the number of initially hidden posts")
+        expected_item_ids = {
+            f"post-{href.rstrip('/').rsplit('/', 1)[-1]}" for href in blog_index.post_links
+        }
+        if len(blog_index.post_item_ids) != 10 or set(blog_index.post_item_ids) != expected_item_ids:
+            errors.append("blog index item IDs must be post-<slug> values matching the listed post URLs")
+
     for path in blog_pages:
         page = parse(path)
         relative = path.relative_to(SITE)
