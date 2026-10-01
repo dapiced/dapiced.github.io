@@ -9,8 +9,8 @@ sitemap: false
   {%- assign search_excerpt = post.description | default: plain_excerpt | strip_html | normalize_whitespace %}
   {
     "title": {{ post.title | jsonify }},
-    "url": {{ post.url | jsonify }},
-    "date": {{ post.date | date_to_xmlschema | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
     "lang": {{ post.lang | default: "en" | jsonify }},
     "tags": {{ post.tags | jsonify }},
     "excerpt": {{ search_excerpt | jsonify }}

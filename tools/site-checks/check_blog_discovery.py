@@ -23,6 +23,7 @@ class PageParser(HTMLParser):
         super().__init__()
         self.tag_classes: list[tuple[str, str, str | None]] = []
         self.post_links: list[str] = []
+        self.links: list[str] = []
         self.meta_description: str | None = None
         self.ids: set[str] = set()
         self.forms: list[dict[str, str | None]] = []
@@ -46,6 +47,8 @@ class PageParser(HTMLParser):
             self.meta_description = values.get("content")
         classes = (values.get("class") or "").split()
         href = values.get("href")
+        if tag == "a" and href:
+            self.links.append(href)
         if "tag" in classes:
             self.tag_classes.append((tag, " ".join(classes), href))
         if tag == "a" and "post-link" in classes and href:
@@ -146,6 +149,12 @@ def check() -> list[str]:
                         continue
                     if not all(isinstance(record[field], str) and record[field] for field in ("title", "url", "date", "lang")):
                         errors.append("search title, url, date, and lang values must be non-empty strings")
+                    if isinstance(record.get("url"), str) and not record["url"].startswith("/blog/"):
+                        errors.append(f"search URL must be a relative authored blog path: {record['url']}")
+                    if isinstance(record.get("date"), str) and not re.fullmatch(
+                        r"\d{4}-\d{2}-\d{2}", record["date"]
+                    ):
+                        errors.append(f"search date must use YYYY-MM-DD: {record['date']}")
                     if not isinstance(record["tags"], list) or not all(
                         isinstance(tag, str) for tag in record["tags"]
                     ):
@@ -162,21 +171,30 @@ def check() -> list[str]:
         errors.append("missing generated search page: blog/search/index.html")
     else:
         page = parse(search_page)
-        if not any(form.get("method", "").lower() == "get" for form in page.forms):
-            errors.append("blog search page must contain a GET search form")
+        if not any(
+            form.get("role") == "search" and form.get("method", "").lower() == "get"
+            for form in page.forms
+        ):
+            errors.append("blog search page must contain a role=search GET form")
         if not any(input_.get("id") == "blog-search-query" for input_ in page.inputs):
             errors.append("blog search page must contain the labelled #blog-search-query input")
         if "blog-search-query" not in page.label_targets:
             errors.append("blog search input must have an associated label")
-        if "blog-search-results" not in page.ids:
-            errors.append("blog search page must contain #blog-search-results")
+        if "search-results" not in page.ids:
+            errors.append("blog search page must contain #search-results")
+        if "search-status" not in page.ids:
+            errors.append("blog search page must contain #search-status")
         if "polite" not in page.live_regions:
             errors.append("blog search page must contain an aria-live=polite status region")
-        if "tag-archives" not in page.ids:
-            errors.append("blog search page must include a server-rendered tag archive list")
+        if "search-fallback" not in page.ids or "tag-archives" not in page.ids:
+            errors.append("blog search page must include a server-rendered fallback and tag archive list")
         source = search_page.read_text(encoding="utf-8").lower()
-        if "<noscript>" not in source or "javascript" not in source or 'href="#tag-archives"' not in source:
-            errors.append("blog search page must explain the no-JavaScript fallback and link to its tags")
+        if "search needs javascript" not in source or "/blog/" not in page.links:
+            errors.append("blog search fallback must explain its JavaScript requirement and link to /blog/")
+        fallback_start = source.find('id="search-fallback"')
+        fallback_end = source.find("</div>", fallback_start)
+        if fallback_start < 0 or fallback_end < 0 or "<noscript>" in source[fallback_start:fallback_end]:
+            errors.append("blog search fallback must be server-rendered and visible without JavaScript")
         linked_archives = {href for _, _, href in page.tag_classes if href}
         for tag in authored_tags():
             expected = f"/blog/tag/{tag}/"

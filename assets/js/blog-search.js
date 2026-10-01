@@ -4,8 +4,9 @@
 
   const form = document.getElementById("blog-search-form");
   const input = document.getElementById("blog-search-query");
-  const status = document.getElementById("blog-search-status");
-  const results = document.getElementById("blog-search-results");
+  const status = document.getElementById("search-status");
+  const fallback = document.getElementById("search-fallback");
+  const results = document.querySelector("#search-results ol");
   const labels = {
     results: root.dataset.searchResults,
     oneResult: root.dataset.searchOneResult,
@@ -19,7 +20,7 @@
   let debounce;
 
   function format(template, values) {
-    return template.replace(/\{(count|query|tag)\}/g, (_, key) => values[key] ?? "");
+    return template.replace(/\{(n|q|tag)\}/g, (_, key) => values[key] ?? "");
   }
 
   function updateAddressBar(query) {
@@ -34,6 +35,10 @@
       postsPromise = fetch("/blog/search.json").then((response) => {
         if (!response.ok) throw new Error("Search index request failed");
         return response.json();
+      }).then((posts) => {
+        if (!Array.isArray(posts)) throw new Error("Search index must be an array");
+        fallback.hidden = true;
+        return posts;
       });
     }
     return postsPromise;
@@ -98,19 +103,22 @@
       return;
     }
 
+    let posts;
     try {
-      const posts = await loadPosts();
-      const matches = window.BlogSearchCore.searchPosts(posts, query);
-      results.replaceChildren(...matches.map(renderPost));
-      status.textContent = matches.length === 0
-        ? format(labels.none, { query })
-        : matches.length === 1
-          ? format(labels.oneResult, { query })
-          : format(labels.results, { count: matches.length, query });
+      posts = await loadPosts();
     } catch {
       results.replaceChildren();
       status.textContent = labels.error;
+      return;
     }
+
+    const matches = window.BlogSearchCore.searchPosts(posts, query);
+    results.replaceChildren(...matches.map(renderPost));
+    status.textContent = matches.length === 0
+      ? format(labels.none, { q: query })
+      : matches.length === 1
+        ? format(labels.oneResult, { q: query })
+        : format(labels.results, { n: matches.length, q: query });
   }
 
   form.addEventListener("submit", (event) => {

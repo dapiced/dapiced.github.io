@@ -19,26 +19,27 @@ blog_search: true
   <p class="eyebrow"><a href="/blog/">{{ search_t.eyebrow_blog }}</a></p>
   <h1 class="section-title">{{ search_t.search_title }}</h1>
 
-  <form id="blog-search-form" action="/blog/search/" method="get">
+  <form id="blog-search-form" role="search" action="/blog/search/" method="get">
     <label for="blog-search-query">{{ search_t.search_label }}</label>
     <input id="blog-search-query" name="q" type="search" autocomplete="off"
       placeholder="{{ search_t.search_placeholder | escape }}">
     <button type="submit">{{ search_t.search_button }}</button>
   </form>
 
-  <noscript>
-    <p>{{ search_t.search_requires_javascript }} <a href="#tag-archives">{{ search_t.search_browse_tags }}</a></p>
-  </noscript>
+  <div id="search-fallback">
+    <p>{{ search_t.search_nojs }} <a href="/blog/">{{ search_t.search_browse_posts }}</a></p>
+    <div id="tag-archives">
+      <h2>{{ search_t.search_tags_title }}</h2>
+      <ul class="post-list">
+        {% for tag in site.tags %}
+          <li><a class="tag" href="/blog/tag/{{ tag[0] | slugify }}/">#{{ tag[0] | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 
-  <p id="blog-search-status" role="status" aria-live="polite"></p>
-  <ol id="blog-search-results" class="post-list" aria-describedby="blog-search-status"></ol>
-
-  <div id="tag-archives">
-    <h2>{{ search_t.search_tags_title }}</h2>
-    <ul class="post-list">
-      {% for tag in site.tags %}
-        <li><a class="tag" href="/blog/tag/{{ tag[0] | slugify }}/">#{{ tag[0] | escape }}</a></li>
-      {% endfor %}
-    </ul>
+  <p id="search-status" role="status" aria-live="polite"></p>
+  <div id="search-results" aria-describedby="search-status">
+    <ol class="post-list"></ol>
   </div>
 </section>
