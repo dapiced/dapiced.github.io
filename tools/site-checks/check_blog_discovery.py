@@ -28,16 +28,47 @@ class PageParser(HTMLParser):
         self.unordered_lists: list[dict[str, str | None]] = []
         self.meta_description: str | None = None
         self.ids: set[str] = set()
+        self.html_lang: str | None = None
         self.forms: list[dict[str, str | None]] = []
         self.inputs: list[dict[str, str | None]] = []
         self.scripts: list[str] = []
         self.live_regions: list[str | None] = []
         self.label_targets: set[str] = set()
+        self.post_content_div_depth = 0
+        self.content_headings: list[tuple[str, str | None]] = []
+        self.current_heading: tuple[str, str | None, list[str]] | None = None
+        self.in_post_toc = False
+        self.post_toc_count = 0
+        self.toc_list_depth = 0
+        self.toc_entries: list[tuple[int, str]] = []
+        self.toc_title_parts: list[str] | None = None
+        self.toc_title_text: str | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
+        if tag == "html":
+            self.html_lang = values.get("lang")
         if values.get("id"):
-            self.ids.add(values["id"] or "")
+            element_id = values["id"] or ""
+            self.ids.add(element_id)
+        classes = (values.get("class") or "").split()
+        if tag == "div":
+            if self.post_content_div_depth:
+                self.post_content_div_depth += 1
+            elif "post-content" in classes:
+                self.post_content_div_depth = 1
+        if tag in ("h2", "h3") and self.post_content_div_depth:
+            self.current_heading = (tag, values.get("id"), [])
+        if tag == "nav" and "post-toc" in classes:
+            self.post_toc_count += 1
+            self.in_post_toc = True
+            self.toc_list_depth = 0
+        if self.in_post_toc and tag == "ol":
+            self.toc_list_depth += 1
+        if self.in_post_toc and tag == "a" and (values.get("href") or "").startswith("#"):
+            self.toc_entries.append((self.toc_list_depth, (values["href"] or "")[1:]))
+        if self.in_post_toc and tag == "h2" and values.get("id") == "post-toc-title":
+            self.toc_title_parts = []
         if tag == "form":
             self.forms.append(values)
         if tag == "input":
@@ -50,7 +81,6 @@ class PageParser(HTMLParser):
             self.live_regions.append(values.get("aria-live"))
         if tag == "meta" and values.get("name") == "description":
             self.meta_description = values.get("content")
-        classes = (values.get("class") or "").split()
         href = values.get("href")
         if tag == "a" and href:
             self.links.append(href)
@@ -62,6 +92,27 @@ class PageParser(HTMLParser):
             self.post_item_ids.append(values.get("id"))
         if tag == "ul":
             self.unordered_lists.append(values)
+
+    def handle_data(self, data: str) -> None:
+        if self.current_heading is not None:
+            self.current_heading[2].append(data)
+        if self.in_post_toc and self.toc_title_parts is not None:
+            self.toc_title_parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if self.current_heading is not None and tag == self.current_heading[0]:
+            level, heading_id, parts = self.current_heading
+            self.content_headings.append((level, heading_id))
+            self.current_heading = None
+        if self.in_post_toc and tag == "h2" and self.toc_title_parts is not None:
+            self.toc_title_text = " ".join(" ".join(self.toc_title_parts).split())
+            self.toc_title_parts = None
+        if self.in_post_toc and tag == "ol":
+            self.toc_list_depth -= 1
+        if tag == "nav" and self.in_post_toc:
+            self.in_post_toc = False
+        if tag == "div" and self.post_content_div_depth:
+            self.post_content_div_depth -= 1
 
 
 def authored_tags() -> set[str]:
@@ -166,6 +217,56 @@ def check() -> list[str]:
                 errors.append(
                     f"{path.relative_to(SITE)}: portfolio .tag must remain a span, found <{tag}>"
                 )
+
+    post_pages = [
+        path
+        for path in (SITE / "blog").rglob("index.html")
+        if len(path.relative_to(SITE / "blog").parts) == 4
+        and path.relative_to(SITE / "blog").parts[0].isdigit()
+        and path.relative_to(SITE / "blog").parts[1].isdigit()
+    ]
+    for path in post_pages:
+        page = parse(path)
+        relative = path.relative_to(SITE)
+        usable_headings = [
+            (level, heading_id)
+            for level, heading_id in page.content_headings
+            if heading_id
+        ]
+        expected_entries: list[tuple[int, str]] = []
+        seen_h2 = False
+        for level, heading_id in usable_headings:
+            if level == "h2":
+                seen_h2 = True
+                depth = 1
+            else:
+                depth = 2 if seen_h2 else 1
+            expected_entries.append((depth, heading_id or ""))
+
+        needs_toc = len(usable_headings) >= 3
+        if needs_toc and page.post_toc_count != 1:
+            errors.append(f"{relative}: expected one TOC for {len(usable_headings)} usable h2/h3 headings")
+        elif not needs_toc and page.post_toc_count:
+            errors.append(f"{relative}: TOC must be omitted with fewer than 3 usable h2/h3 headings")
+        if "post-toc-title" in {
+            heading_id for _, heading_id in usable_headings
+        }:
+            errors.append(f"{relative}: post heading ID collides with post-toc-title")
+        if page.post_toc_count:
+            actual_ids = [heading_id for _, heading_id in page.toc_entries]
+            if len(actual_ids) != len(set(actual_ids)):
+                errors.append(f"{relative}: TOC contains duplicate fragment IDs")
+            for heading_id in actual_ids:
+                if heading_id not in page.ids:
+                    errors.append(f"{relative}: TOC fragment #{heading_id} has no target ID")
+            if page.toc_entries != expected_entries:
+                errors.append(f"{relative}: TOC heading order or h3 nesting does not match post content")
+            expected_title = "Sur cette page" if (page.html_lang or "").startswith("fr") else "On this page"
+            if page.toc_title_text != expected_title:
+                errors.append(f"{relative}: TOC title must use the page language")
+    nothingness_path = SITE / "blog" / "2026" / "07" / "nothingness-has-no-address" / "index.html"
+    if nothingness_path.is_file() and parse(nothingness_path).post_toc_count:
+        errors.append("nothingness must not contain a TOC")
 
     search_json = SITE / "blog" / "search.json"
     search_page = SITE / "blog" / "search" / "index.html"

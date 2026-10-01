@@ -27,6 +27,8 @@ en:
   search_tag_label: "Browse the {tag} tag"
   search_french_marker: "FR"
   search_french_label: "French version"
+  toc_title: "On this page"
+  related_title: "Related posts"
   show_more: "Show all posts ({n} more)"
 
 fr:
@@ -56,7 +58,9 @@ fr:
   search_tag_label: "Parcourir le mot-clé {tag}"
   search_french_marker: "FR"
   search_french_label: "Version française"
-  show_more: "Afficher tous les billets ({n} de plus)"
+  toc_title: "Sur cette page"
+  related_title: "Articles connexes"
+  show_more: "Afficher tous les articles ({n} de plus)"
   months:
     - janvier
     - février

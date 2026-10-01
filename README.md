@@ -27,6 +27,8 @@ Post content in Markdown…
   social preview (JPG/PNG, ideally 1200x630 - falls back to `/assets/img/og-default.jpg`).
 - Keep tags as lowercase hyphenated slugs; Jekyll generates a linked archive at
   `/blog/tag/<tag>/` for each authored-post tag.
+- Use clear `##` and `###` sections in long posts; a server-rendered table of contents
+  appears when a post has at least three such headings.
 - Search authored posts at `/blog/search/`; the local index is generated at
   `/blog/search.json`. Tag archives remain available without JavaScript.
 - Photos: resize to ~1600 px max and convert to WebP before committing; always set
