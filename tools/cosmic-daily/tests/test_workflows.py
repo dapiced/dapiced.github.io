@@ -130,11 +130,25 @@ def test_ci_builds_the_site(ci):
     site = ci["jobs"]["site"]
     assert uses_action(site, "ruby/setup-ruby@")
     assert "bundle exec jekyll build" in run_commands(site)
+    assert uses_action(site, "actions/setup-python@v7")
+    setup = next(
+        s for s in steps_of(site) if str(s.get("uses", "")).startswith("actions/setup-python@v7")
+    )
+    assert setup["with"]["python-version"] == "3.11"
+    assert "tools/site-checks/check_blog_discovery.py" in run_commands(site)
+    assert run_commands(site).index("bundle exec jekyll build") < run_commands(site).index(
+        "check_blog_discovery.py"
+    )
 
 
 def test_ci_smoke_checks_the_generated_output(ci):
     commands = run_commands(ci["jobs"]["site"])
-    for expected in ("_site/sky/index.html", "_site/feed.xml", "_site/feed/apod.xml"):
+    for expected in (
+        "_site/sky/index.html",
+        "_site/feed.xml",
+        "_site/feed/apod.xml",
+        "_site/blog/tag/machine-learning/index.html",
+    ):
         assert expected in commands
 
 

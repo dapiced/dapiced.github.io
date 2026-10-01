@@ -427,6 +427,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   font-size: 0.8rem;
   color: var(--text);
 }
+.tag:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
 .tag:hover { border-color: var(--cyan); }
 
 /* ---------- timeline ---------- */

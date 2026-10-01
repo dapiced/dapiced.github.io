@@ -1,0 +1,9 @@
+<li class="post-item">
+  <a class="post-link" href="{{ include.post.url }}">{{ include.post.title }}</a>
+  <p class="post-meta">
+    <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ include.post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span>
+    {% if include.post.tags and include.post.tags.size > 0 %} · {% for tag in include.post.tags %}<a class="tag" href="/blog/tag/{{ tag | slugify }}/">#{{ tag }}</a> {% endfor %}{% endif %}
+    {% if include.post.translation_url %} · <a href="{{ include.post.translation_url }}">version française 🇫🇷</a>{% endif %}
+  </p>
+  <p class="excerpt">{{ include.post.excerpt | strip_html | truncate: 220 }}</p>
+</li>
