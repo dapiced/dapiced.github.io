@@ -111,3 +111,24 @@ def test_resume_assets_support_responsive_layout_and_printing():
 
     assert 'querySelector("[data-print-resume]")' in javascript
     assert "window.print()" in javascript
+
+
+def test_resume_print_styles_do_not_change_other_pages():
+    template = read_resume_template()
+    layout = (ROOT / "_layouts" / "default.html").read_text(encoding="utf-8")
+    stylesheet = (ROOT / "assets" / "css" / "style.css").read_text(encoding="utf-8")
+    print_styles = stylesheet.split("@media print", maxsplit=1)[1].split(
+        "/* ---------- beyond ---------- */",
+        maxsplit=1,
+    )[0]
+
+    assert "body_class: resume-document" in template
+    assert (
+        '<body{% if page.body_class %} class="{{ page.body_class | escape }}"{% endif %}>'
+        in layout
+    )
+    assert "@page resume" in print_styles
+    assert "body.resume-document" in print_styles
+    assert re.search(r"(?m)^\s*body\s*\{", print_styles) is None
+    for selector in (".nav", ".footer", "#starfield", ".skip-link", ".gold-tip"):
+        assert f"body.resume-document {selector}" in print_styles

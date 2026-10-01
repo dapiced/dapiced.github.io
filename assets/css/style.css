@@ -648,15 +648,12 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 }
 
 @media print {
-  @page {
+  @page resume {
     margin: 0.55in;
   }
 
-  html {
-    scroll-behavior: auto;
-  }
-
-  body {
+  body.resume-document {
+    page: resume;
     min-height: auto;
     background: #fff;
     color: #111;
@@ -664,16 +661,16 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
     line-height: 1.4;
   }
 
-  .nav,
-  .footer,
-  #starfield,
-  .skip-link,
-  .resume-actions,
-  .gold-tip {
+  body.resume-document .nav,
+  body.resume-document .footer,
+  body.resume-document #starfield,
+  body.resume-document .skip-link,
+  body.resume-document .resume-actions,
+  body.resume-document .gold-tip {
     display: none !important;
   }
 
-  .resume-page {
+  body.resume-document .resume-page {
     width: 100%;
     margin: 0;
     padding: 0;
@@ -683,41 +680,41 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
     box-shadow: none;
   }
 
-  .resume-header {
+  body.resume-document .resume-header {
     padding-bottom: 0.2in;
     border-color: #bbb;
   }
 
-  .resume-header h1,
-  .resume-section h2,
-  .resume-experience-item h3,
-  .resume-skill-group h3 {
+  body.resume-document .resume-header h1,
+  body.resume-document .resume-section h2,
+  body.resume-document .resume-experience-item h3,
+  body.resume-document .resume-skill-group h3 {
     color: #111;
   }
 
-  .resume-header h1 {
+  body.resume-document .resume-header h1 {
     font-size: 27pt;
   }
 
-  .resume-role,
-  .resume-location,
-  .resume-summary,
-  .resume-experience-year,
-  .resume-experience-item p:last-child,
-  .resume-profiles > p {
+  body.resume-document .resume-role,
+  body.resume-document .resume-location,
+  body.resume-document .resume-summary,
+  body.resume-document .resume-experience-year,
+  body.resume-document .resume-experience-item p:last-child,
+  body.resume-document .resume-profiles > p {
     color: #222;
   }
 
-  .resume-section {
+  body.resume-document .resume-section {
     padding-top: 0.22in;
   }
 
-  .resume-section h2 {
+  body.resume-document .resume-section h2 {
     margin-bottom: 0.12in;
     font-size: 15pt;
   }
 
-  .resume-experience-item {
+  body.resume-document .resume-experience-item {
     grid-template-columns: 1.2in 1fr;
     gap: 0.18in;
     padding: 0.1in 0;
@@ -725,27 +722,27 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
     break-inside: avoid;
   }
 
-  .resume-skill-groups {
+  body.resume-document .resume-skill-groups {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.12in 0.3in;
   }
 
-  .tag {
+  body.resume-document .tag {
     padding: 0;
     background: none;
     border: 0;
     color: #222;
   }
 
-  .resume-skill-tags {
+  body.resume-document .resume-skill-tags {
     gap: 0.06in 0.12in;
   }
 
-  .resume-profile-link {
+  body.resume-document .resume-profile-link {
     color: #111;
   }
 
-  .resume-profile-link::after {
+  body.resume-document .resume-profile-link::after {
     content: " (" attr(href) ")";
     color: #444;
     font-size: 8pt;

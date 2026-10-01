@@ -62,7 +62,7 @@
   }
   </script>
 </head>
-<body>
+<body{% if page.body_class %} class="{{ page.body_class | escape }}"{% endif %}>
   {%- assign chrome_lang = page.lang | default: site.lang %}
   {%- assign chrome_t = site.data.i18n[chrome_lang] | default: site.data.i18n.en %}
   <a class="skip-link" href="#main">{{ chrome_t.skip_link }}</a>
