@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATE_IN_TIME = re.compile(
     r'<time\b[^>]*\bdatetime="(?P<date>\d{4}-\d{2}-\d{2})"[^>]*>'
 )
+REMOVED_MIGRATION_CLAIM = ("~200", "1,500 repositories")
 
 
 def _load_freshness_checker():
@@ -45,6 +46,12 @@ def main() -> int:
         print(
             "Generated /now/ validation failed: "
             f"expected {expected.isoformat()}, got {match.group('date')}",
+            file=sys.stderr,
+        )
+        return 1
+    if any(fragment in html for fragment in REMOVED_MIGRATION_CLAIM):
+        print(
+            "Generated /now/ validation failed: removed migration claim is present",
             file=sys.stderr,
         )
         return 1
