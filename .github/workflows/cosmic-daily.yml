@@ -30,10 +30,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -106,7 +106,7 @@ jobs:
       - name: Create pull request
         if: ${{ steps.mode.outputs.publish == 'true' && steps.apod.outputs.post_path != '' }}
         id: create-pr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: "cosmic-daily/${{ steps.target.outputs.value }}"
           title: "Cosmic Daily: ${{ steps.target.outputs.value }}"
