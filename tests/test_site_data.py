@@ -121,3 +121,19 @@ def test_validate_site_data_rejects_unpaired_external_link_attributes(tmp_path: 
         match=r"navigation\[9\].*target and rel",
     ):
         validator.load_site_data(tmp_path)
+
+
+def test_templates_render_the_four_data_contracts_with_liquid_loops():
+    layout = (ROOT / "_layouts" / "default.html").read_text(encoding="utf-8")
+    homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+
+    assert "{% for item in site.data.navigation %}" in layout
+    assert "{{ item.label | escape }}" in layout
+    assert "{{ item.href | escape }}" in layout
+
+    for data_name, variable in (
+        ("skills", "group"),
+        ("timeline", "item"),
+        ("resources", "resource"),
+    ):
+        assert f"{{% for {variable} in site.data.{data_name} %}}" in homepage

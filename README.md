@@ -76,11 +76,21 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
   link), `comments.html` (giscus), `mermaid.html`, `localized-date.html`, `topic-posts.html`
 - `_data/i18n.yml` - interface strings for article pages in `en` and `fr`, picked by `page.lang`
   (dates, "min read", comments heading, giscus language, back links)
+- `_data/navigation.yml` - ordered header links (`label`, `href`, and optional `class`,
+  `target`, `rel`)
+- `_data/skills.yml` - ordered homepage skill groups (`domain` and an ordered `tags` list)
+- `_data/timeline.yml` - ordered career entries (`year`, `role`, `description`)
+- `_data/resources.yml` - ordered off-duty cards (`icon`, `title`, `description`, `href`,
+  `more`)
 - `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos
 - `_config.yml` - Jekyll config: canonical `url`, SEO/feed/sitemap plugins, default og:image, social links
 - `tools/cosmic-daily/` - Python generator behind the daily APOD entries (excluded from the Jekyll build)
 - `.github/workflows/` - automation, see below
 - `.github/dependabot.yml` - weekly dependency updates (Actions, Bundler, pip)
+
+The four homepage presentation files are validated with
+`python tools/site-checks/validate_site_data.py`. Keep every list in display order and
+preserve the navigation `target: _blank` / `rel: noopener` pair for external links.
 
 ## Automation
 

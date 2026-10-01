@@ -102,30 +102,12 @@ keywords:
   <p class="eyebrow">03 · ONBOARD SYSTEMS</p>
   <h2 class="section-title">Skills</h2>
   <div class="skills-groups reveal">
+    {% for group in site.data.skills %}
     <div class="skill-row">
-      <span class="skill-domain">Cloud &amp; Data</span>
-      <span class="skill-tags"><span class="tag">Azure</span><span class="tag">Databricks</span><span class="tag">VMware</span><span class="tag">Azure DevOps</span></span>
+      <span class="skill-domain">{{ group.domain | escape }}</span>
+      <span class="skill-tags">{% for tag in group.tags %}<span class="tag">{{ tag | escape }}</span>{% endfor %}</span>
     </div>
-    <div class="skill-row">
-      <span class="skill-domain">IaC &amp; Automation</span>
-      <span class="skill-tags"><span class="tag">Ansible</span><span class="tag">Terraform</span><span class="tag">Packer</span><span class="tag">GitHub Actions</span><span class="tag">PowerShell</span><span class="tag">Bash</span></span>
-    </div>
-    <div class="skill-row">
-      <span class="skill-domain">Languages</span>
-      <span class="skill-tags"><span class="tag">Python</span><span class="tag">R</span><span class="tag">JavaScript</span><span class="tag">Perl</span></span>
-    </div>
-    <div class="skill-row">
-      <span class="skill-domain">Systems</span>
-      <span class="skill-tags"><span class="tag">Red Hat</span><span class="tag">SUSE</span><span class="tag">Windows</span><span class="tag">IBM AIX</span><span class="tag">Red Hat Satellite</span></span>
-    </div>
-    <div class="skill-row">
-      <span class="skill-domain">Databases</span>
-      <span class="skill-tags"><span class="tag">PostgreSQL</span><span class="tag">MSSQL</span><span class="tag">MySQL</span><span class="tag">Oracle</span></span>
-    </div>
-    <div class="skill-row">
-      <span class="skill-domain">ML &amp; Data</span>
-      <span class="skill-tags"><span class="tag">MLOps</span><span class="tag">DataOps</span><span class="tag">Machine Learning</span><span class="tag">Kaggle</span></span>
-    </div>
+    {% endfor %}
   </div>
 </section>
 
@@ -134,36 +116,13 @@ keywords:
   <p class="eyebrow">04 · FLIGHT LOG</p>
   <h2 class="section-title">25+ years of service</h2>
   <div class="timeline reveal">
+    {% for item in site.data.timeline %}
     <div class="tl-item">
-      <span class="tl-year">2026 - NOW</span>
-      <p class="tl-role">Developer - Azure Infrastructure AI</p>
-      <p class="tl-desc">Azure for AI · Databricks platform · MLOps / DataOps · IaC · CI/CD</p>
+      <span class="tl-year">{{ item.year | escape }}</span>
+      <p class="tl-role">{{ item.role | escape }}</p>
+      <p class="tl-desc">{{ item.description | escape }}</p>
     </div>
-    <div class="tl-item">
-      <span class="tl-year">2018 - 2025</span>
-      <p class="tl-role">Cloud / Linux Administrator &amp; IaC Developer</p>
-      <p class="tl-desc">Self-service cloud for business clients · IaC in NERC-regulated environments</p>
-    </div>
-    <div class="tl-item">
-      <span class="tl-year">2015 - 2018</span>
-      <p class="tl-role">IT Standardization Linux System Administrator</p>
-      <p class="tl-desc">Fleet of 1000+ servers · patching and standardization at scale</p>
-    </div>
-    <div class="tl-item">
-      <span class="tl-year">2011 - 2015</span>
-      <p class="tl-role">IT Linux System Administrator</p>
-      <p class="tl-desc">Physical &amp; virtual server deployments · Linux appliances</p>
-    </div>
-    <div class="tl-item">
-      <span class="tl-year">2001 - 2011</span>
-      <p class="tl-role">IT Linux System Administrator</p>
-      <p class="tl-desc">Installation and configuration of servers and Linux appliances</p>
-    </div>
-    <div class="tl-item">
-      <span class="tl-year">1998 - 2001</span>
-      <p class="tl-role">IT Technician &amp; System Administrator</p>
-      <p class="tl-desc">Internal IT and client support - where it all started</p>
-    </div>
+    {% endfor %}
   </div>
 </section>
 
@@ -178,24 +137,14 @@ keywords:
     </blockquote>
   </div>
   <div class="beyond-grid">
-    <a class="beyond-card reveal" href="/blog/astronomy/">
-      <span class="icon">🌌</span>
-      <h3>Astronomy</h3>
-      <p>Exploring celestial objects and following the latest discoveries - from JWST deep fields to backyard skies.</p>
-      <span class="beyond-more">Read articles →</span>
+    {% for resource in site.data.resources %}
+    <a class="beyond-card reveal" href="{{ resource.href | escape }}">
+      <span class="icon">{{ resource.icon | escape }}</span>
+      <h3>{{ resource.title | escape }}</h3>
+      <p>{{ resource.description | escape }}</p>
+      <span class="beyond-more">{{ resource.more | escape }}</span>
     </a>
-    <a class="beyond-card reveal" href="/blog/ai/">
-      <span class="icon">🧠</span>
-      <h3>Artificial Intelligence</h3>
-      <p>Studying ML advances and how they translate into real-world impact - then testing myself on Kaggle.</p>
-      <span class="beyond-more">Read articles →</span>
-    </a>
-    <a class="beyond-card reveal" href="/blog/physics/">
-      <span class="icon">⚛️</span>
-      <h3>Physics</h3>
-      <p>Fascinated by the fundamental laws that describe our universe - the original distributed system.</p>
-      <span class="beyond-more">Read articles →</span>
-    </a>
+    {% endfor %}
   </div>
   {% include sky-today.html %}
 </section>

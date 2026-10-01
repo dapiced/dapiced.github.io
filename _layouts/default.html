@@ -73,16 +73,9 @@
       <a class="brand" href="/"><span class="brand-planet" aria-hidden="true"></span>dominic@azure<span class="brand-cursor" aria-hidden="true">▌</span></a>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">☰</button>
       <ul class="nav-links" id="nav-links">
-        <li><a href="/#about">About</a></li>
-        <li><a href="/#projects">Projects</a></li>
-        <li><a href="/portfolio/">Portfolios</a></li>
-        <li><a href="/#timeline">Timeline</a></li>
-        <li><a href="/blog/">Blogs</a></li>
-        <li><a href="/now/">Now</a></li>
-        <li><a class="nav-labml" href="https://app.dominicdapice.com/" target="_blank" rel="noopener">My LabML</a></li>
-        <li><a href="/resources/">Resources</a></li>
-        <li><a href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">Contact</a></li>
-        <li><a class="nav-gh" href="https://github.com/dapiced" target="_blank" rel="noopener">GitHub ↗</a></li>
+        {% for item in site.data.navigation %}
+        <li><a{% if item.class %} class="{{ item.class | escape }}"{% endif %} href="{{ item.href | escape }}"{% if item.target %} target="{{ item.target | escape }}"{% endif %}{% if item.rel %} rel="{{ item.rel | escape }}"{% endif %}>{{ item.label | escape }}</a></li>
+        {% endfor %}
       </ul>
     </nav>
   </header>
