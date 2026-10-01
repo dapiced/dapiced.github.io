@@ -128,7 +128,8 @@ jobs:
 
             - Generated from NASA APOD data
             - Validated with the local checker (rights, duplicates, front matter, image)
-            -             This PR is auto-merged only when the rights policy marks the image as
+
+            This PR is auto-merged only when the rights policy marks the image as
             safe. Third-party copyright metadata remains open for manual review.
           commit-message: "Add Cosmic Daily APOD entry for ${{ steps.target.outputs.value }}"
           delete-branch: true

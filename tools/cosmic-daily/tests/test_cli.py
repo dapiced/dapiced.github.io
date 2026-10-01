@@ -61,7 +61,7 @@ def test_generate_tries_hd_then_standard_url(monkeypatch, repo):
     def fake_process(urls, target_dir, output_name):
         seen["urls"] = list(urls)
         target = Path(target_dir) / f"{output_name}.webp"
-        target.write_bytes(b"webp")
+        Image.new("RGB", (1200, 800), "black").save(target, format="WEBP")
         return target, (1200, 800)
 
     monkeypatch.setattr(cli, "process_apod_image_with_fallback", fake_process)
@@ -175,3 +175,60 @@ def test_generate_marks_third_party_rights_for_manual_review(monkeypatch, repo, 
     output = capsys.readouterr().out
     assert "manual review" in output.lower()
     assert (repo.root / "_apod" / "2026-09-13-example-title.md").exists()
+
+
+def test_generate_rejects_malformed_output_before_persisting(monkeypatch, repo, capsys):
+    malformed = _record()
+    malformed = APODRecord(
+        date=malformed.date,
+        title="NASA Science",
+        media_type=malformed.media_type,
+        url=malformed.url,
+        hdurl=malformed.hdurl,
+        explanation="APOD's main NASA site has moved. Tomorrow's picture: sharpless",
+        copyright="NASA",
+        apod_url=malformed.apod_url,
+    )
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: malformed)
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
+
+    assert cli.generate("2026-09-13") == cli.EXIT_ERROR
+    assert "Validation failed" in capsys.readouterr().out
+    assert not list((repo.root / "_apod").glob("*.md"))
+    assert not list((repo.root / "assets" / "img" / "apod").glob("*.webp"))
+
+
+def _valid_generated_content() -> str:
+    _, content = cli.generate_article(
+        APODRecord(
+            date="2026-09-13",
+            title="Example Title",
+            media_type="image",
+            url="https://apod.nasa.gov/apod/image/std.jpg",
+            hdurl=None,
+            explanation="An explanation long enough to satisfy the generated article validation contract.",
+            copyright="NASA",
+            apod_url="https://apod.nasa.gov/apod/ap20260913.html",
+        ),
+        "/assets/img/apod/2026-09-13-example-title.webp",
+        1200,
+        800,
+    )
+    return content
+
+
+@pytest.mark.parametrize(
+    ("mutate", "expected_error"),
+    [
+        (lambda content: content.replace('title: "Example Title"\n', 'title: "First Title"\ntitle: "Example Title"\n'), "duplicate front matter key"),
+        (lambda content: content.replace("date: 2026-09-13 08:00:00 -0400\n", ""), "missing date"),
+        (lambda content: content.replace("apod_date: 2026-09-13", "apod_date: not-a-date"), "invalid apod_date"),
+        (lambda content: content.replace(
+            'apod_url: "https://apod.nasa.gov/apod/ap20260913.html"',
+            'apod_url: "https://example.com/not-apod"',
+        ), "invalid apod_url"),
+    ],
+)
+def test_parse_rejects_incomplete_or_ambiguous_front_matter(mutate, expected_error):
+    with pytest.raises(ValueError, match=expected_error):
+        cli._parse_and_validate_post(mutate(_valid_generated_content()))

@@ -28,7 +28,7 @@ It will add:
 
 - `<meta name="theme-color" content="#04060f">`;
 - `<meta name="color-scheme" content="dark">`;
-- `<link rel="manifest" href="/site.webmanifest">`.
+- `<link rel="manifest" href="/manifest.webmanifest">`.
 
 The stylesheet will declare the matching native preference with
 `color-scheme: dark`. The manifest is a small static JSON file with the site
@@ -66,12 +66,12 @@ the whole repository is MIT-licensed.
 - third-party copyright is a manual-review result and is never auto-published;
 - any unknown or incomplete rights metadata fails closed.
 
-The CLI will emit a distinct manual-review result, write no article or image
-for it, and return a successful workflow outcome only when the workflow can
-stop without auto-merging. The workflow must create or leave an explicit,
-validated PR open for manual-review content, while validation failures and
-malformed content prevent the merge. No code will claim legal certainty from
-metadata alone.
+The CLI will emit a distinct manual-review result. It may stage a validated
+candidate article and image in a review branch so the workflow can open an
+explicit PR, but that candidate is not publishable and cannot auto-merge.
+Validation failures and malformed content produce no persisted candidate and
+prevent PR creation or merge. No code will claim legal certainty from metadata
+alone.
 
 Structured APOD validation will parse complete front matter and required
 content fields instead of loose substring checks. It will require sensible
@@ -105,7 +105,7 @@ The hardening pass also includes:
 - Modify `_layouts/default.html`: shared theme metadata, manifest link, and
   unchanged GoatCounter-only script.
 - Modify `assets/css/style.css`: dark native `color-scheme`.
-- Add `site.webmanifest`: static manifest contract.
+- Add `manifest.webmanifest`: static manifest contract.
 - Modify `now/index.html` and `blog/index.html`: semantic heading levels only.
 - Modify the two specified `_posts/2026-07-02-*.md` files: SVG-derived
   intrinsic dimensions.
@@ -178,8 +178,9 @@ only after this validation.
 
 - **Placeholders:** none; thresholds, paths, statuses, and workflow outcomes
   are explicit.
-- **Contradictions:** “manual review is successful” is intentionally distinct
-  from “validated and mergeable”; only the latter can reach auto-merge.
+- **Contradictions:** “manual review is a handled workflow outcome” is
+  intentionally distinct from “validated and mergeable”; a review candidate
+  can exist on a branch, but only an explicitly allowed result can auto-merge.
 - **Scope:** all changes serve E4 or a confirmed review finding; no redesign,
   service worker, new analytics, or unrelated dependency is included.
 - **Ambiguity resolved:** existing icons are reused only when their actual

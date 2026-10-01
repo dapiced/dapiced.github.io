@@ -42,7 +42,7 @@
 - Create: `manifest.webmanifest` — valid static manifest with `name`, `short_name`, `start_url`, `display`, `background_color`, `theme_color`, and valid existing icon references.
 - Modify: `_layouts/default.html` — shared theme metadata and manifest link; preserve the one GoatCounter script.
 - Modify: `assets/css/style.css` — add `color-scheme: dark` at the root/site scope without changing palette tokens.
-- Modify: `tests/test_generated_site.py` or the existing site contract tests — source and rendered metadata/manifest contracts.
+- Modify: `tests/test_final_hardening_contracts.py` and existing generated-output checks — source and rendered metadata/manifest contracts.
 
 ### Content, license, and accessibility
 
@@ -56,8 +56,7 @@
 
 - Modify: `tools/cosmic-daily/cosmic_daily/rights_policy.py` — `evaluate_media_rights(media_type: str, copyright: str | None = None, rights_category: str | None = None) -> RightsDecision`.
 - Modify: `tools/cosmic-daily/cosmic_daily/nasa_client.py` — preserve supported APOD metadata in `APODRecord` without silently inventing rights.
-- Create or modify: `tools/cosmic-daily/cosmic_daily/content_validator.py` — `validate_generated_article(content: str, image_path: Path) -> ValidationResult`, validating complete front matter, dimensions, source fields, and boilerplate.
-- Modify: `tools/cosmic-daily/cosmic_daily/cli.py` — manual-review result, validator invocation, explicit exit semantics, and no generated files on unsafe rights.
+- Modify: `tools/cosmic-daily/cosmic_daily/cli.py` — manual-review result, structured validator invocation, explicit exit semantics, and validated review candidates that cannot auto-merge.
 - Modify: `tools/cosmic-daily/tests/test_rights_policy.py`, `test_cli.py`, `test_article_generator.py`, and validator tests — RED/GREEN safety coverage.
 - Modify: `.github/workflows/cosmic-daily.yml` — manual-review PR remains open and cannot reach merge; invalid validation remains a failure.
 - Remove: `_apod/2026-10-01-nasa-science.md` and its exact generated APOD image path.
@@ -101,7 +100,7 @@
 - [x] **Step 1: Write failing validator/CLI tests.** Add a fixture equivalent to the malformed 2026-10-01 payload (generic title, 121x102 image, APOD navigation/migration/footer boilerplate) and assert `validate_generated_article` rejects it; add accepted complete front matter, positive dimensions above the minimum, required title/explanation/source fields, missing-image, duplicate-field, and boilerplate cases.
 - [x] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py -q`; expected failures because validation is substring-based or absent.
 - [x] **Step 3: Implement `ValidationResult` and `validate_generated_article(content: str, image_path: Path) -> ValidationResult`.** Parse the first front-matter document, require exactly one complete set of fields, validate image dimensions against a conservative minimum and the referenced file, reject known APOD navigation/footer phrases and generic generated output, and return explicit errors.
-- [x] **Step 4: Integrate CLI generation/check.** Invoke rights validation before image/article writes where possible and structured validation before success output; manual review creates no generated article/image, while invalid content returns `EXIT_ERROR`.
+- [x] **Step 4: Integrate CLI generation/check.** Invoke rights validation before persistence and structured validation before success output; manual review may persist a validated candidate for an open review PR, while invalid content returns `EXIT_ERROR` and persists nothing.
 - [x] **Step 5: Remove the malformed tracked entry/image and run GREEN.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py tools/cosmic-daily/tests/test_article_generator.py -q`; expected PASS and no generated files from rejected fixtures.
 - [x] **Step 6: Commit.** `git add tools/cosmic-daily _apod tests && git rm _apod/2026-10-01-nasa-science.md <exact-image-path> && git commit -m "fix: reject malformed APOD output" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 

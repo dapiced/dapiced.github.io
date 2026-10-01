@@ -6,7 +6,7 @@ import os
 import shutil
 import sys
 import tempfile
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import yaml
@@ -27,6 +27,26 @@ BOILERPLATE_MARKERS = (
     "apod's email for image submissions has changed",
     "tomorrow's picture:",
     "apod submissions",
+)
+
+
+class _UniqueKeyLoader(yaml.SafeLoader):
+    pass
+
+
+def _construct_unique_mapping(loader: _UniqueKeyLoader, node: yaml.MappingNode, deep: bool = False) -> dict:
+    mapping = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if key in mapping:
+            raise ValueError(f"duplicate front matter key: {key}")
+        mapping[key] = loader.construct_object(value_node, deep=deep)
+    return mapping
+
+
+_UniqueKeyLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+    _construct_unique_mapping,
 )
 
 
@@ -118,20 +138,47 @@ def generate(date_value: str | None = None) -> int:
         return EXIT_SUCCESS
 
     slug = slugify_title(apod.title)
-    image_dir = repo.ensure_directory(repo.assets_apod_dir)
-    try:
-        image_path, image_size = process_apod_image_with_fallback(_image_candidates(apod), image_dir, f"{apod.date}-{slug}")
-    except Exception as exc:
-        print(f"Image processing failed: {exc}")
+    filename = f"{apod.date}-{slug}"
+    post_path = repo.apod_dir / f"{filename}.md"
+    image_path = repo.assets_apod_dir / f"{filename}.webp"
+    if post_path.exists() or image_path.exists():
+        print(f"Destination already exists: {post_path if post_path.exists() else image_path}")
         return EXIT_ERROR
 
-    article_front, article_text = generate_article(apod, f"/assets/img/apod/{apod.date}-{slug}.webp", image_size[0], image_size[1])
-    post_path = repo.ensure_directory(repo.apod_dir) / f"{apod.date}-{slug}.md"
-    if post_path.exists():
-        print(f"Destination already exists: {post_path}")
-        return EXIT_ERROR
+    with tempfile.TemporaryDirectory(prefix="cosmic-daily-") as temp_dir:
+        staging_root = Path(temp_dir)
+        staging_image_dir = staging_root / "assets" / "img" / "apod"
+        staging_image_dir.mkdir(parents=True)
+        try:
+            staged_image, image_size = process_apod_image_with_fallback(
+                _image_candidates(apod),
+                staging_image_dir,
+                filename,
+            )
+        except Exception as exc:
+            print(f"Image processing failed: {exc}")
+            return EXIT_ERROR
 
-    post_path.write_text(article_text, encoding="utf-8")
+        _, article_text = generate_article(
+            apod,
+            f"/assets/img/apod/{filename}.webp",
+            image_size[0],
+            image_size[1],
+        )
+        staged_post = staging_root / "_apod" / f"{filename}.md"
+        staged_post.parent.mkdir(parents=True)
+        staged_post.write_text(article_text, encoding="utf-8")
+        try:
+            _validate_post_file(staged_post, repo, image_path=staged_image)
+        except ValueError as exc:
+            print(f"Validation failed: {exc}")
+            return EXIT_ERROR
+
+        repo.ensure_directory(repo.assets_apod_dir)
+        repo.ensure_directory(repo.apod_dir)
+        shutil.move(str(staged_image), image_path)
+        shutil.move(str(staged_post), post_path)
+
     _emit_github_output(
         apod_date=apod.date,
         result=decision.status,
@@ -159,34 +206,35 @@ def check(post_path: str | None = None) -> int:
         print(f"Article does not exist: {chosen}")
         return EXIT_ERROR
 
-    content = chosen.read_text(encoding="utf-8")
     try:
-        metadata, body = _parse_and_validate_post(content)
+        _validate_post_file(chosen, repo)
     except ValueError as exc:
         print(f"Validation failed: {exc}")
         return EXIT_ERROR
 
-    image_reference = metadata["image"]
-    resolved_image = repo.root / image_reference.lstrip("/")
+    print(f"Validation passed for {chosen}")
+    return EXIT_SUCCESS
+
+
+def _validate_post_file(chosen: Path, repo: RepositoryContext, image_path: Path | None = None) -> None:
+    content = chosen.read_text(encoding="utf-8")
+    metadata, _ = _parse_and_validate_post(content)
+    resolved_image = image_path or repo.root / metadata["image"].lstrip("/")
     if not resolved_image.exists():
-        print(f"Image file missing: {resolved_image}")
-        return EXIT_ERROR
+        raise ValueError(f"Image file missing: {resolved_image}")
     try:
         with Image.open(resolved_image) as image:
             actual_width, actual_height = image.size
     except (OSError, UnidentifiedImageError) as exc:
-        print(f"Image file is not a readable raster image: {exc}")
-        return EXIT_ERROR
+        raise ValueError(f"Image file is not a readable raster image: {exc}") from exc
     if (actual_width, actual_height) != (metadata["image_width"], metadata["image_height"]):
-        print(
+        raise ValueError(
             "Image dimensions do not match front matter: "
             f"declared {metadata['image_width']}x{metadata['image_height']}, "
             f"actual {actual_width}x{actual_height}"
         )
-        return EXIT_ERROR
     if actual_width < MIN_IMAGE_DIMENSION or actual_height < MIN_IMAGE_DIMENSION:
-        print(f"Image dimensions are too small: {actual_width}x{actual_height}")
-        return EXIT_ERROR
+        raise ValueError(f"Image dimensions are too small: {actual_width}x{actual_height}")
 
     duplicates = repo.find_duplicates(
         metadata["apod_date"],
@@ -194,11 +242,7 @@ def check(post_path: str | None = None) -> int:
         exclude_path=chosen,
     )
     if duplicates:
-        print(f"Duplicate APOD article already exists: {[str(p) for p in duplicates]}")
-        return EXIT_ERROR
-
-    print(f"Validation passed for {chosen}")
-    return EXIT_SUCCESS
+        raise ValueError(f"Duplicate APOD article already exists: {[str(p) for p in duplicates]}")
 
 
 def _parse_and_validate_post(content: str) -> tuple[dict, str]:
@@ -207,7 +251,7 @@ def _parse_and_validate_post(content: str) -> tuple[dict, str]:
     header, separator, body = content[4:].partition("\n---\n")
     if not separator:
         raise ValueError("front matter is not closed")
-    metadata = yaml.safe_load(header)
+    metadata = yaml.load(header, Loader=_UniqueKeyLoader)
     if not isinstance(metadata, dict):
         raise ValueError("front matter must be a mapping")
     required = {
@@ -224,9 +268,30 @@ def _parse_and_validate_post(content: str) -> tuple[dict, str]:
     for key in ("description", "image", "credit", "apod_url"):
         if not isinstance(metadata.get(key), str) or not metadata[key].strip():
             raise ValueError(f"missing {key}")
-    if not isinstance(metadata.get("apod_date"), (str, date)):
+    publication_date = metadata.get("date")
+    if publication_date is None:
+        raise ValueError("missing date")
+    try:
+        parsed_publication_date = (
+            publication_date.date()
+            if isinstance(publication_date, datetime)
+            else datetime.strptime(publication_date.strip(), "%Y-%m-%d %H:%M:%S %z").date()
+        )
+    except (AttributeError, TypeError, ValueError) as exc:
+        raise ValueError("invalid date") from exc
+    apod_date_value = metadata.get("apod_date")
+    if apod_date_value is None:
         raise ValueError("missing apod_date")
-    metadata["apod_date"] = metadata["apod_date"].isoformat() if isinstance(metadata["apod_date"], date) else metadata["apod_date"].strip()
+    try:
+        parsed_apod_date = apod_date_value if isinstance(apod_date_value, date) else date.fromisoformat(apod_date_value.strip())
+    except (AttributeError, TypeError, ValueError) as exc:
+        raise ValueError("invalid apod_date") from exc
+    if parsed_publication_date != parsed_apod_date:
+        raise ValueError("date does not match apod_date")
+    metadata["apod_date"] = parsed_apod_date.isoformat()
+    expected_apod_url = f"https://apod.nasa.gov/apod/ap{parsed_apod_date:%Y%m%d}.html"
+    if metadata["apod_url"] != expected_apod_url:
+        raise ValueError("invalid apod_url")
     if not metadata["image"].startswith("/assets/img/apod/"):
         raise ValueError("image must be an APOD asset")
     if not isinstance(metadata.get("image_width"), int) or metadata["image_width"] < MIN_IMAGE_DIMENSION:
