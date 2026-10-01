@@ -1,0 +1,88 @@
+---
+layout: default
+title: Resume | Dominic D'Apice
+description: >-
+  Professional resume for Dominic D'Apice, Developer - Azure Infrastructure AI
+  in Montréal, with 25+ years of systems, cloud, automation, and data experience.
+keywords:
+  - Dominic D'Apice resume
+  - Azure Infrastructure AI
+  - Databricks
+  - MLOps
+  - DataOps
+  - Infrastructure as Code
+  - cloud engineer Montréal
+  - Linux system administrator
+---
+
+<!--
+THESIS: A direct working record for people evaluating experience, not a marketing landing page.
+OWN-WORLD: The site's deep-space palette, precise borders, system type, and restrained blue-violet accents.
+STORY: Understand Dominic's current work, scan the full career and technical range, then contact him on LinkedIn.
+FIRST VIEWPORT: Name and current role lead, a concise summary follows, and contact plus print actions remain immediately visible.
+FORM: A single document surface in the established site language, chosen over a separate layout or generated artifact.
+-->
+<article class="resume-page">
+  <header class="resume-header">
+    <p class="resume-location">Montréal, Canada</p>
+    <h1>Dominic D'Apice</h1>
+    <p class="resume-role">{{ site.data.timeline.first.role | escape }}</p>
+    <p class="resume-summary">
+      I design, deploy, and operate Azure platforms that power AI workloads,
+      including Databricks environments, data pipelines, and mission-critical
+      systems. More than 25 years in IT shaped a practical approach: automate
+      repeatable work, build reliable infrastructure, and connect cloud
+      operations with MLOps and DataOps.
+    </p>
+    <div class="resume-actions" aria-label="Resume actions">
+      <a class="btn btn-primary resume-contact-link" href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">Contact on LinkedIn</a>
+      <button type="button" class="btn btn-ghost" data-print-resume>Print / save as PDF</button>
+    </div>
+  </header>
+
+  <section class="resume-section" aria-labelledby="resume-experience-title">
+    <h2 id="resume-experience-title">Experience</h2>
+    <ol class="resume-experience-list">
+      {% for item in site.data.timeline %}
+      <li class="resume-experience-item">
+        <p class="resume-experience-year">{{ item.year | escape }}</p>
+        <div>
+          <h3>{{ item.role | escape }}</h3>
+          <p>{{ item.description | escape }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="resume-section" aria-labelledby="resume-skills-title">
+    <h2 id="resume-skills-title">Technical capabilities</h2>
+    <ul class="resume-skill-groups">
+      {% for group in site.data.skills %}
+      <li class="resume-skill-group">
+        <h3>{{ group.domain | escape }}</h3>
+        <ul class="resume-skill-tags" aria-label="{{ group.domain | escape }} skills">
+          {% for tag in group.tags %}
+          <li class="tag">{{ tag | escape }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="resume-section resume-profiles" aria-labelledby="resume-profiles-title">
+    <h2 id="resume-profiles-title">Profiles and contact</h2>
+    <p>
+      For professional inquiries and collaboration, contact me on LinkedIn.
+      You can also review my public work and data science activity through
+      these profiles.
+    </p>
+    <ul class="resume-profile-links">
+      <li><a class="resume-profile-link" href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a class="resume-profile-link" href="https://github.com/dapiced" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a class="resume-profile-link" href="https://www.kaggle.com/dominicdapice" target="_blank" rel="noopener">Kaggle</a></li>
+      <li><a class="resume-profile-link" href="https://huggingface.co/dapiced" target="_blank" rel="noopener">Hugging Face</a></li>
+    </ul>
+  </section>
+</article>
