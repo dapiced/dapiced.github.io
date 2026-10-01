@@ -13,6 +13,7 @@ layout: default
   <div class="post-content">
     {{ content }}
   </div>
+  {% include related-posts.html %}
   {% include comments.html %}
 
   <p class="post-footer"><a href="/blog/">{{ t.back_to_posts }}</a></p>

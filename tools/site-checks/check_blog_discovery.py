@@ -6,6 +6,8 @@ from __future__ import annotations
 import re
 import json
 import sys
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -16,6 +18,14 @@ EXPECTED_MACHINE_LEARNING = {
     "/blog/2026/08/autonomous-ai-agents-2026/",
     "/blog/2026/08/forty-years-of-losing-to-a-tree/",
 }
+
+
+@dataclass
+class RelatedItem:
+    url: str | None = None
+    date: str | None = None
+    tags: list[str] = field(default_factory=list)
+    title_parts: list[str] = field(default_factory=list)
 
 
 class PageParser(HTMLParser):
@@ -43,6 +53,14 @@ class PageParser(HTMLParser):
         self.toc_entries: list[tuple[int, str]] = []
         self.toc_title_parts: list[str] | None = None
         self.toc_title_text: str | None = None
+        self.related_section_count = 0
+        self.related_labelledby: str | None = None
+        self.in_related_section = False
+        self.related_title_parts: list[str] | None = None
+        self.related_title_text: str | None = None
+        self.current_related_item: RelatedItem | None = None
+        self.related_items: list[RelatedItem] = []
+        self.in_related_post_link = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
@@ -63,10 +81,31 @@ class PageParser(HTMLParser):
             self.post_toc_count += 1
             self.in_post_toc = True
             self.toc_list_depth = 0
+        if tag == "section" and "related-posts" in classes:
+            self.related_section_count += 1
+            self.related_labelledby = values.get("aria-labelledby")
+            self.in_related_section = True
+        if self.in_related_section and tag == "h2" and values.get("id") == "related-title":
+            self.related_title_parts = []
+        if (
+            self.in_related_section
+            and tag == "li"
+            and "related-post-item" in classes
+        ):
+            self.current_related_item = RelatedItem()
         if self.in_post_toc and tag == "ol":
             self.toc_list_depth += 1
         if self.in_post_toc and tag == "a" and (values.get("href") or "").startswith("#"):
             self.toc_entries.append((self.toc_list_depth, (values["href"] or "")[1:]))
+        if self.current_related_item is not None and tag == "a":
+            href = values.get("href")
+            if "related-post-link" in classes and href:
+                self.current_related_item.url = href
+                self.in_related_post_link = True
+            elif "tag" in classes and href:
+                self.current_related_item.tags.append(href)
+        if self.current_related_item is not None and tag == "time":
+            self.current_related_item.date = values.get("datetime")
         if self.in_post_toc and tag == "h2" and values.get("id") == "post-toc-title":
             self.toc_title_parts = []
         if tag == "form":
@@ -98,6 +137,10 @@ class PageParser(HTMLParser):
             self.current_heading[2].append(data)
         if self.in_post_toc and self.toc_title_parts is not None:
             self.toc_title_parts.append(data)
+        if self.in_related_section and self.related_title_parts is not None:
+            self.related_title_parts.append(data)
+        if self.current_related_item is not None and self.in_related_post_link:
+            self.current_related_item.title_parts.append(data)
 
     def handle_endtag(self, tag: str) -> None:
         if self.current_heading is not None and tag == self.current_heading[0]:
@@ -111,6 +154,16 @@ class PageParser(HTMLParser):
             self.toc_list_depth -= 1
         if tag == "nav" and self.in_post_toc:
             self.in_post_toc = False
+        if self.in_related_section and tag == "h2" and self.related_title_parts is not None:
+            self.related_title_text = " ".join(" ".join(self.related_title_parts).split())
+            self.related_title_parts = None
+        if tag == "a" and self.in_related_post_link:
+            self.in_related_post_link = False
+        if tag == "li" and self.current_related_item is not None:
+            self.related_items.append(self.current_related_item)
+            self.current_related_item = None
+        if tag == "section" and self.in_related_section:
+            self.in_related_section = False
         if tag == "div" and self.post_content_div_depth:
             self.post_content_div_depth -= 1
 
@@ -125,6 +178,46 @@ def authored_tags() -> set[str]:
     return tags
 
 
+def authored_post_metadata() -> dict[str, dict[str, object]]:
+    posts: dict[str, dict[str, object]] = {}
+    for post in (ROOT / "_posts").glob("*.md"):
+        match = re.match(r"^(\d{4})-(\d{2})-(\d{2})-(.+)\.md$", post.name)
+        if not match:
+            continue
+        year, month, day, slug = match.groups()
+        text = post.read_text(encoding="utf-8")
+        tags_match = re.search(r"^tags:\s*\[([^\]]*)\]\s*$", text, re.MULTILINE)
+        tags = {
+            value.strip().strip("'\"")
+            for value in tags_match.group(1).split(",")
+            if value.strip()
+        } if tags_match else set()
+        date_match = re.search(r"^date:\s*(.+?)\s*$", text, re.MULTILINE)
+        date_value = (
+            date_match.group(1).strip().strip("'\"")
+            if date_match
+            else f"{year}-{month}-{day} 00:00:00+00:00"
+        )
+        parsed_date = datetime.fromisoformat(date_value)
+        if parsed_date.tzinfo is None:
+            parsed_date = parsed_date.replace(tzinfo=timezone.utc)
+        lang_match = re.search(r"^lang:\s*[\"']?([^\"'\s#]+)", text, re.MULTILINE)
+        translation_match = re.search(
+            r"^translation_url:\s*[\"']?([^\"'\s#]+)",
+            text,
+            re.MULTILINE,
+        )
+        url = f"/blog/{year}/{month}/{slug}/"
+        posts[url] = {
+            "date": f"{year}-{month}-{day}",
+            "sort_date": parsed_date.astimezone(timezone.utc).strftime("%Y%m%d%H%M%S"),
+            "lang": lang_match.group(1) if lang_match else "en",
+            "tags": tags,
+            "translation_url": translation_match.group(1) if translation_match else None,
+        }
+    return posts
+
+
 def parse(path: Path) -> PageParser:
     parser = PageParser()
     parser.feed(path.read_text(encoding="utf-8"))
@@ -133,6 +226,43 @@ def parse(path: Path) -> PageParser:
 
 def output_path_for_url(url: str) -> Path:
     return SITE / url.lstrip("/") / "index.html"
+
+
+def related_urls_for_post(
+    current_url: str,
+    posts: dict[str, dict[str, object]],
+) -> list[str]:
+    current = posts.get(current_url)
+    if current is None:
+        return []
+    translation_url = current["translation_url"]
+    candidates: list[tuple[int, str, str, str]] = []
+    for url, post in posts.items():
+        if (
+            url == current_url
+            or url == translation_url
+            or post["translation_url"] == current_url
+        ):
+            continue
+        score = len(current["tags"] & post["tags"])
+        if score:
+            candidates.append((score, str(post["sort_date"]), url, str(post["lang"])))
+
+    language = str(current["lang"])
+    preferred = sorted(
+        (candidate for candidate in candidates if candidate[3] == language),
+        reverse=True,
+    )
+    selected = preferred[:3]
+    if len(selected) < 3:
+        english = sorted(
+            (candidate for candidate in candidates if candidate[3] == "en"),
+            reverse=True,
+        )
+        selected.extend(
+            candidate for candidate in english if candidate not in selected
+        )
+    return [candidate[2] for candidate in selected[:3]]
 
 
 def check() -> list[str]:
@@ -225,6 +355,10 @@ def check() -> list[str]:
         and path.relative_to(SITE / "blog").parts[0].isdigit()
         and path.relative_to(SITE / "blog").parts[1].isdigit()
     ]
+    authored_posts = authored_post_metadata()
+    for url in authored_posts:
+        if not output_path_for_url(url).is_file():
+            errors.append(f"authored post has no generated page: {url}")
     for path in post_pages:
         page = parse(path)
         relative = path.relative_to(SITE)
@@ -267,6 +401,55 @@ def check() -> list[str]:
     nothingness_path = SITE / "blog" / "2026" / "07" / "nothingness-has-no-address" / "index.html"
     if nothingness_path.is_file() and parse(nothingness_path).post_toc_count:
         errors.append("nothingness must not contain a TOC")
+
+    for current_url in authored_posts:
+        path = output_path_for_url(current_url)
+        if not path.is_file():
+            continue
+        page = parse(path)
+        relative = path.relative_to(SITE)
+        expected_urls = related_urls_for_post(current_url, authored_posts)
+        if expected_urls and page.related_section_count != 1:
+            errors.append(f"{relative}: expected one related-posts section")
+        elif not expected_urls and page.related_section_count:
+            errors.append(f"{relative}: related section must be omitted without candidates")
+        if page.related_section_count > 1:
+            errors.append(f"{relative}: expected at most one related-posts section")
+        if page.related_section_count and page.related_labelledby != "related-title":
+            errors.append(f"{relative}: related section must label its heading")
+        if page.related_section_count:
+            expected_title = "Articles connexes" if (page.html_lang or "").startswith("fr") else "Related posts"
+            if page.related_title_text != expected_title:
+                errors.append(f"{relative}: related-posts title must use the page language")
+        if len(page.related_items) > 3:
+            errors.append(f"{relative}: related section must contain at most 3 posts")
+        actual_urls = [item.url for item in page.related_items]
+        if actual_urls != expected_urls:
+            errors.append(
+                f"{relative}: related links must follow shared-tag score/date order and language preference; "
+                f"expected {expected_urls}, found {actual_urls}"
+            )
+        current = authored_posts.get(current_url)
+        for item in page.related_items:
+            if not item.url or item.url not in authored_posts:
+                errors.append(f"{relative}: related links must target authored blog posts, found {item.url!r}")
+                continue
+            if item.url == current_url:
+                errors.append(f"{relative}: related section links to the current post")
+            if current and (
+                item.url == current["translation_url"]
+                or authored_posts[item.url]["translation_url"] == current_url
+            ):
+                errors.append(f"{relative}: related section links to the current post's translation")
+            related_post = authored_posts[item.url]
+            if current and not (current["tags"] & related_post["tags"]):
+                errors.append(f"{relative}: related post {item.url} shares no tags")
+            if not item.title_parts or not "".join(item.title_parts).strip():
+                errors.append(f"{relative}: related link has no post title")
+            if not item.date or not item.date.startswith(str(related_post["date"])):
+                errors.append(f"{relative}: related post {item.url} has no matching date")
+            if not item.tags:
+                errors.append(f"{relative}: related post {item.url} has no linked tags")
 
     search_json = SITE / "blog" / "search.json"
     search_page = SITE / "blog" / "search" / "index.html"
