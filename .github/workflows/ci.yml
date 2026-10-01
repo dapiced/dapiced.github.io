@@ -53,6 +53,7 @@ jobs:
           python tools/site-checks/check_site_data_html.py
           for path in \
             _site/index.html \
+            _site/resume/index.html \
             _site/sky/index.html \
             _site/feed.xml \
             _site/feed/apod.xml \
