@@ -68,11 +68,8 @@ def _write_preview_files(apod, repo: RepositoryContext, output_dir: Path) -> tup
     image_target_dir = output_dir / "assets" / "img" / "apod"
     image_target_dir.mkdir(parents=True, exist_ok=True)
     if apod.media_type == "image":
-        decision = evaluate_media_rights(apod.media_type, apod.copyright)
-        if decision.status != "allowed":
-            raise ValueError(decision.reason)
         image_path, size = process_apod_image_with_fallback(_image_candidates(apod), image_target_dir, f"{apod.date}-{slug}")
-        article_front, article_text = generate_article(apod, f"/assets/img/apod/{apod.date}-{slug}.webp", size[0], size[1])
+        _, article_text = generate_article(apod, f"/assets/img/apod/{apod.date}-{slug}.webp", size[0], size[1])
         post_path = output_dir / "_apod" / f"{apod.date}-{slug}.md"
         post_path.parent.mkdir(parents=True, exist_ok=True)
         post_path.write_text(article_text, encoding="utf-8")
@@ -103,17 +100,24 @@ def preview(date_value: str | None = None) -> int:
         print(f"Skipped: {decision.reason}")
         return EXIT_SUCCESS
 
-    try:
-        with tempfile.TemporaryDirectory(prefix="cosmic-daily-") as temp_dir:
-            repo = RepositoryContext(repo_root=Path.cwd())
+    with tempfile.TemporaryDirectory(prefix="cosmic-daily-") as temp_dir:
+        repo = RepositoryContext(repo_root=Path.cwd())
+        try:
             post_path, image_path = _write_preview_files(apod, repo, Path(temp_dir))
-            print(f"Preview article: {post_path}")
-            if image_path:
-                print(f"Preview image: {image_path}")
-        return EXIT_SUCCESS
-    except Exception as exc:
-        print(f"Preview generation failed: {exc}")
-        return EXIT_ERROR
+        except Exception as exc:
+            print(f"Preview generation failed: {exc}")
+            return EXIT_ERROR
+        try:
+            _validate_post_file(post_path, repo, image_path=image_path, check_duplicates=False)
+        except ValueError as exc:
+            print(f"Preview validation failed: {exc}")
+            return EXIT_ERROR
+        if decision.status == "manual_review":
+            print(f"Preview requires manual review: {decision.reason}")
+        print(f"Preview article: {post_path}")
+        if image_path:
+            print(f"Preview image: {image_path}")
+    return EXIT_SUCCESS
 
 
 def generate(date_value: str | None = None) -> int:
@@ -216,7 +220,12 @@ def check(post_path: str | None = None) -> int:
     return EXIT_SUCCESS
 
 
-def _validate_post_file(chosen: Path, repo: RepositoryContext, image_path: Path | None = None) -> None:
+def _validate_post_file(
+    chosen: Path,
+    repo: RepositoryContext,
+    image_path: Path | None = None,
+    check_duplicates: bool = True,
+) -> None:
     content = chosen.read_text(encoding="utf-8")
     metadata, _ = _parse_and_validate_post(content)
     resolved_image = image_path or repo.root / metadata["image"].lstrip("/")
@@ -236,13 +245,14 @@ def _validate_post_file(chosen: Path, repo: RepositoryContext, image_path: Path 
     if actual_width < MIN_IMAGE_DIMENSION or actual_height < MIN_IMAGE_DIMENSION:
         raise ValueError(f"Image dimensions are too small: {actual_width}x{actual_height}")
 
-    duplicates = repo.find_duplicates(
-        metadata["apod_date"],
-        metadata["apod_url"],
-        exclude_path=chosen,
-    )
-    if duplicates:
-        raise ValueError(f"Duplicate APOD article already exists: {[str(p) for p in duplicates]}")
+    if check_duplicates:
+        duplicates = repo.find_duplicates(
+            metadata["apod_date"],
+            metadata["apod_url"],
+            exclude_path=chosen,
+        )
+        if duplicates:
+            raise ValueError(f"Duplicate APOD article already exists: {[str(p) for p in duplicates]}")
 
 
 def _parse_and_validate_post(content: str) -> tuple[dict, str]:
@@ -268,6 +278,12 @@ def _parse_and_validate_post(content: str) -> tuple[dict, str]:
     for key in ("description", "image", "credit", "apod_url"):
         if not isinstance(metadata.get(key), str) or not metadata[key].strip():
             raise ValueError(f"missing {key}")
+    rights_status = metadata.get("rights_status")
+    if rights_status not in {"allowed", "manual_review"}:
+        raise ValueError("invalid rights status")
+    rendered_rights = evaluate_media_rights("image", metadata["credit"])
+    if rendered_rights.status != rights_status:
+        raise ValueError("rights status does not match rendered credit")
     publication_date = metadata.get("date")
     if publication_date is None:
         raise ValueError("missing date")

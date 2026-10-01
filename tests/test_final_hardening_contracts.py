@@ -33,6 +33,29 @@ def test_license_and_readme_define_split_scope():
     assert "GoatCounter" in readme
 
 
+def test_completed_hardening_docs_match_the_implemented_contracts():
+    plan = (ROOT / "docs" / "superpowers" / "plans" / "2026-10-01-final-site-hardening-implementation.md").read_text(
+        encoding="utf-8"
+    )
+    readme = (ROOT / "tools" / "cosmic-daily" / "README.md").read_text(encoding="utf-8")
+    for nonexistent_reference in (
+        "tests/test_generated_site.py",
+        "tests/test_documentation_contract.py",
+        "tests/test_content_validator.py",
+        "tests/test_editorial_images.py",
+        "ValidationResult",
+        "validate_generated_article",
+        "rights_category",
+        "site.webmanifest",
+    ):
+        assert nonexistent_reference not in plan
+    assert "tests/test_final_hardening_contracts.py" in plan
+    assert "tools/cosmic-daily/tests/test_cli.py" in plan
+    assert "only explicit NASA/public-domain rights metadata" in readme
+    assert "manual-review candidates remain open" in readme
+    assert "Preview-only runs do not open failure issues" in readme
+
+
 def test_repo_card_auth_uses_bearer_token_without_literal_placeholder():
     source = (ROOT / "tools" / "repo_cards" / "generate_repo_data.py").read_text(encoding="utf-8")
     assert 'headers["Authorization"] = f"Bearer {token}"' in source

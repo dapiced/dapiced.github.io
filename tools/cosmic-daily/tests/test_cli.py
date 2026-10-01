@@ -54,6 +54,55 @@ def test_preview_skips_video_entries_without_failing(monkeypatch, repo, capsys):
     assert "Skipped" in output
 
 
+@pytest.mark.parametrize("copyright", ["Jane Photographer", None, "   "])
+def test_preview_manual_review_is_successful_and_persists_nothing(monkeypatch, repo, capsys, copyright):
+    record = _record()
+    record = APODRecord(**{**record.__dict__, "copyright": copyright})
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: record)
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
+
+    exit_code = cli.preview("2026-09-13")
+
+    output = capsys.readouterr().out.lower()
+    assert exit_code == cli.EXIT_SUCCESS
+    assert "manual review" in output
+    assert "preview article:" in output
+    assert not (repo.root / "_apod").exists()
+    assert not (repo.root / "assets").exists()
+
+
+def test_preview_manual_review_ignores_existing_published_duplicate(monkeypatch, repo, capsys):
+    existing = repo.root / "_apod"
+    existing.mkdir()
+    (existing / "2026-09-13-existing.md").write_text(
+        '---\napod_date: 2026-09-13\napod_url: "https://apod.nasa.gov/apod/ap20260913.html"\n---\n',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _record())
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
+
+    assert cli.preview("2026-09-13") == cli.EXIT_SUCCESS
+    assert "manual review" in capsys.readouterr().out.lower()
+    assert list(existing.glob("*.md")) == [existing / "2026-09-13-existing.md"]
+    assert not (repo.root / "assets").exists()
+
+
+def test_preview_invalid_candidate_fails_without_persisting(monkeypatch, repo, capsys):
+    record = _record()
+    malformed = APODRecord(**{
+        **record.__dict__,
+        "title": "NASA Science",
+        "copyright": "NASA",
+    })
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: malformed)
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
+
+    assert cli.preview("2026-09-13") == cli.EXIT_ERROR
+    assert "Preview validation failed" in capsys.readouterr().out
+    assert not (repo.root / "_apod").exists()
+    assert not (repo.root / "assets").exists()
+
+
 def test_generate_tries_hd_then_standard_url(monkeypatch, repo):
     monkeypatch.setattr(cli, "fetch_apod", lambda target: _record())
     seen: dict[str, object] = {}
@@ -177,6 +226,22 @@ def test_generate_marks_third_party_rights_for_manual_review(monkeypatch, repo, 
     assert (repo.root / "_apod" / "2026-09-13-example-title.md").exists()
 
 
+@pytest.mark.parametrize("copyright", [None, "   "])
+def test_generate_missing_rights_keeps_explicit_manual_review_credit(monkeypatch, repo, capsys, copyright):
+    record = _record()
+    record = APODRecord(**{**record.__dict__, "copyright": copyright})
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: record)
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
+
+    assert cli.generate("2026-09-13") == cli.EXIT_SUCCESS
+    output = capsys.readouterr().out.lower()
+    content = (repo.root / "_apod" / "2026-09-13-example-title.md").read_text(encoding="utf-8")
+    assert "manual review" in output
+    assert 'credit: "Rights metadata unavailable"' in content
+    assert "rights_status: manual_review" in content
+    assert 'credit: "NASA"' not in content
+
+
 def test_generate_rejects_malformed_output_before_persisting(monkeypatch, repo, capsys):
     malformed = _record()
     malformed = APODRecord(
@@ -232,3 +297,15 @@ def _valid_generated_content() -> str:
 def test_parse_rejects_incomplete_or_ambiguous_front_matter(mutate, expected_error):
     with pytest.raises(ValueError, match=expected_error):
         cli._parse_and_validate_post(mutate(_valid_generated_content()))
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        lambda text: text.replace("rights_status: allowed", "rights_status: manual_review"),
+        lambda text: text.replace('credit: "NASA"', 'credit: "Rights metadata unavailable"'),
+    ],
+)
+def test_parse_rejects_inconsistent_rights_status_and_credit(content):
+    with pytest.raises(ValueError, match="rights status"):
+        cli._parse_and_validate_post(content(_valid_generated_content()))

@@ -29,10 +29,14 @@ The default mode is `preview`.
 
 ## Notes
 
-- `preview` writes only to a temporary directory and never touches tracked files.
-- `generate` writes `_apod/YYYY-MM-DD-slug.md` and the corresponding WebP image when the media is eligible.
+- `preview` generates and validates only in a temporary directory and never touches tracked files.
+  Third-party, missing, or blank rights metadata is reported as manual review and still exits 0.
+  Preview-only runs do not open failure issues.
+- `generate` writes `_apod/YYYY-MM-DD-slug.md` and the corresponding WebP image for an
+  explicitly allowed image or for a validated manual-review candidate.
   The entry stays factual: title, date, credit, NASA's explanation and the source link. An optional
-  `note:` field can be added by hand to the front matter; the generator never writes it.
+  `note:` field can be added by hand to the front matter; the generator never writes it. Missing or
+  blank rights metadata is preserved as `Rights metadata unavailable`, never rewritten as NASA.
 - Old entries were migrated from `_posts/`; their former `/blog/...` URLs redirect through
   `redirect_from`. Duplicate detection still scans both folders.
 - `check` validates front matter and image references for a generated article.
@@ -42,6 +46,8 @@ The default mode is `preview`.
 - The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or
   cannot fit the size budget; the command fails only when every candidate fails.
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.
-- Scheduled runs open a PR, validate it and squash-merge it automatically. A failure opens an
-  issue titled `Cosmic Daily: echec le YYYY-MM-DD`; a re-run of the same day comments on the
-  existing open issue instead of creating another one.
+- Scheduled runs auto-merge only explicit NASA/public-domain rights metadata accepted by the
+  rights policy. Validated manual-review candidates remain open in a PR and are never auto-merged.
+  Invalid images or content still fail and open an issue titled
+  `Cosmic Daily: echec le YYYY-MM-DD`; a re-run of the same day comments on the existing open
+  issue instead of creating another one.

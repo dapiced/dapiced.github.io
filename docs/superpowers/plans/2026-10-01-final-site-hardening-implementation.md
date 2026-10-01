@@ -31,7 +31,7 @@
 - A NASA/public-domain record must use the current accepted metadata shape, while an unknown category must route to manual review; pin both cases in the rights-policy tests.
 - A malformed APOD can contain plausible substrings but still include a 121x102 image or APOD navigation boilerplate; pin the complete payload rejection in `tools/cosmic-daily/tests/test_cli.py` and validator tests.
 - A manually dispatched Pages build can succeed without deployment; pin the IndexNow event/condition contract in `tools/cosmic-daily/tests/test_workflows.py`.
-- A manifest link or heading fix can be present in source but absent from generated layouts; pin representative generated pages in `tests/test_generated_site.py` (or the existing generated-output contract module).
+- A manifest link or heading fix can be present in source but absent from generated layouts; pin source contracts in `tests/test_final_hardening_contracts.py` and rendered behavior in the generated-output checkers.
 
 ---
 
@@ -54,10 +54,10 @@
 
 ### Cosmic Daily
 
-- Modify: `tools/cosmic-daily/cosmic_daily/rights_policy.py` — `evaluate_media_rights(media_type: str, copyright: str | None = None, rights_category: str | None = None) -> RightsDecision`.
+- Modify: `tools/cosmic-daily/cosmic_daily/rights_policy.py` — `evaluate_media_rights(media_type: str, copyright: str | None = None) -> RightsDecision`.
 - Modify: `tools/cosmic-daily/cosmic_daily/nasa_client.py` — preserve supported APOD metadata in `APODRecord` without silently inventing rights.
 - Modify: `tools/cosmic-daily/cosmic_daily/cli.py` — manual-review result, structured validator invocation, explicit exit semantics, and validated review candidates that cannot auto-merge.
-- Modify: `tools/cosmic-daily/tests/test_rights_policy.py`, `test_cli.py`, `test_article_generator.py`, and validator tests — RED/GREEN safety coverage.
+- Modify: `tools/cosmic-daily/tests/test_rights_policy.py`, `test_cli.py`, and `test_article_generator.py` — RED/GREEN rights and validation coverage.
 - Modify: `.github/workflows/cosmic-daily.yml` — manual-review PR remains open and cannot reach merge; invalid validation remains a failure.
 - Remove: `_apod/2026-10-01-nasa-science.md` and its exact generated APOD image path.
 
@@ -73,19 +73,19 @@
 
 ## Task 1: Browser metadata, manifest, and analytics boundary
 
-- [x] **Step 1: Write failing source/generated contracts** in `tests/test_generated_site.py` (or the existing site contract file): assert the default layout contains the exact theme-color, dark color-scheme, manifest link, and exactly one GoatCounter script; assert the manifest has required keys, valid JSON, root-relative icon URLs, no service-worker/install/offline fields, and only existing supported icon assets.
-- [x] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_generated_site.py -q`; expected failures identify missing metadata/manifest.
-- [x] **Step 3: Implement the minimal shared boundary.** Add `site.webmanifest`, the two meta tags and link in `_layouts/default.html`, and `color-scheme: dark` in `assets/css/style.css`; do not add preconnect or another analytics provider.
-- [x] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_generated_site.py -q`; expected PASS.
-- [x] **Step 5: Commit.** `git add site.webmanifest _layouts/default.html assets/css/style.css tests/test_generated_site.py && git commit -m "feat: add native dark site metadata" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 1: Write failing source/generated contracts** in `tests/test_final_hardening_contracts.py`: assert the default layout contains the exact theme-color, dark color-scheme, manifest link, and exactly one GoatCounter script; assert the manifest has required keys, valid JSON, root-relative icon URLs, no service-worker/install/offline fields, and only existing supported icon assets.
+- [x] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_final_hardening_contracts.py -q`; failures identified the missing metadata and manifest.
+- [x] **Step 3: Implement the minimal shared boundary.** Add `manifest.webmanifest`, the two meta tags and link in `_layouts/default.html`, and `color-scheme: dark` in `assets/css/style.css`; do not add preconnect or another analytics provider.
+- [x] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_final_hardening_contracts.py -q`.
+- [x] **Step 5: Commit.** The metadata, manifest, documentation, accessibility, and workflow contracts landed together in `490946e`.
 
 ## Task 2: License and maintainer documentation
 
 - [x] **Step 1: Write failing documentation contracts.** Add tests that require `LICENSE` to state MIT source-code scope and explicit exclusions, README to identify `_data/repos.json` as the rendered project-card source refreshed by workflow, README to describe GoatCounter as sole counter, and README to omit the completed one-time Pages migration instruction.
-- [x] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_documentation_contract.py -q`; expected failure because the root license and corrected wording are absent.
+- [x] **Step 2: Run the focused tests to verify RED.** Run `python -m pytest tests/test_final_hardening_contracts.py -q`; failures confirmed the root license and corrected wording were absent.
 - [x] **Step 3: Add the scoped license and README edits.** Keep the license human-readable and explicit about personal/third-party content; update only stale automation and ownership statements.
-- [x] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_documentation_contract.py -q`.
-- [x] **Step 5: Commit.** `git add LICENSE README.md tests/test_documentation_contract.py && git commit -m "docs: define site ownership and analytics boundaries" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
+- [x] **Step 4: Run focused tests to verify GREEN.** Run `python -m pytest tests/test_final_hardening_contracts.py -q`.
+- [x] **Step 5: Commit.** The scoped license and README corrections landed in `490946e`.
 
 ## Task 3: Cosmic Daily rights policy
 
@@ -97,11 +97,11 @@
 
 ## Task 4: Structured APOD validation and malformed regression
 
-- [x] **Step 1: Write failing validator/CLI tests.** Add a fixture equivalent to the malformed 2026-10-01 payload (generic title, 121x102 image, APOD navigation/migration/footer boilerplate) and assert `validate_generated_article` rejects it; add accepted complete front matter, positive dimensions above the minimum, required title/explanation/source fields, missing-image, duplicate-field, and boilerplate cases.
-- [x] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py -q`; expected failures because validation is substring-based or absent.
-- [x] **Step 3: Implement `ValidationResult` and `validate_generated_article(content: str, image_path: Path) -> ValidationResult`.** Parse the first front-matter document, require exactly one complete set of fields, validate image dimensions against a conservative minimum and the referenced file, reject known APOD navigation/footer phrases and generic generated output, and return explicit errors.
+- [x] **Step 1: Write failing validator/CLI tests.** Add a fixture equivalent to the malformed 2026-10-01 payload (generic title, 121x102 image, APOD navigation/migration/footer boilerplate) in `tools/cosmic-daily/tests/test_cli.py`; add accepted complete front matter, positive dimensions above the minimum, required title/explanation/source fields, missing-image, duplicate-field, and boilerplate cases.
+- [x] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_cli.py -q`; failures confirmed that generation and checking were not yet structurally validating the payload.
+- [x] **Step 3: Implement `_parse_and_validate_post()` and `_validate_post_file()` in `cosmic_daily/cli.py`.** Parse the first front-matter document with duplicate-key rejection, require a complete field set, validate source dates/URL and actual image dimensions, and reject known APOD navigation/footer phrases and generic generated output with explicit errors.
 - [x] **Step 4: Integrate CLI generation/check.** Invoke rights validation before persistence and structured validation before success output; manual review may persist a validated candidate for an open review PR, while invalid content returns `EXIT_ERROR` and persists nothing.
-- [x] **Step 5: Remove the malformed tracked entry/image and run GREEN.** Run `python -m pytest tools/cosmic-daily/tests/test_content_validator.py tools/cosmic-daily/tests/test_cli.py tools/cosmic-daily/tests/test_article_generator.py -q`; expected PASS and no generated files from rejected fixtures.
+- [x] **Step 5: Remove the malformed tracked entry/image and run GREEN.** Run `python -m pytest tools/cosmic-daily/tests/test_cli.py tools/cosmic-daily/tests/test_article_generator.py -q`; the rejected fixtures persist no generated files.
 - [x] **Step 6: Commit.** `git add tools/cosmic-daily _apod tests && git rm _apod/2026-10-01-nasa-science.md <exact-image-path> && git commit -m "fix: reject malformed APOD output" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
 
 ## Task 5: Cosmic Daily workflow fail-closed behavior
@@ -115,7 +115,7 @@
 ## Task 6: Repo-card authorization and IndexNow trigger contracts
 
 - [x] **Step 1: Write failing tests.** Assert repo-card requests use the `Authorization: Bearer` scheme and never the literal placeholder or token in logs; assert IndexNow has `workflow_run` completion plus `workflow_dispatch`, and its condition permits manual dispatch or successful main deployment completion only.
-- [x] **Step 2: Run RED.** Run `python -m pytest tools/repo_cards/tests -q tools/cosmic-daily/tests/test_workflows.py -q`; expected failures for the placeholder header and permissive manual workflow-run condition.
+- [x] **Step 2: Run RED.** Run `python -m pytest tools/cosmic-daily/tests/test_repo_cards.py tools/cosmic-daily/tests/test_workflows.py -q`; failures identified the placeholder header and permissive manual workflow-run condition.
 - [x] **Step 3: Implement both fixes.** Change only the request header construction and the IndexNow event/condition; keep `permissions: {}` and avoid any deployment-less manual Pages path.
 - [x] **Step 4: Run GREEN.** Re-run the focused tests and `git diff --check`.
 - [x] **Step 5: Commit.** `git add tools/repo_cards .github/workflows/indexnow.yml tools/cosmic-daily/tests/test_workflows.py && git commit -m "fix: harden refresh and indexing triggers" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
@@ -123,7 +123,7 @@
 ## Task 7: Heading order and editorial image dimensions
 
 - [x] **Step 1: Write failing source contracts.** Assert `/now/` has one `h1` followed by four `h2` card headings with unchanged card classes, `/blog/` topic headings use `h2`, and the two named post images have width/height matching their SVG `viewBox` dimensions plus existing lazy/alt attributes.
-- [x] **Step 2: Run RED.** Run `python -m pytest tests/test_now_page.py tests/test_site_data.py tests/test_editorial_images.py -q`; expected failures for heading levels and missing dimensions.
+- [x] **Step 2: Run RED.** Run `python -m pytest tests/test_now_page.py tests/test_final_hardening_contracts.py -q`; failures identified heading levels and missing dimensions.
 - [x] **Step 3: Implement semantic-only edits.** Change heading elements without changing CSS classes or copy; read exact `viewBox` values from `assets/img/etoile-vincenzo.svg` and `assets/img/nothingness-has-no-address.svg` and add those intrinsic dimensions to the corresponding `<img>` tags.
 - [x] **Step 4: Run GREEN.** Re-run focused source tests and inspect the two SVG `viewBox`/HTML pairs.
 - [x] **Step 5: Commit.** `git add now/index.html blog/index.html _posts/2026-07-02-a-star-for-my-father.md _posts/2026-07-02-nothingness-has-no-address.md tests && git commit -m "fix: restore heading order and image dimensions" -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>"`.
@@ -150,6 +150,6 @@
 
 - **Spec coverage:** metadata/manifest/analytics are Task 1; license/docs are Task 2; rights and malformed content are Tasks 3–5; repo-card/IndexNow are Task 6; accessibility/images are Task 7; generated output/E3 status are Task 8; full validation and PR constraints are Task 9.
 - **Step scan:** each task has explicit RED, run, GREEN implementation, run, and commit boundaries; signatures are defined in the file map; no task relies on vague or unspecified behavior.
-- **Type consistency:** `RightsDecision` is reused by policy, CLI, and workflow output; `ValidationResult` is consumed by CLI and tests; manifest and generated-output contracts share root-relative asset expectations.
+- **Type consistency:** `RightsDecision` is reused by policy, article generation, CLI, and workflow output; `_parse_and_validate_post()` and `_validate_post_file()` enforce the generated candidate contract; manifest and generated-output checks share root-relative asset expectations.
 - **Review focus:** all five failure modes have owning tests named in the Review Focus and repeated in their task's RED step.
 - **Proportion:** the plan is a compact execution map rather than a code transcript; implementation bodies remain with the executor.
