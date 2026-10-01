@@ -1,0 +1,72 @@
+name: CI
+
+# Runs on every pull request and on main. The site job proves the Jekyll build
+# still works and that the pages the rest of the site links to are generated;
+# the cosmic-daily job runs the Python test suite behind the APOD generator.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    name: Jekyll build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll build
+
+      - name: Check generated output
+        run: |
+          set -euo pipefail
+          for path in \
+            _site/index.html \
+            _site/sky/index.html \
+            _site/feed.xml \
+            _site/feed/apod.xml \
+            _site/sitemap.xml \
+            _site/404.html; do
+            test -s "$path" || { echo "Missing or empty: $path"; exit 1; }
+          done
+          # jekyll-redirect-from emits a meta refresh page at every old URL.
+          if grep -rl "redirect_from" _posts _apod _portfolio >/dev/null 2>&1; then
+            grep -rl "http-equiv=\"refresh\"" _site >/dev/null \
+              || { echo "redirect_from declared but no redirect page emitted"; exit 1; }
+          fi
+
+  cosmic-daily:
+    name: Cosmic Daily tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/cosmic-daily/pyproject.toml
+
+      - name: Install Cosmic Daily
+        working-directory: tools/cosmic-daily
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev]
+
+      - name: Run tests
+        working-directory: tools/cosmic-daily
+        run: python -m pytest

@@ -1,23 +1,29 @@
 name: IndexNow - notify search engines
 
 # Submits every URL from the live sitemap to the IndexNow API (used by Bing
-# and other engines) after each publish to main. Google does not support
-# IndexNow: it re-crawls the sitemap registered in Search Console on its own.
+# and other engines). Google does not support IndexNow: it re-crawls the
+# sitemap registered in Search Console on its own.
+#
+# Chained to the Pages deployment rather than to the push itself, so the
+# sitemap read below is the one that was just published. The head_branch
+# guard keeps manual Pages runs on other branches from notifying.
 
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
   workflow_dispatch:
 
 permissions: {}
 
 jobs:
   indexnow:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for GitHub Pages deploy
-        run: sleep 120
-
       - name: Submit sitemap URLs to IndexNow
         run: |
           set -euo pipefail
