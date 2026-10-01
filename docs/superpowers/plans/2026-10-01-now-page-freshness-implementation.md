@@ -1,5 +1,7 @@
 # `/now/` Page Freshness Implementation Plan
 
+**Status:** implementation completed and validated; PR publication pending.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Refresh `/now/` with four durable public themes and add a non-blocking 90-day freshness reminder that creates one stable GitHub issue.
@@ -42,7 +44,7 @@
 - Consumes: `now/index.html`, existing public links and wording conventions.
 - Produces: focused source assertions for the exact date, four themes, removed claims, semantic structure, and safe links.
 
-- [ ] **Step 1: Write failing page-contract tests**
+- [x] **Step 1: Write failing page-contract tests**
 
 Add tests that read `now/index.html` and assert:
 
@@ -63,7 +65,7 @@ assert "https://nownownow.com/p/1Fe6" in template
 
 Also assert one `h1`, four `h3` headings, `page.updated` rendering, `target="_blank"`/`rel="noopener"` for both nownownow links, and no claim that the certificate is complete.
 
-- [ ] **Step 2: Run the focused tests to verify the current page fails**
+- [x] **Step 2: Run the focused tests to verify the current page fails**
 
 Run:
 
@@ -73,7 +75,7 @@ python -m pytest tests/test_now_page.py -q
 
 Expected: FAIL because the current date and migration card violate the new contract.
 
-- [ ] **Step 3: Commit the failing contract**
+- [x] **Step 3: Commit the failing contract**
 
 ```powershell
 git add tests/test_now_page.py
@@ -89,11 +91,11 @@ git commit -m "test: define now page freshness content contract" -m "Co-authored
 - Consumes: Task 1 source contract and public content named in the spec.
 - Produces: four concise cards titled `Studying`, `Competing`, `Building`, and `Learning and sharing`, with `updated: 2026-10-01`.
 
-- [ ] **Step 1: Update the page content**
+- [x] **Step 1: Update the page content**
 
 Change only the front matter date/description/keywords and the four card headings/prose needed to express the approved themes. Keep the current section shell, inline styles, links, metadata rendering, and card classes. Replace the migration card instead of adding a fifth card.
 
-- [ ] **Step 2: Run the page-contract tests**
+- [x] **Step 2: Run the page-contract tests**
 
 Run:
 
@@ -103,7 +105,7 @@ python -m pytest tests/test_now_page.py -q
 
 Expected: PASS.
 
-- [ ] **Step 3: Commit the page refresh**
+- [x] **Step 3: Commit the page refresh**
 
 ```powershell
 git add now/index.html
@@ -120,11 +122,11 @@ git commit -m "content: refresh now page themes" -m "Co-authored-by: Copilot App
 - Consumes: `now/index.html` or a caller-provided page path.
 - Produces: importable `parse_updated_date(text: str) -> date`, `assess_freshness(updated: date, today: date, threshold_days: int = 90) -> FreshnessResult`, and CLI exit/output behavior.
 
-- [ ] **Step 1: Write failing parser/date tests**
+- [x] **Step 1: Write failing parser/date tests**
 
 Cover valid exact front matter, missing field, duplicate field, malformed date, future date, threshold `89/90/91` age boundaries, injected today date, and invalid negative threshold. Assert `FreshnessResult` exposes `updated`, `today`, `age_days`, `threshold_days`, and `stale`.
 
-- [ ] **Step 2: Write failing CLI tests**
+- [x] **Step 2: Write failing CLI tests**
 
 Invoke `main()` or a subprocess against temporary pages and assert:
 
@@ -135,7 +137,7 @@ Invoke `main()` or a subprocess against temporary pages and assert:
 - `--format json` emits stable JSON keys and boolean `stale`;
 - `--today` and `--threshold-days` are honored.
 
-- [ ] **Step 3: Run checker tests to verify failure**
+- [x] **Step 3: Run checker tests to verify failure**
 
 Run:
 
@@ -145,11 +147,11 @@ python -m pytest tests/test_now_freshness.py -q
 
 Expected: FAIL because the checker module does not exist.
 
-- [ ] **Step 4: Implement the checker**
+- [x] **Step 4: Implement the checker**
 
 Define a small immutable result type, parse only front matter between the first two `---` delimiters, require exactly one line matching `^updated:\s*(\d{4}-\d{2}-\d{2})\s*$`, use `datetime.date.fromisoformat`, and calculate `(today - updated).days`. Keep stale as a result with exit code `2`; reserve exit code `1` for invalid arguments or page/date input.
 
-- [ ] **Step 5: Run checker tests to verify pass**
+- [x] **Step 5: Run checker tests to verify pass**
 
 Run:
 
@@ -159,7 +161,7 @@ python -m pytest tests/test_now_freshness.py -q
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit the checker and tests**
+- [x] **Step 6: Commit the checker and tests**
 
 ```powershell
 git add tools/site-checks/check_now_freshness.py tests/test_now_freshness.py
@@ -176,7 +178,7 @@ git commit -m "feat: add now page freshness checker" -m "Co-authored-by: Copilot
 - Consumes: Task 3 CLI output and GitHub Actions `GITHUB_OUTPUT`, `GITHUB_TOKEN`, `GITHUB_REPOSITORY`, `GITHUB_SERVER_URL`, and `GITHUB_RUN_ID`.
 - Produces: monthly/manual workflow with `check` outputs `updated`, `age`, `stale`, and a conditional `notify` job.
 
-- [ ] **Step 1: Write failing workflow contract tests**
+- [x] **Step 1: Write failing workflow contract tests**
 
 Read the YAML as text/parsed YAML and assert:
 
@@ -190,7 +192,7 @@ Read the YAML as text/parsed YAML and assert:
 - open-issue lookup is title-scoped and creation is guarded;
 - no comment, label, close, edit, secret, or third-party service behavior appears.
 
-- [ ] **Step 2: Run workflow tests to verify failure**
+- [x] **Step 2: Run workflow tests to verify failure**
 
 Run:
 
@@ -200,11 +202,11 @@ python -m pytest tests/test_now_workflow.py -q
 
 Expected: FAIL because the workflow does not exist.
 
-- [ ] **Step 3: Implement the workflow**
+- [x] **Step 3: Implement the workflow**
 
 Use a shell step in `check` to run the checker in JSON mode, write outputs to `$GITHUB_OUTPUT`, and allow exit code `2` without converting staleness into a failed job. Use a separate `notify` shell step with `gh issue list --state open --search 'in:title "Refresh /now/ page"'` and `gh issue create` only when the exact title is absent. The notification step must use the run URL constructed from `${{ github.server_url }}`, `${{ github.repository }}`, and `${{ github.run_id }}`.
 
-- [ ] **Step 4: Run workflow tests to verify pass**
+- [x] **Step 4: Run workflow tests to verify pass**
 
 Run:
 
@@ -214,7 +216,7 @@ python -m pytest tests/test_now_workflow.py -q
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit the workflow**
+- [x] **Step 5: Commit the workflow**
 
 ```powershell
 git add .github/workflows/now-freshness.yml tests/test_now_workflow.py
@@ -232,15 +234,15 @@ git commit -m "ci: add now page freshness reminder" -m "Co-authored-by: Copilot 
 - Consumes: `_site/now/index.html` after Jekyll build and Task 3 checker.
 - Produces: post-build protection that requires generated `/now/` output and rejects the removed claim without applying staleness as a CI failure.
 
-- [ ] **Step 1: Write failing generated-output tests**
+- [x] **Step 1: Write failing generated-output tests**
 
 Add a test that creates a temporary `_site/now/index.html` and asserts the generated-output helper accepts the current date/card structure, rejects missing/empty output, and rejects the removed quantified claim. Keep a stale date valid for this post-build check.
 
-- [ ] **Step 2: Implement the generated-output check and CI integration**
+- [x] **Step 2: Implement the generated-output check and CI integration**
 
 Add a narrow helper or explicit CI command after `bundle exec jekyll build`. Run the source checker separately before the build with an invocation that rejects malformed/future dates but tolerates stale exit code `2`; after the build, validate `_site/now/index.html` exists, is non-empty, contains `2026-10-01` rendered output, and has no removed claim. Add `_site/now/index.html` to the required output list.
 
-- [ ] **Step 3: Run focused and source checks**
+- [x] **Step 3: Run focused and source checks**
 
 Run:
 
@@ -251,7 +253,7 @@ python tools/site-checks/check_now_freshness.py now/index.html --today 2026-10-0
 
 Expected: PASS with exit code `0` for the injected current date.
 
-- [ ] **Step 4: Commit CI protection**
+- [x] **Step 4: Commit CI protection**
 
 ```powershell
 git add .github/workflows/ci.yml tools/site-checks/check_now_freshness.py tests/test_now_freshness.py
@@ -267,11 +269,11 @@ git commit -m "ci: validate generated now page output" -m "Co-authored-by: Copil
 - Consumes: completed `/now/` page, checker CLI, and workflow behavior.
 - Produces: contributor documentation for manual ownership, the 90-day threshold, non-blocking CI, stable issue reminder, and `workflow_dispatch`.
 
-- [ ] **Step 1: Update README**
+- [x] **Step 1: Update README**
 
 Document `now/index.html` in Structure and add a maintenance paragraph under Automation. State that the `updated` front-matter date is the source of truth, the default threshold is 90 days, CI checks validity/generated output without failing for age, and `.github/workflows/now-freshness.yml` runs monthly or manually and creates one `Refresh /now/ page` issue without comments or auto-edits.
 
-- [ ] **Step 2: Commit documentation**
+- [x] **Step 2: Commit documentation**
 
 ```powershell
 git add README.md
@@ -288,19 +290,19 @@ git commit -m "docs: document now page freshness ownership" -m "Co-authored-by: 
 - Consumes: full `main...HEAD` diff, spec, plan, and passing focused tests.
 - Produces: whole-branch review record, test-first fixes for Critical/Important findings, completed plan checkboxes, and fresh validation evidence.
 
-- [ ] **Step 1: Request independent whole-branch review**
+- [x] **Step 1: Request independent whole-branch review**
 
 Ask a fresh reviewer to inspect content boundaries, date parsing, exit semantics, workflow permissions, issue de-duplication, generated output, and regression risk. Require precise findings and ignore style-only preferences.
 
-- [ ] **Step 2: Reproduce accepted findings with failing tests**
+- [x] **Step 2: Reproduce accepted findings with failing tests**
 
 For every accepted Critical/Important finding, add or tighten a focused test before changing implementation. Document reasoned rejections in the final handoff if any finding is intentionally not applied.
 
-- [ ] **Step 3: Implement minimal fixes and rerun targeted tests**
+- [x] **Step 3: Implement minimal fixes and rerun targeted tests**
 
 Change only the necessary files and rerun the affected focused tests until passing.
 
-- [ ] **Step 4: Run complete validation**
+- [x] **Step 4: Run complete validation**
 
 Run all of:
 
@@ -318,11 +320,11 @@ git diff --check
 
 Expected: focused/full Python, Node, CLI fresh/stale boundary, Docker Jekyll build, generated-output, YAML parsing, and diff checks all pass. The future check is expected to return invalid-date exit `1`; the stale check is expected to return `2` where applicable.
 
-- [ ] **Step 5: Mark the plan complete**
+- [x] **Step 5: Mark the plan complete**
 
 Change every completed checkbox to `- [x]` and set the header status to `implementation completed and validated; PR open/non-merged` only after fresh validation succeeds.
 
-- [ ] **Step 6: Commit review fixes and completed plan**
+- [x] **Step 6: Commit review fixes and completed plan**
 
 ```powershell
 git add -u
