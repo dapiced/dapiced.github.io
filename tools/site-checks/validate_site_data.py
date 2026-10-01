@@ -39,6 +39,7 @@ APPROVED_SITE_DATA = {
         {"label": "Projects", "href": "/#projects"},
         {"label": "Portfolios", "href": "/portfolio/"},
         {"label": "Timeline", "href": "/#timeline"},
+        {"label": "Resume", "href": "/resume/"},
         {"label": "Blogs", "href": "/blog/"},
         {"label": "Now", "href": "/now/"},
         {

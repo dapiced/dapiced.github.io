@@ -63,6 +63,10 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 
 - `index.html` - homepage (hero, about, projects, skills, timeline, blog preview).
   Project cards are static HTML (indexable without JS) refreshed live from the GitHub API.
+- `resume/index.html` - professional resume at `/resume/`. It renders experience and
+  technical capabilities directly from `_data/timeline.yml` and `_data/skills.yml`,
+  uses LinkedIn as the public contact path, and offers browser printing instead of a
+  committed PDF.
 - `blog/index.html` - post listing (all English posts remain in HTML for SEO and readers without JavaScript; JavaScript initially shows eight and provides a button to reveal the rest)
 - `blog/search/` and `blog/search.json` - local search over authored post titles, excerpts and tags
 - `404.html` - custom not-found page
@@ -79,7 +83,9 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `_data/navigation.yml` - ordered header links (`label`, `href`, and optional `class`,
   `target`, `rel`)
 - `_data/skills.yml` - ordered homepage skill groups (`domain` and an ordered `tags` list)
-- `_data/timeline.yml` - ordered career entries (`year`, `role`, `description`)
+- `_data/timeline.yml` - ordered career entries (`year`, `role`, `description`). Together
+  with `_data/skills.yml`, this is also the source of truth for `/resume/`; update these
+  files rather than copying resume content into the page template.
 - `_data/resources.yml` - ordered off-duty cards (`icon`, `title`, `description`, `href`,
   `more`)
 - `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos

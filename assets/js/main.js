@@ -223,6 +223,14 @@
     });
   }
 
+  /* ---------- printable resume ---------- */
+  var printResume = document.querySelector("[data-print-resume]");
+  if (printResume) {
+    printResume.addEventListener("click", function () {
+      window.print();
+    });
+  }
+
   /* ---------- visitor counts (GoatCounter) ---------- */
   function fetchCount(path, onCount) {
     fetch("https://dapiced.goatcounter.com/counter/" + path + ".json")
