@@ -202,7 +202,7 @@ On an English post, both steps select English posts, so French posts are never s
 
 **Output.** A `<section aria-labelledby="related-title">` with an `h2` from i18n and a short list showing title, date and tag links. With no candidate left, nothing is rendered: no heading and no empty box.
 
-**Implementation note.** Liquid cannot sort by a computed key. The expected approach builds a sortable string per candidate, such as a zero-padded score, then the date, then the URL, sorts the strings and walks them in reverse. Another approach is fine if it produces the same order. With 11 posts the build cost is negligible.
+**Implementation note.** Liquid's `sort` filter only orders by an existing property of the items, not by a value computed during rendering such as the shared-tag score. The expected approach builds a sortable string per candidate, such as a zero-padded score, then the date, then the URL, sorts the strings and walks them in reverse. Another approach is fine if it produces the same order. With 11 posts the build cost is negligible.
 
 ### 5.6 i18n strings
 
@@ -320,10 +320,12 @@ After this lot, the `site` job runs: build, the extended file checks, the redire
 
 ## 11. Suggested implementation order
 
+Lot D ships as a single pull request. The five steps below are staged commits within that PR and serve as review checkpoints. They are not separate PRs.
+
 1. `jekyll-archives`, the tag archive layout, the `post-item.html` include, tag links, and the Python checks for archives and APOD exclusion.
 2. `search.json`, the search page, the core and DOM scripts, and the Node tests.
 3. Show more on `/blog/`.
 4. The TOC include.
 5. The related posts include.
 
-Add the i18n strings, CSS, README updates and CI wiring alongside the step that needs them. Each step can ship as its own pull request. Steps 3, 4 and 5 do not depend on each other.
+Add the i18n strings, CSS, README updates and CI wiring in the same commit as the step that needs them, so the build and checks pass at every commit. Steps 3, 4 and 5 do not depend on each other and can be committed in any order.
