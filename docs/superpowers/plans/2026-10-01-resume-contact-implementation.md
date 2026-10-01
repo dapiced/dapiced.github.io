@@ -1,6 +1,6 @@
 # Resume and Contact Page Implementation Plan
 
-> **Status:** implementation completed and validated; PR pending checks.
+> **Status:** implementation completed and validated; PR open with checks passing.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -360,7 +360,7 @@ git commit -m "docs: mark resume implementation complete" -m "Co-authored-by: Co
 - Consumes: clean, validated branch with all commits.
 - Produces: one non-draft pull request to `main`, published commit SHAs, and GitHub check evidence.
 
-- [ ] **Step 1: Push the focused branch**
+- [x] **Step 1: Push the focused branch**
 
 Run:
 
@@ -370,13 +370,13 @@ git push -u origin dapiced-resume-contact-page
 
 Expected: branch is published and tracks the remote.
 
-- [ ] **Step 2: Open a non-draft PR with `gh`**
+- [x] **Step 2: Open a non-draft PR with `gh`**
 
 Run `gh pr create --base main --head dapiced-resume-contact-page` with a concise summary, test evidence, scope decisions, and no merge action.
 
 Expected: one open, non-draft PR targeting `main`.
 
-- [ ] **Step 3: Wait for GitHub checks**
+- [x] **Step 3: Wait for GitHub checks**
 
 Run:
 
@@ -386,7 +386,7 @@ gh pr checks --watch
 
 Expected: all required checks pass. If a check fails because of this branch, reproduce it locally, fix it test-first, commit, push, and watch again.
 
-- [ ] **Step 4: Confirm clean worktree and collect handoff evidence**
+- [x] **Step 4: Confirm clean worktree and collect handoff evidence**
 
 Run:
 
@@ -398,6 +398,6 @@ gh pr view --json url,number,state,isDraft,baseRefName,headRefName,statusCheckRo
 
 Expected: clean tracking branch, non-draft open PR to `main`, complete commit list, and passing checks.
 
-- [ ] **Step 5: Report to the coordinator**
+- [x] **Step 5: Report to the coordinator**
 
 Send the PR URL, commit SHAs, exact validation commands and results, independent review findings/fixes, key scope decisions, and clean worktree status. Do not merge.
