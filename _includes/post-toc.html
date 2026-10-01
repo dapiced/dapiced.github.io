@@ -11,10 +11,11 @@
       {% assign toc_opening_tag = toc_part | split: '>' | first %}
       {% if toc_opening_tag contains 'id="' %}
         {% assign toc_id = toc_opening_tag | split: 'id="' | last | split: '"' | first %}
-        {% assign toc_text = toc_part | split: toc_close | first | split: '>' | last | strip_html | strip %}
+        {% assign toc_inner = toc_part | remove_first: toc_opening_tag | remove_first: '>' | split: toc_close | first %}
+        {% assign toc_text = toc_inner | strip_html | strip %}
         {% if toc_id != '' %}
           {% assign toc_count = toc_count | plus: 1 %}
-          {% capture toc_link -%}<li><a href="#{{ toc_id | escape }}">{{ toc_text | escape }}</a></li>{%- endcapture %}
+          {% capture toc_link -%}<li><a href="#{{ toc_id | escape }}">{{ toc_text | escape }}</a>{%- endcapture %}
           {% assign toc_link = toc_link | strip %}
           {% if toc_level == '2' %}
             {% if toc_h2_open %}
@@ -31,9 +32,9 @@
               {% assign toc_html = toc_html | append: '<ol>' %}
               {% assign toc_children_open = true %}
             {% endunless %}
-            {% assign toc_html = toc_html | append: toc_link %}
+            {% assign toc_html = toc_html | append: toc_link | append: '</li>' %}
           {% else %}
-            {% assign toc_html = toc_html | append: toc_link %}
+            {% assign toc_html = toc_html | append: toc_link | append: '</li>' %}
           {% endif %}
         {% endif %}
       {% endif %}

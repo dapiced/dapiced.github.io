@@ -45,12 +45,15 @@ class PageParser(HTMLParser):
         self.live_regions: list[str | None] = []
         self.label_targets: set[str] = set()
         self.post_content_div_depth = 0
-        self.content_headings: list[tuple[str, str | None]] = []
+        self.content_headings: list[tuple[str, str | None, str]] = []
         self.current_heading: tuple[str, str | None, list[str]] | None = None
         self.in_post_toc = False
         self.post_toc_count = 0
         self.toc_list_depth = 0
-        self.toc_entries: list[tuple[int, str]] = []
+        self.toc_li_depth = 0
+        self.toc_invalid_structure = False
+        self.toc_entries: list[tuple[int, str, str]] = []
+        self.current_toc_link: tuple[int, str, list[str]] | None = None
         self.toc_title_parts: list[str] | None = None
         self.toc_title_text: str | None = None
         self.related_section_count = 0
@@ -81,6 +84,8 @@ class PageParser(HTMLParser):
             self.post_toc_count += 1
             self.in_post_toc = True
             self.toc_list_depth = 0
+            self.toc_li_depth = 0
+            self.toc_invalid_structure = False
         if tag == "section" and "related-posts" in classes:
             self.related_section_count += 1
             self.related_labelledby = values.get("aria-labelledby")
@@ -94,9 +99,19 @@ class PageParser(HTMLParser):
         ):
             self.current_related_item = RelatedItem()
         if self.in_post_toc and tag == "ol":
+            if self.toc_li_depth != self.toc_list_depth:
+                self.toc_invalid_structure = True
             self.toc_list_depth += 1
         if self.in_post_toc and tag == "a" and (values.get("href") or "").startswith("#"):
-            self.toc_entries.append((self.toc_list_depth, (values["href"] or "")[1:]))
+            self.current_toc_link = (
+                self.toc_list_depth,
+                (values["href"] or "")[1:],
+                [],
+            )
+        if self.in_post_toc and tag == "li":
+            if self.toc_list_depth == 0 or self.toc_li_depth < self.toc_list_depth - 1:
+                self.toc_invalid_structure = True
+            self.toc_li_depth += 1
         if self.current_related_item is not None and tag == "a":
             href = values.get("href")
             if "related-post-link" in classes and href:
@@ -135,6 +150,8 @@ class PageParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.current_heading is not None:
             self.current_heading[2].append(data)
+        if self.current_toc_link is not None:
+            self.current_toc_link[2].append(data)
         if self.in_post_toc and self.toc_title_parts is not None:
             self.toc_title_parts.append(data)
         if self.in_related_section and self.related_title_parts is not None:
@@ -145,14 +162,32 @@ class PageParser(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if self.current_heading is not None and tag == self.current_heading[0]:
             level, heading_id, parts = self.current_heading
-            self.content_headings.append((level, heading_id))
+            heading_text = " ".join(" ".join(parts).split())
+            self.content_headings.append((level, heading_id, heading_text))
             self.current_heading = None
+        if self.in_post_toc and tag == "a" and self.current_toc_link is not None:
+            depth, heading_id, parts = self.current_toc_link
+            link_text = " ".join(" ".join(parts).split())
+            self.toc_entries.append((depth, heading_id, link_text))
+            self.current_toc_link = None
         if self.in_post_toc and tag == "h2" and self.toc_title_parts is not None:
             self.toc_title_text = " ".join(" ".join(self.toc_title_parts).split())
             self.toc_title_parts = None
         if self.in_post_toc and tag == "ol":
-            self.toc_list_depth -= 1
+            if self.toc_list_depth == 0:
+                self.toc_invalid_structure = True
+            else:
+                self.toc_list_depth -= 1
+            if self.toc_li_depth != self.toc_list_depth:
+                self.toc_invalid_structure = True
+        if self.in_post_toc and tag == "li":
+            if self.toc_li_depth == 0:
+                self.toc_invalid_structure = True
+            else:
+                self.toc_li_depth -= 1
         if tag == "nav" and self.in_post_toc:
+            if self.toc_list_depth or self.toc_li_depth:
+                self.toc_invalid_structure = True
             self.in_post_toc = False
         if self.in_related_section and tag == "h2" and self.related_title_parts is not None:
             self.related_title_text = " ".join(" ".join(self.related_title_parts).split())
@@ -363,19 +398,19 @@ def check() -> list[str]:
         page = parse(path)
         relative = path.relative_to(SITE)
         usable_headings = [
-            (level, heading_id)
-            for level, heading_id in page.content_headings
+            (level, heading_id, heading_text)
+            for level, heading_id, heading_text in page.content_headings
             if heading_id
         ]
-        expected_entries: list[tuple[int, str]] = []
+        expected_entries: list[tuple[int, str, str]] = []
         seen_h2 = False
-        for level, heading_id in usable_headings:
+        for level, heading_id, heading_text in usable_headings:
             if level == "h2":
                 seen_h2 = True
                 depth = 1
             else:
                 depth = 2 if seen_h2 else 1
-            expected_entries.append((depth, heading_id or ""))
+            expected_entries.append((depth, heading_id or "", heading_text))
 
         needs_toc = len(usable_headings) >= 3
         if needs_toc and page.post_toc_count != 1:
@@ -383,18 +418,20 @@ def check() -> list[str]:
         elif not needs_toc and page.post_toc_count:
             errors.append(f"{relative}: TOC must be omitted with fewer than 3 usable h2/h3 headings")
         if "post-toc-title" in {
-            heading_id for _, heading_id in usable_headings
+            heading_id for _, heading_id, _ in usable_headings
         }:
             errors.append(f"{relative}: post heading ID collides with post-toc-title")
         if page.post_toc_count:
-            actual_ids = [heading_id for _, heading_id in page.toc_entries]
+            actual_ids = [heading_id for _, heading_id, _ in page.toc_entries]
             if len(actual_ids) != len(set(actual_ids)):
                 errors.append(f"{relative}: TOC contains duplicate fragment IDs")
             for heading_id in actual_ids:
                 if heading_id not in page.ids:
                     errors.append(f"{relative}: TOC fragment #{heading_id} has no target ID")
+            if page.toc_invalid_structure:
+                errors.append(f"{relative}: TOC lists must be properly nested within list items")
             if page.toc_entries != expected_entries:
-                errors.append(f"{relative}: TOC heading order or h3 nesting does not match post content")
+                errors.append(f"{relative}: TOC text, heading order or h3 nesting does not match post content")
             expected_title = "Sur cette page" if (page.html_lang or "").startswith("fr") else "On this page"
             if page.toc_title_text != expected_title:
                 errors.append(f"{relative}: TOC title must use the page language")

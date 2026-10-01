@@ -58,10 +58,7 @@
     metadata.className = "post-meta";
     const date = document.createElement("time");
     date.dateTime = post.date;
-    const parsedDate = new Date(post.date);
-    date.textContent = Number.isNaN(parsedDate.getTime())
-      ? post.date
-      : new Intl.DateTimeFormat(root.dataset.searchLocale, { dateStyle: "medium" }).format(parsedDate);
+    date.textContent = window.BlogSearchCore.formatDate(post.date, root.dataset.searchLocale);
     metadata.append(date);
 
     if (post.lang === "fr") {
@@ -134,5 +131,8 @@
 
   const initialQuery = new URLSearchParams(window.location.search).get("q") || "";
   input.value = initialQuery;
+  void loadPosts().catch(() => {
+    status.textContent = labels.error;
+  });
   if (initialQuery) void runSearch(initialQuery);
 })();

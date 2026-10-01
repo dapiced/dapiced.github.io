@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { normalize, searchPosts } = require("../../../assets/js/blog-search-core.js");
+const { formatDate, normalize, searchPosts } = require("../../../assets/js/blog-search-core.js");
 
 test("normalize_removes_accents_and_normalizes_hyphens", () => {
   assert.equal(normalize("Données machine-learning"), "donnees machine learning");
@@ -40,4 +40,15 @@ test("search_empty_query_returns_no_results", () => {
 
 test("search_punctuation_only_query_returns_no_results", () => {
   assert.deepEqual(searchPosts([{ title: "Any post" }], "!!! — ..."), []);
+});
+
+test("format_date_preserves_iso_calendar_day_in_toronto", () => {
+  const previousTimezone = process.env.TZ;
+  process.env.TZ = "America/Toronto";
+  try {
+    assert.equal(formatDate("2026-09-26", "en-US"), "Sep 26, 2026");
+  } finally {
+    if (previousTimezone === undefined) delete process.env.TZ;
+    else process.env.TZ = previousTimezone;
+  }
 });

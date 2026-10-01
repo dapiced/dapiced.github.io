@@ -16,6 +16,15 @@
       .replace(/\s+/g, " ");
   }
 
+  function formatDate(value, locale) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value ?? "");
+    return new Intl.DateTimeFormat(locale, {
+      dateStyle: "medium",
+      timeZone: "UTC",
+    }).format(date);
+  }
+
   function searchPosts(posts, query) {
     const tokens = normalize(query).split(" ").filter(Boolean);
     if (tokens.length === 0) return [];
@@ -44,5 +53,5 @@
       .map(({ post }) => post);
   }
 
-  return { normalize, searchPosts };
+  return { formatDate, normalize, searchPosts };
 });
