@@ -1,0 +1,28 @@
+- label: About
+  href: "/#about"
+- label: Projects
+  href: "/#projects"
+- label: Portfolios
+  href: "/portfolio/"
+- label: Timeline
+  href: "/#timeline"
+- label: Blogs
+  href: "/blog/"
+- label: Now
+  href: "/now/"
+- label: My LabML
+  href: "https://app.dominicdapice.com/"
+  class: nav-labml
+  target: _blank
+  rel: noopener
+- label: Resources
+  href: "/resources/"
+- label: Contact
+  href: "https://www.linkedin.com/in/dapiced/"
+  target: _blank
+  rel: noopener
+- label: "GitHub ↗"
+  href: "https://github.com/dapiced"
+  class: nav-gh
+  target: _blank
+  rel: noopener

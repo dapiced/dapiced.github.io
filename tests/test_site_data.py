@@ -1,0 +1,123 @@
+from __future__ import annotations
+
+import importlib.util
+from pathlib import Path
+
+import pytest
+import yaml
+
+
+ROOT = Path(__file__).resolve().parents[1]
+VALIDATOR_PATH = ROOT / "tools" / "site-checks" / "validate_site_data.py"
+
+
+def load_validator():
+    spec = importlib.util.spec_from_file_location("validate_site_data", VALIDATOR_PATH)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_site_data_files_match_required_schema():
+    validator = load_validator()
+
+    data = validator.load_site_data(ROOT)
+
+    assert data["navigation"] == [
+        {"label": "About", "href": "/#about"},
+        {"label": "Projects", "href": "/#projects"},
+        {"label": "Portfolios", "href": "/portfolio/"},
+        {"label": "Timeline", "href": "/#timeline"},
+        {"label": "Blogs", "href": "/blog/"},
+        {"label": "Now", "href": "/now/"},
+        {
+            "label": "My LabML",
+            "href": "https://app.dominicdapice.com/",
+            "class": "nav-labml",
+            "target": "_blank",
+            "rel": "noopener",
+        },
+        {"label": "Resources", "href": "/resources/"},
+        {
+            "label": "Contact",
+            "href": "https://www.linkedin.com/in/dapiced/",
+            "target": "_blank",
+            "rel": "noopener",
+        },
+        {
+            "label": "GitHub ↗",
+            "href": "https://github.com/dapiced",
+            "class": "nav-gh",
+            "target": "_blank",
+            "rel": "noopener",
+        },
+    ]
+    assert data["skills"][0] == {
+        "domain": "Cloud & Data",
+        "tags": ["Azure", "Databricks", "VMware", "Azure DevOps"],
+    }
+    assert data["timeline"][0] == {
+        "year": "2026 - NOW",
+        "role": "Developer - Azure Infrastructure AI",
+        "description": "Azure for AI · Databricks platform · MLOps / DataOps · IaC · CI/CD",
+    }
+    assert data["resources"][0] == {
+        "icon": "🌌",
+        "title": "Astronomy",
+        "description": (
+            "Exploring celestial objects and following the latest discoveries - "
+            "from JWST deep fields to backyard skies."
+        ),
+        "href": "/blog/astronomy/",
+        "more": "Read articles →",
+    }
+
+
+def test_validate_site_data_rejects_missing_required_field(tmp_path: Path):
+    validator = load_validator()
+    data_dir = tmp_path / "_data"
+    data_dir.mkdir()
+
+    for name in validator.SCHEMAS:
+        source = ROOT / "_data" / f"{name}.yml"
+        (data_dir / f"{name}.yml").write_text(
+            source.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
+    navigation = yaml.safe_load((data_dir / "navigation.yml").read_text(encoding="utf-8"))
+    del navigation[0]["href"]
+    (data_dir / "navigation.yml").write_text(
+        yaml.safe_dump(navigation, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(validator.SiteDataError, match=r"navigation\[0\].*href"):
+        validator.load_site_data(tmp_path)
+
+
+def test_validate_site_data_rejects_unpaired_external_link_attributes(tmp_path: Path):
+    validator = load_validator()
+    data_dir = tmp_path / "_data"
+    data_dir.mkdir()
+
+    for name in validator.SCHEMAS:
+        source = ROOT / "_data" / f"{name}.yml"
+        (data_dir / f"{name}.yml").write_text(
+            source.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
+    navigation = yaml.safe_load((data_dir / "navigation.yml").read_text(encoding="utf-8"))
+    del navigation[-1]["rel"]
+    (data_dir / "navigation.yml").write_text(
+        yaml.safe_dump(navigation, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        validator.SiteDataError,
+        match=r"navigation\[9\].*target and rel",
+    ):
+        validator.load_site_data(tmp_path)
