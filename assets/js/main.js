@@ -1,4 +1,4 @@
-/* dapiced.github.io - starfield, typed roles, live projects */
+/* dapiced.github.io - starfield, typed roles, sky widgets */
 (function () {
   "use strict";
 
@@ -193,83 +193,6 @@
     } else {
       typeTick();
     }
-  }
-
-  /* ---------- live projects from GitHub API ---------- */
-  var LANG_COLORS = {
-    Python: "#3572A5", R: "#198CE7", HTML: "#e34c26", CSS: "#563d7c",
-    Shell: "#89e051", JavaScript: "#f1e05a", PowerShell: "#012456",
-    Jinja: "#a52a22", Dockerfile: "#384d54", Perl: "#0298c3",
-    "Jupyter Notebook": "#DA5B0B", Markdown: "#083fa1", YAML: "#cb171e",
-    Text: "#6e7681"
-  };
-
-  /* Repos always shown first in the grid, whatever their star count */
-  var PINNED = ["titanic"];
-
-  var grid = document.getElementById("projects-grid");
-  if (grid) {
-    fetch("https://api.github.com/users/dapiced/repos?per_page=100&sort=updated")
-      .then(function (r) {
-        if (!r.ok) throw new Error("GitHub API " + r.status);
-        return r.json();
-      })
-      .then(function (repos) {
-        var own = repos.filter(function (r) {
-          return !r.fork && r.name !== "dapiced" && r.name !== "dapiced.github.io";
-        });
-        own.sort(function (a, b) {
-          var pa = PINNED.indexOf(a.name), pb = PINNED.indexOf(b.name);
-          if (pa !== -1 || pb !== -1) {
-            if (pa === -1) return 1;
-            if (pb === -1) return -1;
-            return pa - pb;
-          }
-          var d = b.stargazers_count - a.stargazers_count;
-          return d !== 0 ? d : (a.updated_at < b.updated_at ? 1 : -1);
-        });
-        grid.innerHTML = "";
-        own.slice(0, 9).forEach(function (repo) {
-          var card = document.createElement("a");
-          card.className = "project-card reveal";
-          card.href = repo.html_url;
-          card.target = "_blank";
-          card.rel = "noopener";
-
-          var name = document.createElement("span");
-          name.className = "project-name";
-          name.textContent = repo.name;
-
-          var desc = document.createElement("span");
-          desc.className = "project-desc";
-          var d = (repo.description || "Automation project").replace(/\*\*/g, "");
-          desc.textContent = d.length > 130 ? d.slice(0, 129) + "…" : d;
-
-          var meta = document.createElement("span");
-          meta.className = "project-meta";
-          var parts = [];
-          if (repo.language) {
-            var dot = '<span class="lang-dot" style="background:' +
-              (LANG_COLORS[repo.language] || "#bc8cff") + '"></span>';
-            parts.push(dot + repo.language);
-          } else if ((repo.topics || []).indexOf("ansible") !== -1) {
-            parts.push('<span class="lang-dot" style="background:#EE0000"></span>Ansible');
-          }
-          parts.push("★ " + repo.stargazers_count);
-          if (repo.forks_count > 0) parts.push("⑂ " + repo.forks_count);
-          meta.innerHTML = parts.map(function (p) { return "<span>" + p + "</span>"; }).join("");
-
-          card.appendChild(name);
-          card.appendChild(desc);
-          card.appendChild(meta);
-          grid.appendChild(card);
-          requestAnimationFrame(function () { card.classList.add("visible"); });
-        });
-      })
-      .catch(function () {
-        /* API unreachable (rate limit, offline): keep the static fallback cards
-           already rendered in the HTML instead of replacing them with an error. */
-      });
   }
 
   /* ---------- scroll reveal ---------- */

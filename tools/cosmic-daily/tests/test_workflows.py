@@ -176,6 +176,117 @@ def test_indexnow_requests_no_token_permissions(indexnow):
     assert indexnow["permissions"] == {}
 
 
+# --- Cosmic Daily -----------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def cosmic() -> dict:
+    return load(WORKFLOWS / "cosmic-daily.yml")
+
+
+def test_cosmic_daily_triggers_are_scheduled_and_manual_only(cosmic):
+    triggers = cosmic["on"]
+    assert set(triggers) == {"schedule", "workflow_dispatch"}
+    assert triggers["schedule"] == [{"cron": "0 12 * * *"}]
+    # No pull_request / issue_comment trigger: this workflow holds write
+    # permissions and must never run from a fork or a comment.
+    assert set(triggers["workflow_dispatch"]["inputs"]) == {"date", "publish"}
+
+
+def test_cosmic_daily_grants_no_default_permissions(cosmic):
+    assert cosmic["permissions"] == {}
+
+
+def test_cosmic_daily_generation_job_can_only_commit_and_open_prs(cosmic):
+    assert cosmic["jobs"]["cosmic-daily"]["permissions"] == {
+        "contents": "write",
+        "pull-requests": "write",
+    }
+
+
+def test_failure_reporting_is_a_separate_job_limited_to_issues(cosmic):
+    report = cosmic["jobs"]["report-failure"]
+    assert report["permissions"] == {"issues": "write"}
+    assert report["needs"] == "cosmic-daily"
+    assert report["if"] == "failure()"
+
+
+def test_failure_report_receives_the_log_tail_from_the_generation_job(cosmic):
+    outputs = cosmic["jobs"]["cosmic-daily"]["outputs"]
+    assert {"target-date", "log-tail", "pull-request"} <= set(outputs)
+    report = yaml.safe_dump(cosmic["jobs"]["report-failure"])
+    # The tail is passed through the job output (as an env var, so untrusted
+    # log content never reaches the shell as an expression) and decoded there.
+    assert "needs.cosmic-daily.outputs.log-tail" in report
+    assert "base64" in run_commands(cosmic["jobs"]["report-failure"])
+
+
+def test_failure_report_opens_or_comments_a_single_issue(cosmic):
+    commands = run_commands(cosmic["jobs"]["report-failure"])
+    assert "gh issue list" in commands
+    assert "gh issue comment" in commands
+    assert "gh issue create" in commands
+
+
+def test_cosmic_daily_actions_stay_pinned(cosmic):
+    job = cosmic["jobs"]["cosmic-daily"]
+    used = {str(step["uses"]) for step in steps_of(job) if step.get("uses")}
+    assert used == {
+        "actions/checkout@v7",
+        "actions/setup-python@v7",
+        "peter-evans/create-pull-request@v8",
+    }
+
+
+def test_cosmic_daily_still_validates_before_merging(cosmic):
+    commands = run_commands(cosmic["jobs"]["cosmic-daily"])
+    assert "python -m cosmic_daily check" in commands
+    assert "gh pr merge" in commands
+
+
+# --- Repo data refresh ------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def repo_data() -> dict:
+    return load(WORKFLOWS / "repo-data.yml")
+
+
+def test_repo_data_refresh_is_scheduled_and_manual(repo_data):
+    triggers = repo_data["on"]
+    assert set(triggers) == {"schedule", "workflow_dispatch"}
+    assert triggers["schedule"] and triggers["schedule"][0]["cron"]
+
+
+def test_repo_data_refresh_grants_no_default_permissions(repo_data):
+    assert repo_data["permissions"] == {}
+
+
+def test_repo_data_refresh_job_can_only_commit_and_open_prs(repo_data):
+    assert repo_data["jobs"]["refresh"]["permissions"] == {
+        "contents": "write",
+        "pull-requests": "write",
+    }
+
+
+def test_repo_data_refresh_runs_the_generator(repo_data):
+    commands = run_commands(repo_data["jobs"]["refresh"])
+    assert "tools/repo_cards/generate_repo_data.py" in commands
+
+
+def test_repo_data_refresh_opens_a_pull_request_instead_of_pushing_to_main(repo_data):
+    job = repo_data["jobs"]["refresh"]
+    assert uses_action(job, "peter-evans/create-pull-request@v8")
+    commands = run_commands(job)
+    assert "git push" not in commands
+
+
+def test_repo_data_refresh_uses_the_default_token_only(repo_data):
+    raw = (WORKFLOWS / "repo-data.yml").read_text(encoding="utf-8")
+    assert "secrets.GITHUB_TOKEN" in raw
+    assert raw.count("secrets.") == raw.count("secrets.GITHUB_TOKEN")
+
+
 # --- Dependabot -------------------------------------------------------------
 
 
