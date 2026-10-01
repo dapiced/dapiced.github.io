@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import yaml
@@ -31,9 +32,27 @@ def test_resume_template_renders_shared_timeline_and_skills():
     assert "{% for tag in group.tags %}" in template
     assert "{{ tag | escape }}" in template
 
+    shared_content = template.split(
+        '<section class="resume-section resume-profiles"',
+        maxsplit=1,
+    )[0]
     for item in load_yaml("timeline"):
-        assert item["year"] not in template
-        assert item["description"] not in template
+        for value in item.values():
+            assert value not in shared_content
+
+    for group in load_yaml("skills"):
+        assert group["domain"] not in shared_content
+        for tag in group["tags"]:
+            static_value = rf"(?<![\w]){re.escape(tag)}(?![\w])"
+            assert re.search(static_value, shared_content) is None
+
+
+def test_site_ci_runs_resume_source_contracts_before_building():
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+
+    test_command = "python -m pytest tests/test_resume_page.py tests/test_site_data.py -q"
+    assert test_command in workflow
+    assert workflow.index(test_command) < workflow.index("bundle exec jekyll build")
 
 
 def test_resume_template_has_accessible_structure_and_actions():

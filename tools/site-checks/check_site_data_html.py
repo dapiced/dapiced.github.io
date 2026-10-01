@@ -152,6 +152,7 @@ class ResumeParser(HTMLParser):
         self.headings: list[str] = []
         self.contact_links: list[dict[str, str]] = []
         self.profile_links: list[dict[str, str]] = []
+        self.all_links: list[dict[str, str]] = []
         self.has_print_control = False
         self.has_form = False
         self.has_mailto = False
@@ -219,14 +220,13 @@ class ResumeParser(HTMLParser):
                 self._link_collection = self.profile_links
             else:
                 self._link_collection = None
-            if self._link_collection is not None:
-                self._link = {
-                    key: value
-                    for key in ("href", "target", "rel")
-                    if (value := attrs.get(key)) is not None
-                }
-                self._link["label"] = ""
-                self._capture = (self._link, "label", False)
+            self._link = {
+                key: value
+                for key in ("href", "target", "rel")
+                if (value := attrs.get(key)) is not None
+            }
+            self._link["label"] = ""
+            self._capture = (self._link, "label", False)
 
     def handle_data(self, data: str) -> None:
         if self._capture is None:
@@ -252,8 +252,9 @@ class ResumeParser(HTMLParser):
             self._capture = None
 
         if tag == "a" and self._link is not None:
-            assert self._link_collection is not None
-            self._link_collection.append(self._link)
+            self.all_links.append(self._link)
+            if self._link_collection is not None:
+                self._link_collection.append(self._link)
             self._link = None
             self._link_collection = None
             self._capture = None
@@ -282,6 +283,7 @@ def parse_rendered_resume(html: str) -> dict[str, Any]:
         "headings": parser.headings,
         "contact_links": parser.contact_links,
         "profile_links": parser.profile_links,
+        "all_links": parser.all_links,
         "has_print_control": parser.has_print_control,
         "has_form": parser.has_form,
         "has_mailto": parser.has_mailto,
@@ -363,6 +365,21 @@ def validate_rendered_resume(root: Path | str) -> dict[str, int]:
         raise HtmlDataError(
             "generated resume public profiles are incorrect: "
             f"expected {expected_profiles!r}, got {profiles!r}"
+        )
+
+    expected_all_links = expected_contact + [
+        {
+            "href": href,
+            "target": "_blank",
+            "rel": "noopener",
+            "label": label,
+        }
+        for href, label in expected_profiles
+    ]
+    if rendered["all_links"] != expected_all_links:
+        raise HtmlDataError(
+            "generated resume must contain only its approved public links: "
+            f"expected {expected_all_links!r}, got {rendered['all_links']!r}"
         )
 
     for link in rendered["contact_links"] + rendered["profile_links"]:

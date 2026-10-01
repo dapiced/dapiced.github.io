@@ -25,9 +25,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Validate site data
+      - name: Validate site source and data
         run: |
-          python -m pip install "PyYAML==6.0.3"
+          python -m pip install "PyYAML==6.0.3" "pytest>=8.0.0"
+          python -m pytest tests/test_resume_page.py tests/test_site_data.py -q
           python tools/site-checks/validate_site_data.py
 
       - name: Set up Ruby

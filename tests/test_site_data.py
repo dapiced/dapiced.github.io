@@ -264,6 +264,20 @@ def test_html_parser_extracts_rendered_resume_contract():
                 "label": "GitHub",
             }
         ],
+        "all_links": [
+            {
+                "href": "https://www.linkedin.com/in/dapiced/",
+                "target": "_blank",
+                "rel": "noopener",
+                "label": "Contact on LinkedIn",
+            },
+            {
+                "href": "https://github.com/dapiced",
+                "target": "_blank",
+                "rel": "noopener",
+                "label": "GitHub",
+            },
+        ],
         "has_print_control": True,
         "has_form": False,
         "has_mailto": False,
@@ -277,6 +291,7 @@ def write_generated_resume(
     contact_target: str = "_blank",
     include_form: bool = False,
     include_mailto: bool = False,
+    extra_link: str = "",
 ) -> None:
     validator = load_validator()
     tools_dir = root / "tools" / "site-checks"
@@ -335,7 +350,7 @@ def write_generated_resume(
           <a class="resume-profile-link" href="https://www.kaggle.com/dominicdapice" target="_blank" rel="noopener">Kaggle</a>
           <a class="resume-profile-link" href="https://huggingface.co/dapiced" target="_blank" rel="noopener">Hugging Face</a>
           <button data-print-resume>Print</button>
-          {form_html}{mailto_html}
+          {form_html}{mailto_html}{extra_link}
         </article>
         """,
         encoding="utf-8",
@@ -377,7 +392,32 @@ def test_validate_rendered_resume_rejects_mailto(tmp_path: Path):
     checker = load_module("check_site_data_html_mailto_resume", HTML_CHECKER_PATH)
     write_generated_resume(tmp_path, include_mailto=True)
 
-    with pytest.raises(checker.HtmlDataError, match="must not contain mailto"):
+    with pytest.raises(checker.HtmlDataError, match="approved public links"):
+        checker.validate_rendered_resume(tmp_path)
+
+
+def test_validate_rendered_resume_rejects_phone_link(tmp_path: Path):
+    checker = load_module("check_site_data_html_phone_resume", HTML_CHECKER_PATH)
+    write_generated_resume(
+        tmp_path,
+        extra_link='<a href="tel:+15551234567">Call</a>',
+    )
+
+    with pytest.raises(checker.HtmlDataError, match="approved public links"):
+        checker.validate_rendered_resume(tmp_path)
+
+
+def test_validate_rendered_resume_rejects_unapproved_contact_service(tmp_path: Path):
+    checker = load_module("check_site_data_html_service_resume", HTML_CHECKER_PATH)
+    write_generated_resume(
+        tmp_path,
+        extra_link=(
+            '<a href="https://contact.example/dapiced" target="_blank" '
+            'rel="noopener">Contact service</a>'
+        ),
+    )
+
+    with pytest.raises(checker.HtmlDataError, match="approved public links"):
         checker.validate_rendered_resume(tmp_path)
 
 
