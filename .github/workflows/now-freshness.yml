@@ -1,0 +1,86 @@
+name: /now/ freshness
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 14 1 * *"
+
+permissions: {}
+
+jobs:
+  check:
+    name: Check /now/ freshness
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      updated: ${{ steps.freshness.outputs.updated }}
+      age_days: ${{ steps.freshness.outputs.age_days }}
+      stale: ${{ steps.freshness.outputs.stale }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Check freshness
+        id: freshness
+        shell: bash
+        run: |
+          set +e
+          result="$(python tools/site-checks/check_now_freshness.py --format json)"
+          status=$?
+          printf '%s\n' "$result"
+          if [ "$status" -eq 1 ]; then
+            exit 1
+          fi
+          {
+            echo "updated=$(printf '%s' "$result" | python -c 'import json, sys; print(json.load(sys.stdin)["updated"])')"
+            echo "age_days=$(printf '%s' "$result" | python -c 'import json, sys; print(json.load(sys.stdin)["age_days"])')"
+            echo "stale=$(printf '%s' "$result" | python -c 'import json, sys; print(str(json.load(sys.stdin)["stale"]).lower())')"
+          } >> "$GITHUB_OUTPUT"
+
+  notify:
+    name: Open stale page reminder
+    needs: check
+    if: needs.check.outputs.stale == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open one reminder issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPDATED: ${{ needs.check.outputs.updated }}
+          AGE_DAYS: ${{ needs.check.outputs.age_days }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --state open \
+            --search "in:title Refresh /now/ page" \
+            --json title \
+            --jq '.[].title' \
+            | grep -Fxq "Refresh /now/ page"; then
+            echo "An open /now/ reminder already exists; no new issue created."
+            exit 0
+          fi
+
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Refresh /now/ page" \
+            --body "$(cat <<EOF
+          The \`/now/\` page has not been updated recently.
+
+          - Last update: ${UPDATED}
+          - Age: ${AGE_DAYS} days
+          - Reminder threshold: 90 days
+          - Freshness workflow run: ${RUN_URL}
+
+          Review the page at [now/index.html](https://github.com/${GITHUB_REPOSITORY}/blob/main/now/index.html) and update the \`updated\` front-matter date when its durable facts have been reviewed.
+          EOF
+          )"
