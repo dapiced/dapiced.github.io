@@ -29,6 +29,19 @@ jobs:
       - name: Build site
         run: bundle exec jekyll build
 
+      - name: Set up Node.js for search tests
+        uses: actions/setup-node@v6
+        with:
+          node-version: "lts/*"
+
+      - name: Test local blog search
+        run: node --test tools/site-checks/js/*.test.js
+
+      - name: Set up Python for generated-site checks
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
       - name: Check generated output
         run: |
           set -euo pipefail
@@ -38,7 +51,10 @@ jobs:
             _site/feed.xml \
             _site/feed/apod.xml \
             _site/sitemap.xml \
-            _site/404.html; do
+            _site/404.html \
+            _site/blog/tag/machine-learning/index.html \
+            _site/blog/search/index.html \
+            _site/blog/search.json; do
             test -s "$path" || { echo "Missing or empty: $path"; exit 1; }
           done
           # jekyll-redirect-from emits a meta refresh page at every old URL.
@@ -46,6 +62,7 @@ jobs:
             grep -rl "http-equiv=\"refresh\"" _site >/dev/null \
               || { echo "redirect_from declared but no redirect page emitted"; exit 1; }
           fi
+          python tools/site-checks/check_blog_discovery.py
 
   cosmic-daily:
     name: Cosmic Daily tests

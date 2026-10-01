@@ -1,0 +1,45 @@
+---
+layout: default
+title: Search the blog
+description: Search authored blog posts by title, excerpt, and tag.
+lang: en
+blog_search: true
+---
+{% assign search_lang = page.lang | default: site.lang %}
+{% assign search_t = site.data.i18n[search_lang] | default: site.data.i18n.en %}
+<section class="section" id="blog-search"
+  data-search-results="{{ search_t.search_results | escape }}"
+  data-search-one-result="{{ search_t.search_one_result | escape }}"
+  data-search-none="{{ search_t.search_none | escape }}"
+  data-search-error="{{ search_t.search_error | escape }}"
+  data-search-tag-label="{{ search_t.search_tag_label | escape }}"
+  data-search-french-marker="{{ search_t.search_french_marker | escape }}"
+  data-search-french-label="{{ search_t.search_french_label | escape }}"
+  data-search-locale="{{ search_lang | escape }}">
+  <p class="eyebrow"><a href="/blog/">{{ search_t.eyebrow_blog }}</a></p>
+  <h1 class="section-title">{{ search_t.search_title }}</h1>
+
+  <form id="blog-search-form" role="search" action="/blog/search/" method="get">
+    <label for="blog-search-query">{{ search_t.search_label }}</label>
+    <input id="blog-search-query" name="q" type="search" autocomplete="off"
+      placeholder="{{ search_t.search_placeholder | escape }}">
+    <button type="submit">{{ search_t.search_button }}</button>
+  </form>
+
+  <div id="search-fallback">
+    <p>{{ search_t.search_nojs }} <a href="/blog/">{{ search_t.search_browse_posts }}</a></p>
+    <div id="tag-archives">
+      <h2>{{ search_t.search_tags_title }}</h2>
+      <ul class="post-list">
+        {% for tag in site.tags %}
+          <li><a class="tag" href="/blog/tag/{{ tag[0] | slugify }}/">#{{ tag[0] | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <p id="search-status" role="status" aria-live="polite"></p>
+  <div id="search-results" aria-describedby="search-status">
+    <ol class="post-list"></ol>
+  </div>
+</section>

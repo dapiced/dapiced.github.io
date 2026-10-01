@@ -1,0 +1,76 @@
+{%- assign related_page_lang = page.lang | default: site.lang -%}
+{%- assign preferred_entries = '' -%}
+{%- assign english_entries = '' -%}
+{%- assign selected_urls = '~~' -%}
+{%- assign selected_count = 0 -%}
+{%- for candidate in site.posts -%}
+  {%- assign candidate_lang = candidate.lang | default: site.lang -%}
+  {%- if candidate.url != page.url and candidate.url != page.translation_url and candidate.translation_url != page.url -%}
+    {%- assign shared_score = 0 -%}
+    {%- for tag in candidate.tags -%}
+      {%- if page.tags contains tag -%}
+        {%- assign shared_score = shared_score | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if shared_score > 0 -%}
+      {%- assign padded_score = shared_score | prepend: '000' | slice: -3, 3 -%}
+      {%- assign sortable_date = candidate.date | date: '%Y%m%d%H%M%S' -%}
+      {%- capture candidate_entry -%}{{ padded_score }}|{{ sortable_date }}|{{ candidate.url }}{%- endcapture -%}
+      {%- if candidate_lang == related_page_lang -%}
+        {%- if preferred_entries == '' -%}
+          {%- assign preferred_entries = candidate_entry -%}
+        {%- else -%}
+          {%- assign preferred_entries = preferred_entries | append: '~~' | append: candidate_entry -%}
+        {%- endif -%}
+      {%- elsif candidate_lang == 'en' -%}
+        {%- if english_entries == '' -%}
+          {%- assign english_entries = candidate_entry -%}
+        {%- else -%}
+          {%- assign english_entries = english_entries | append: '~~' | append: candidate_entry -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign preferred_entries = preferred_entries | split: '~~' | sort | reverse -%}
+{%- for entry in preferred_entries -%}
+  {%- if entry != '' and selected_count < 3 -%}
+    {%- assign entry_parts = entry | split: '|' -%}
+    {%- assign selected_urls = selected_urls | append: entry_parts[2] | append: '~~' -%}
+    {%- assign selected_count = selected_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign english_entries = english_entries | split: '~~' | sort | reverse -%}
+{%- for entry in english_entries -%}
+  {%- if entry != '' and selected_count < 3 -%}
+    {%- assign entry_parts = entry | split: '|' -%}
+    {%- assign selected_token = '~~' | append: entry_parts[2] | append: '~~' -%}
+    {%- unless selected_urls contains selected_token -%}
+      {%- assign selected_urls = selected_urls | append: entry_parts[2] | append: '~~' -%}
+      {%- assign selected_count = selected_count | plus: 1 -%}
+    {%- endunless -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if selected_count > 0 %}
+<section class="related-posts" aria-labelledby="related-title">
+  <h2 id="related-title">{{ t.related_title | escape }}</h2>
+  <ul class="post-list related-post-list">
+    {%- assign selected_urls = selected_urls | split: '~~' -%}
+    {%- for selected_url in selected_urls -%}
+      {%- if selected_url != '' -%}
+        {%- for related_post in site.posts -%}
+          {%- if related_post.url == selected_url %}
+    <li class="post-item related-post-item">
+      <a class="post-link related-post-link" href="{{ related_post.url | relative_url }}">{{ related_post.title | escape }}</a>
+      <p class="post-meta">
+        <time datetime="{{ related_post.date | date_to_xmlschema }}">{% include localized-date.html date=related_post.date lang=related_page_lang %}</time>
+        {% if related_post.tags and related_post.tags.size > 0 %} · {% for tag in related_post.tags %}<a class="tag" href="/blog/tag/{{ tag | slugify }}/">#{{ tag }}</a> {% endfor %}{% endif %}
+      </p>
+    </li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor %}
+  </ul>
+</section>
+{%- endif -%}

@@ -25,6 +25,14 @@ Post content in Markdown…
 
 - `description` and `image` are optional but recommended: `image` becomes the og:image
   social preview (JPG/PNG, ideally 1200x630 - falls back to `/assets/img/og-default.jpg`).
+- Keep tags as lowercase hyphenated slugs; Jekyll generates a linked archive at
+  `/blog/tag/<tag>/` for each authored-post tag.
+- Use clear `##` and `###` sections in long posts; a server-rendered table of contents
+  appears when a post has at least three such headings.
+- Related posts use shared tags, prefer the same language and fall back to English; the
+  section is omitted when no authored post shares a tag.
+- Search authored posts at `/blog/search/`; the local index is generated at
+  `/blog/search.json`. Tag archives remain available without JavaScript.
 - Photos: resize to ~1600 px max and convert to WebP before committing; always set
   `width`/`height` + `loading="lazy"` (the first image of a post can stay eager).
 - Bilingual posts: publish two files (one per language) and cross-link them with
@@ -55,7 +63,8 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 
 - `index.html` - homepage (hero, about, projects, skills, timeline, blog preview).
   Project cards are static HTML (indexable without JS) refreshed live from the GitHub API.
-- `blog/index.html` - post listing
+- `blog/index.html` - post listing (all English posts remain in HTML for SEO and readers without JavaScript; JavaScript initially shows eight and provides a button to reveal the rest)
+- `blog/search/` and `blog/search.json` - local search over authored post titles, excerpts and tags
 - `404.html` - custom not-found page
 - `_posts/` - blog posts (Markdown)
 - `_apod/` - daily NASA APOD entries (collection published under `/sky/`, own feed at `/feed/apod.xml`)
@@ -83,7 +92,8 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
   Details in [`tools/cosmic-daily/README.md`](tools/cosmic-daily/README.md).
 - **Pages deployment** (`pages.yml`) builds the site with the Gemfile and publishes it on every
   push to `main`. The legacy GitHub Pages builder is pinned to Jekyll 3.x and ignores the
-  Gemfile, so the plugin and Ruby versions were drifting from what runs locally.
+  Gemfile, so the plugin and Ruby versions were drifting from what runs locally. Blog tag
+  archives depend on `jekyll-archives`, which is loaded through this Actions-based build.
 - **CI** (`ci.yml`) runs on pull requests and on `main`: it builds the site, checks that the
   pages the rest of the site links to exist (`/sky/`, both feeds, the sitemap, the 404 page,
   the `redirect_from` pages), and runs the Cosmic Daily test suite.

@@ -9,9 +9,11 @@ layout: default
     <h1 class="post-title">{{ page.title }}</h1>
     {% include article-meta.html %}
   </header>
+  {% include post-toc.html %}
   <div class="post-content">
     {{ content }}
   </div>
+  {% include related-posts.html %}
   {% include comments.html %}
 
   <p class="post-footer"><a href="/blog/">{{ t.back_to_posts }}</a></p>

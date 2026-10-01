@@ -12,6 +12,24 @@ en:
   comments_hint: "Sign in with your GitHub account to leave a comment or a reaction."
   back_to_posts: "← Back to all posts"
   back_to_portfolio: "← Back to the portfolio"
+  search_title: "Search authored posts"
+  search_label: "Search the blog"
+  search_placeholder: "Try Azure, MLOps, or machine learning"
+  search_button: "Search"
+  search_nojs: "Search needs JavaScript. You can browse all posts or the tags below."
+  search_browse_posts: "Browse all posts"
+  search_browse_tags: "Browse posts by tag"
+  search_tags_title: "Browse all tags"
+  search_results: '{n} results for "{q}"'
+  search_one_result: '1 result for "{q}"'
+  search_none: 'No results for "{q}"'
+  search_error: "The search index could not be loaded."
+  search_tag_label: "Browse the {tag} tag"
+  search_french_marker: "FR"
+  search_french_label: "French version"
+  toc_title: "On this page"
+  related_title: "Related posts"
+  show_more: "Show all posts ({n} more)"
 
 fr:
   giscus_lang: fr
@@ -25,6 +43,24 @@ fr:
   comments_hint: "Connectez-vous avec votre compte GitHub pour laisser un commentaire ou une réaction."
   back_to_posts: "← Tous les billets"
   back_to_portfolio: "← Retour au portfolio"
+  search_title: "Rechercher dans les billets"
+  search_label: "Rechercher dans le blogue"
+  search_placeholder: "Essayez Azure, MLOps ou apprentissage automatique"
+  search_button: "Rechercher"
+  search_nojs: "La recherche nécessite JavaScript. Vous pouvez parcourir tous les billets ou les étiquettes ci-dessous."
+  search_browse_posts: "Parcourir tous les billets"
+  search_browse_tags: "Parcourir les billets par mot-clé"
+  search_tags_title: "Tous les mots-clés"
+  search_results: '{n} résultats pour « {q} »'
+  search_one_result: '1 résultat pour « {q} »'
+  search_none: 'Aucun résultat pour « {q} »'
+  search_error: "L'index de recherche n'a pas pu être chargé."
+  search_tag_label: "Parcourir le mot-clé {tag}"
+  search_french_marker: "FR"
+  search_french_label: "Version française"
+  toc_title: "Sur cette page"
+  related_title: "Articles connexes"
+  show_more: "Afficher tous les articles ({n} de plus)"
   months:
     - janvier
     - février

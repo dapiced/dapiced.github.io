@@ -1,0 +1,20 @@
+---
+layout: default
+---
+{% assign archive_title = page.tag | prepend: "#" %}
+{% assign archive_posts = page.posts | sort: "date" | reverse %}
+{% assign listed_posts = archive_posts | where_exp: "post", "post.lang != 'fr'" %}
+{% if listed_posts.size == 0 %}
+  {% assign listed_posts = archive_posts %}
+{% endif %}
+<section class="section">
+  <p class="eyebrow"><a href="/blog/">← MISSION LOG</a></p>
+  <h1 class="section-title">{{ archive_title | escape }}</h1>
+  <p class="post-meta">{{ listed_posts.size }} posts</p>
+  <p><a href="/blog/">All posts</a> · <a href="/blog/search/">Search the blog</a></p>
+  <ul class="post-list" style="margin-top: 1rem;">
+    {% for post in listed_posts %}
+      {% include post-item.html post=post %}
+    {% endfor %}
+  </ul>
+</section>

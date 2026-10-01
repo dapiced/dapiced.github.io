@@ -107,6 +107,13 @@
     <p class="footer-copy">© <span id="year">2026</span> Dominic D'Apice · Montréal, Canada · Orion Arm</p>
   </footer>
 
+  {% if page.blog_search %}
+  <script src="/assets/js/blog-search-core.js" defer></script>
+  <script src="/assets/js/blog-search.js" defer></script>
+  {% endif %}
+  {% if page.blog_index %}
+  <script src="/assets/js/blog-index.js" defer></script>
+  {% endif %}
   <script src="/assets/js/main.js" defer></script>
   <script data-goatcounter="https://dapiced.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>

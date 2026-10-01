@@ -1,5 +1,6 @@
 ---
 layout: default
+blog_index: true
 title: Blog - Azure, Databricks & MLOps Field Notes
 description: >-
   Field notes from 25+ years of infrastructure: Azure, Databricks, Ansible,
@@ -26,6 +27,7 @@ keywords:
     Azure DevOps → GitHub Actions migrations, MLOps / DataOps and the occasional detour
     into astronomy, physics, and the night sky.
   </p>
+  <p><a href="/blog/search/">Search all authored posts</a></p>
 
   <div class="beyond-grid" style="margin-top: 2rem;">
     <a class="beyond-card reveal" href="/blog/infrastructure/">
@@ -61,19 +63,13 @@ keywords:
   </div>
 
   <p class="eyebrow" style="margin-top: 3rem;">ALL POSTS</p>
-  <ul class="post-list" style="margin-top: 1rem;">
-    {% comment %} French versions are reached from their English post (translation_url), not listed twice {% endcomment %}
-    {% assign posts = site.posts | where_exp: "post", "post.lang != 'fr'" %}
+  {% comment %} French versions are reached from their English post (translation_url), not listed twice {% endcomment %}
+  {% assign posts = site.posts | where_exp: "post", "post.lang != 'fr'" %}
+  {% assign blog_lang = page.lang | default: site.lang %}
+  {% assign blog_t = site.data.i18n[blog_lang] | default: site.data.i18n.en %}
+  <ul class="post-list" id="all-posts" data-initial="8" data-show-more-template="{{ blog_t.show_more | escape }}" data-hidden-count="{{ posts.size | minus: 8 | at_least: 0 }}" style="margin-top: 1rem;">
     {% for post in posts %}
-    <li class="post-item">
-      <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
-      <p class="post-meta">
-        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span>
-        {% if post.tags and post.tags.size > 0 %} · {% for tag in post.tags %}#{{ tag }} {% endfor %}{% endif %}
-        {% if post.translation_url %} · <a href="{{ post.translation_url }}">version française 🇫🇷</a>{% endif %}
-      </p>
-      <p class="excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
-    </li>
+      {% include post-item.html post=post %}
     {% endfor %}
   </ul>
 </section>

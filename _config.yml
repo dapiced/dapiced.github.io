@@ -62,6 +62,15 @@ plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
   - jekyll-redirect-from
+  - jekyll-archives
+
+jekyll-archives:
+  enabled: [tags]
+  layouts:
+    tag: tag-archive
+  permalinks:
+    tag: /blog/tag/:name/
+  slug_mode: default
 
 feed:
   path: feed.xml
