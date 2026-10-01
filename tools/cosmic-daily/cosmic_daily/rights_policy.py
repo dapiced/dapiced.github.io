@@ -16,4 +16,12 @@ def evaluate_media_rights(media_type: str, copyright: Optional[str] = None) -> R
     if normalized != "image":
         return RightsDecision(status="unsupported_media", allowed=False, reason="Only still-image APOD entries are published automatically.")
 
-    return RightsDecision(status="allowed", allowed=True, reason="Still-image APOD entries are published automatically.")
+    credit = (copyright or "").strip().lower()
+    if not credit or credit in {"nasa", "public domain", "nasa / public domain", "nasa/public domain"}:
+        return RightsDecision(status="allowed", allowed=True, reason="APOD metadata identifies the image as NASA/public-domain material.")
+
+    return RightsDecision(
+        status="manual_review",
+        allowed=False,
+        reason="APOD metadata names a third-party copyright holder; manual rights review is required.",
+    )

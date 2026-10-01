@@ -9,6 +9,8 @@ import tempfile
 from datetime import date
 from pathlib import Path
 
+import yaml
+
 from .article_generator import generate_article, slugify_title
 from .image_processor import process_apod_image_with_fallback
 from .nasa_client import APODRecord, fetch_apod
@@ -18,6 +20,13 @@ from .rights_policy import evaluate_media_rights
 
 EXIT_SUCCESS = 0
 EXIT_ERROR = 1
+MIN_IMAGE_DIMENSION = 320
+BOILERPLATE_MARKERS = (
+    "apod's main nasa site has moved",
+    "apod's email for image submissions has changed",
+    "tomorrow's picture:",
+    "apod submissions",
+)
 
 
 def _emit_github_output(**values: str) -> None:
@@ -124,10 +133,12 @@ def generate(date_value: str | None = None) -> int:
     post_path.write_text(article_text, encoding="utf-8")
     _emit_github_output(
         apod_date=apod.date,
-        result="generated",
+        result=decision.status,
         post_path=str(post_path),
         image_path=str(image_path),
     )
+    if decision.status == "manual_review":
+        print(f"Generated post requires manual review: {decision.reason}")
     print(f"Generated post: {post_path}")
     print(f"Generated image: {image_path}")
     return EXIT_SUCCESS
@@ -148,33 +159,21 @@ def check(post_path: str | None = None) -> int:
         return EXIT_ERROR
 
     content = chosen.read_text(encoding="utf-8")
-    if not content.startswith("---"):
-        print("Missing YAML front matter.")
-        return EXIT_ERROR
-    if "generated_by: cosmic-daily" not in content:
-        print("Missing generated_by metadata.")
-        return EXIT_ERROR
-    if "tags: [astronomy, nasa, apod]" not in content:
-        print("Missing astronomy tag.")
+    try:
+        metadata, body = _parse_and_validate_post(content)
+    except ValueError as exc:
+        print(f"Validation failed: {exc}")
         return EXIT_ERROR
 
-    header = content.split("\n---", 1)[0]
-    image_match = next(
-        (line for line in header.splitlines() if line.startswith("image:") and "/assets/img/apod/" in line), None
-    )
-    if not image_match:
-        print("Missing article image reference.")
-        return EXIT_ERROR
-
-    image_reference = image_match.split(":", 1)[1].strip().strip('"\'')
+    image_reference = metadata["image"]
     resolved_image = repo.root / image_reference.lstrip("/")
     if not resolved_image.exists():
         print(f"Image file missing: {resolved_image}")
         return EXIT_ERROR
 
     duplicates = repo.find_duplicates(
-        (content.split("apod_date: ", 1)[1].splitlines()[0].strip()) if "apod_date: " in content else "",
-        (content.split('apod_url: "', 1)[1].split('"', 1)[0]) if 'apod_url: "' in content else "",
+        metadata["apod_date"],
+        metadata["apod_url"],
         exclude_path=chosen,
     )
     if duplicates:
@@ -183,6 +182,46 @@ def check(post_path: str | None = None) -> int:
 
     print(f"Validation passed for {chosen}")
     return EXIT_SUCCESS
+
+
+def _parse_and_validate_post(content: str) -> tuple[dict, str]:
+    if not content.startswith("---\n"):
+        raise ValueError("missing YAML front matter")
+    header, separator, body = content[4:].partition("\n---\n")
+    if not separator:
+        raise ValueError("front matter is not closed")
+    metadata = yaml.safe_load(header)
+    if not isinstance(metadata, dict):
+        raise ValueError("front matter must be a mapping")
+    required = {
+        "layout": "apod",
+        "generated_by": "cosmic-daily",
+        "tags": ["astronomy", "nasa", "apod"],
+    }
+    for key, expected in required.items():
+        if metadata.get(key) != expected:
+            raise ValueError(f"invalid {key}")
+    title = metadata.get("title")
+    if not isinstance(title, str) or len(title.strip()) < 8 or title.strip().lower() in {"nasa science", "untitled", "apod"}:
+        raise ValueError("generic or malformed title")
+    for key in ("description", "image", "credit", "apod_url"):
+        if not isinstance(metadata.get(key), str) or not metadata[key].strip():
+            raise ValueError(f"missing {key}")
+    if not isinstance(metadata.get("apod_date"), (str, date)):
+        raise ValueError("missing apod_date")
+    metadata["apod_date"] = metadata["apod_date"].isoformat() if isinstance(metadata["apod_date"], date) else metadata["apod_date"].strip()
+    if not metadata["image"].startswith("/assets/img/apod/"):
+        raise ValueError("image must be an APOD asset")
+    if not isinstance(metadata.get("image_width"), int) or metadata["image_width"] < MIN_IMAGE_DIMENSION:
+        raise ValueError("image width is too small")
+    if not isinstance(metadata.get("image_height"), int) or metadata["image_height"] < MIN_IMAGE_DIMENSION:
+        raise ValueError("image height is too small")
+    lowered_body = body.lower()
+    if any(marker in lowered_body for marker in BOILERPLATE_MARKERS):
+        raise ValueError("known APOD navigation/footer boilerplate is present")
+    if len(body.strip()) < 40:
+        raise ValueError("article explanation is too short")
+    return metadata, body
 
 
 def main(argv: list[str] | None = None) -> int:

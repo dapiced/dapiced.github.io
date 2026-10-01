@@ -133,3 +133,44 @@ def test_check_rejects_entry_with_missing_image(monkeypatch, repo, capsys):
 
     assert cli.check(str(repo.root / "_apod" / "2026-09-13-example-title.md")) == cli.EXIT_ERROR
     assert "Image file missing" in capsys.readouterr().out
+
+
+def test_check_rejects_malformed_apod_payload(monkeypatch, repo, capsys):
+    entry = repo.root / "_apod" / "2026-10-01-nasa-science.md"
+    image = repo.root / "assets" / "img" / "apod" / "2026-10-01-nasa-science.webp"
+    image.parent.mkdir(parents=True)
+    image.write_bytes(b"placeholder")
+    entry.parent.mkdir()
+    entry.write_text(
+        """---
+layout: apod
+title: "NASA Science"
+date: 2026-10-01 08:00:00 -0400
+tags: [astronomy, nasa, apod]
+description: "NASA Science: Have you ever seen the full moon rise?"
+image: /assets/img/apod/2026-10-01-nasa-science.webp
+image_width: 121
+image_height: 102
+credit: "NASA"
+apod_date: 2026-10-01
+apod_url: "https://apod.nasa.gov/apod/ap20261001.html"
+generated_by: cosmic-daily
+---
+
+The actual explanation. APOD's main NASA site has moved. Tomorrow's picture: sharpless
+""",
+        encoding="utf-8",
+    )
+
+    assert cli.check(str(entry)) == cli.EXIT_ERROR
+    assert "Validation failed" in capsys.readouterr().out
+
+
+def test_generate_marks_third_party_rights_for_manual_review(monkeypatch, repo, capsys):
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _record())
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
+
+    assert cli.generate("2026-09-13") == cli.EXIT_SUCCESS
+    output = capsys.readouterr().out
+    assert "manual review" in output.lower()
+    assert (repo.root / "_apod" / "2026-09-13-example-title.md").exists()

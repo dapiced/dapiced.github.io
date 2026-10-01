@@ -274,6 +274,8 @@ def test_cosmic_daily_still_validates_before_merging(cosmic):
     commands = run_commands(cosmic["jobs"]["cosmic-daily"])
     assert "python -m cosmic_daily check" in commands
     assert "gh pr merge" in commands
+    auto_merge = next(step for step in steps_of(cosmic["jobs"]["cosmic-daily"]) if step.get("name") == "Auto-merge validated post")
+    assert "steps.apod.outputs.result == 'generated'" in auto_merge["if"]
 
 
 # --- Repo data refresh ------------------------------------------------------

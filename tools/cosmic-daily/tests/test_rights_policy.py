@@ -9,10 +9,17 @@ def test_allows_nasa_image():
     assert decision.status == "allowed"
 
 
-def test_allows_image_with_external_copyright():
+def test_routes_image_with_external_copyright_to_manual_review():
     decision = evaluate_media_rights("image", "Jane Photographer")
-    assert decision.allowed is True
-    assert decision.status == "allowed"
+    assert decision.allowed is False
+    assert decision.status == "manual_review"
+
+
+def test_allows_missing_or_blank_copyright_as_nasa_public_domain_metadata():
+    for copyright_value in (None, "", "   ", "NASA", "NASA / Public Domain", "Public domain"):
+        decision = evaluate_media_rights("image", copyright_value)
+        assert decision.allowed is True
+        assert decision.status == "allowed"
 
 
 def test_rejects_video():
