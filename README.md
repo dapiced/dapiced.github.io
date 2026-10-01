@@ -37,7 +37,8 @@ Post content in Markdown…
   reached through the English post's "version française" link, as in the portfolio);
   they still get their own URL and appear in `sitemap.xml` and `feed.xml`.
 
-Push to `main` - GitHub Pages rebuilds and publishes automatically in about a minute.
+Push to `main` - the `pages.yml` workflow builds the site with the Gemfile and deploys it
+to GitHub Pages in about a minute.
 
 Renaming a published post changes its URL (`/blog/:year/:month/:title/` comes from the
 file name). Keep the old address alive with `jekyll-redirect-from`:
@@ -70,6 +71,7 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `_config.yml` - Jekyll config: canonical `url`, SEO/feed/sitemap plugins, default og:image, social links
 - `tools/cosmic-daily/` - Python generator behind the daily APOD entries (excluded from the Jekyll build)
 - `.github/workflows/` - automation, see below
+- `.github/dependabot.yml` - weekly dependency updates (Actions, Bundler, pip)
 
 ## Automation
 
@@ -79,8 +81,21 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
   validates it and squash-merges it. Video days are skipped (the run summary says why); a real
   failure opens an issue. Run it by hand from the Actions tab with a `date` to fill a gap.
   Details in [`tools/cosmic-daily/README.md`](tools/cosmic-daily/README.md).
-- **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing after each push
-  to `main`.
+- **Pages deployment** (`pages.yml`) builds the site with the Gemfile and publishes it on every
+  push to `main`. The legacy GitHub Pages builder is pinned to Jekyll 3.x and ignores the
+  Gemfile, so the plugin and Ruby versions were drifting from what runs locally.
+- **CI** (`ci.yml`) runs on pull requests and on `main`: it builds the site, checks that the
+  pages the rest of the site links to exist (`/sky/`, both feeds, the sitemap, the 404 page,
+  the `redirect_from` pages), and runs the Cosmic Daily test suite.
+- **Dependabot** (`dependabot.yml`) opens weekly grouped PRs for the GitHub Actions, the
+  Gemfile and the Cosmic Daily Python dependencies.
+- **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing once the Pages
+  deployment has succeeded, so it reads the sitemap that was just published.
+
+> One-time step after this is merged: the repository still publishes through the legacy
+> builder. Switch it over with
+> `gh api -X PUT repos/dapiced/dapiced.github.io/pages -f build_type=workflow`.
+> Doing it before `pages.yml` is on `main` would stop deployments.
 
 ## SEO setup
 
