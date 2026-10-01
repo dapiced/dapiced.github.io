@@ -45,6 +45,8 @@ jobs:
       - name: Check generated output
         run: |
           set -euo pipefail
+          python tools/site-checks/validate_site_data.py
+          python tools/site-checks/check_site_data_html.py
           for path in \
             _site/index.html \
             _site/sky/index.html \

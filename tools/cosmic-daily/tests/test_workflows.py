@@ -160,6 +160,12 @@ def test_ci_smoke_checks_the_generated_output(ci):
         assert expected in commands
 
 
+def test_ci_validates_site_data_and_rendered_homepage(ci):
+    commands = run_commands(ci["jobs"]["site"])
+    assert "python tools/site-checks/validate_site_data.py" in commands
+    assert "python tools/site-checks/check_site_data_html.py" in commands
+
+
 def test_ci_installs_cosmic_daily_and_runs_pytest(ci):
     tools = ci["jobs"]["cosmic-daily"]
     assert uses_action(tools, "actions/setup-python@")

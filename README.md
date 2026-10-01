@@ -91,6 +91,8 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 The four homepage presentation files are validated with
 `python tools/site-checks/validate_site_data.py`. Keep every list in display order and
 preserve the navigation `target: _blank` / `rel: noopener` pair for external links.
+After a Jekyll build, `python tools/site-checks/check_site_data_html.py` confirms that
+the generated navigation, skills, timeline, and off-duty cards still match those files.
 
 ## Automation
 

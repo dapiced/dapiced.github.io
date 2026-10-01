@@ -9,14 +9,19 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR_PATH = ROOT / "tools" / "site-checks" / "validate_site_data.py"
+HTML_CHECKER_PATH = ROOT / "tools" / "site-checks" / "check_site_data_html.py"
 
 
-def load_validator():
-    spec = importlib.util.spec_from_file_location("validate_site_data", VALIDATOR_PATH)
+def load_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def load_validator():
+    return load_module("validate_site_data", VALIDATOR_PATH)
 
 
 def test_site_data_files_match_required_schema():
@@ -137,3 +142,16 @@ def test_templates_render_the_four_data_contracts_with_liquid_loops():
         ("resources", "resource"),
     ):
         assert f"{{% for {variable} in site.data.{data_name} %}}" in homepage
+
+
+def test_generated_homepage_matches_the_site_data_contracts():
+    checker = load_module("check_site_data_html", HTML_CHECKER_PATH)
+
+    summary = checker.validate_rendered_homepage(ROOT)
+
+    assert summary == {
+        "navigation": 10,
+        "skills": 6,
+        "timeline": 6,
+        "resources": 3,
+    }
