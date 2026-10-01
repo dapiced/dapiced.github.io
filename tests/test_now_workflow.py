@@ -44,6 +44,8 @@ def test_workflow_separates_read_only_check_and_stale_notification():
     assert "gh issue list" in text
     assert "gh issue create" in text
     assert "Refresh /now/ page" in text
+    assert 'if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]' in text
+    assert "set -euo pipefail" in text
     assert "gh issue comment" not in text
     assert "actions/github-script" not in text
 

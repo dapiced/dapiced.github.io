@@ -44,6 +44,9 @@ def test_parse_updated_date_requires_one_exact_front_matter_field():
     with pytest.raises(checker.FreshnessError, match="valid"):
         checker.parse_updated_date(page_with_updated("2026-1-1"))
 
+    with pytest.raises(checker.FreshnessError, match="front matter"):
+        checker.parse_updated_date("body\n---\nupdated: 2026-10-01\n---\n")
+
 
 def test_assess_freshness_marks_only_the_90_day_boundary_stale():
     checker = load_checker()
@@ -94,6 +97,9 @@ def test_cli_distinguishes_fresh_stale_and_invalid_results(tmp_path: Path):
     assert "stale=true" in stale.stdout
     assert future.returncode == 1
     assert "future" in future.stderr
+
+    invalid_args = run_checker(fresh_page, "--threshold-days", "not-a-number")
+    assert invalid_args.returncode == 1
 
 
 def test_cli_json_supports_injected_today_and_threshold(tmp_path: Path):

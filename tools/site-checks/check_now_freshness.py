@@ -17,6 +17,11 @@ class FreshnessError(ValueError):
     """Raised when the page date cannot be assessed safely."""
 
 
+class FreshnessArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        raise FreshnessError(f"argument error: {message}")
+
+
 @dataclass(frozen=True)
 class FreshnessResult:
     updated: date
@@ -34,11 +39,16 @@ class FreshnessResult:
 
 def parse_updated_date(text: str) -> date:
     """Parse exactly one valid updated field from the page front matter."""
-    delimiters = [index for index, line in enumerate(text.splitlines()) if line == "---"]
-    if len(delimiters) < 2:
+    lines = text.splitlines()
+    if not lines or lines[0] != "---":
         raise FreshnessError("front matter is missing")
 
-    front_matter = text.splitlines()[delimiters[0] + 1 : delimiters[1]]
+    try:
+        closing_delimiter = lines.index("---", 1)
+    except ValueError as error:
+        raise FreshnessError("front matter is missing") from error
+
+    front_matter = lines[1:closing_delimiter]
     candidates = [line for line in front_matter if line.startswith("updated:")]
     if len(candidates) != 1:
         if len(candidates) > 1:
@@ -84,7 +94,7 @@ def _parse_date(value: str, label: str) -> date:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Check /now/ page freshness.")
+    parser = FreshnessArgumentParser(description="Check /now/ page freshness.")
     parser.add_argument("page", nargs="?", type=Path, default=Path("now/index.html"))
     parser.add_argument("--today", help="Override today's date for deterministic checks.")
     parser.add_argument(
@@ -98,8 +108,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = _build_parser().parse_args(argv)
     try:
+        args = _build_parser().parse_args(argv)
         content = args.page.read_text(encoding="utf-8")
         updated = parse_updated_date(content)
         today = _parse_date(args.today, "today") if args.today else date.today()

@@ -35,7 +35,13 @@ jobs:
             tests/test_resume_page.py \
             tests/test_site_data.py -q
           python tools/site-checks/validate_site_data.py
+          set +e
           python tools/site-checks/check_now_freshness.py
+          freshness_status=$?
+          set -e
+          if [ "$freshness_status" -ne 0 ] && [ "$freshness_status" -ne 2 ]; then
+            exit "$freshness_status"
+          fi
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
