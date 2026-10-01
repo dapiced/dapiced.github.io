@@ -34,6 +34,7 @@ def test_site_data_files_match_required_schema():
         {"label": "Projects", "href": "/#projects"},
         {"label": "Portfolios", "href": "/portfolio/"},
         {"label": "Timeline", "href": "/#timeline"},
+        {"label": "Resume", "href": "/resume/"},
         {"label": "Blogs", "href": "/blog/"},
         {"label": "Now", "href": "/now/"},
         {
@@ -123,7 +124,7 @@ def test_validate_site_data_rejects_unpaired_external_link_attributes(tmp_path: 
 
     with pytest.raises(
         validator.SiteDataError,
-        match=r"navigation\[9\].*target and rel",
+        match=r"navigation\[10\].*target and rel",
     ):
         validator.load_site_data(tmp_path)
 
