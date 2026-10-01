@@ -1,0 +1,14 @@
+{%- if site.apod.size > 0 -%}
+{%- assign sky_latest = site.apod | sort: "date" | last -%}
+<a class="sky-today reveal" href="{{ sky_latest.url }}">
+  {% if sky_latest.image %}
+  <img src="{{ sky_latest.image }}" alt="{{ sky_latest.title | escape }}"{% if sky_latest.image_width %} width="{{ sky_latest.image_width }}"{% endif %}{% if sky_latest.image_height %} height="{{ sky_latest.image_height }}"{% endif %} loading="lazy" decoding="async">
+  {% endif %}
+  <span class="sky-today-body">
+    <span class="sky-today-label">Sky of the day · NASA APOD</span>
+    <span class="sky-today-title">{{ sky_latest.title }}</span>
+    <time datetime="{{ sky_latest.date | date_to_xmlschema }}">{{ sky_latest.date | date: "%B %-d, %Y" }}</time>
+    <span class="beyond-more">Browse the sky archive →</span>
+  </span>
+</a>
+{%- endif -%}

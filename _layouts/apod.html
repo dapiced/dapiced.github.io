@@ -1,0 +1,35 @@
+---
+layout: default
+---
+<article class="section post apod-entry">
+  <header class="post-header">
+    <p class="eyebrow"><a href="/sky/">SKY · NASA ASTRONOMY PICTURE OF THE DAY</a></p>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time></p>
+  </header>
+
+  {% if page.image %}
+  <figure class="apod-figure">
+    <img src="{{ page.image }}" alt="{{ page.title | escape }}"{% if page.image_width %} width="{{ page.image_width }}"{% endif %}{% if page.image_height %} height="{{ page.image_height }}"{% endif %} loading="eager">
+    {% if page.credit %}<figcaption>Image credit: {{ page.credit | escape }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  {% if page.note %}
+  <aside class="apod-note">
+    <p class="apod-note-label">Note from Dominic</p>
+    {{ page.note | markdownify }}
+  </aside>
+  {% endif %}
+
+  <p class="apod-source">
+    Source: NASA Astronomy Picture of the Day.
+    {% if page.apod_url %}<a href="{{ page.apod_url }}" rel="noopener">Read the full entry on apod.nasa.gov →</a>{% endif %}
+  </p>
+
+  <p class="post-footer"><a href="/sky/">← All sky entries</a> · <a href="/blog/">Blog</a></p>
+</article>

@@ -1,6 +1,6 @@
 # Cosmic Daily
 
-Cosmic Daily generates a daily NASA APOD article for this Jekyll blog while respecting the project’s conventions and safety checks.
+Cosmic Daily generates a daily NASA APOD entry for the site's `_apod/` collection (published under `/sky/`) while respecting the project’s conventions and safety checks.
 
 ## Local setup
 
@@ -30,7 +30,11 @@ The default mode is `preview`.
 ## Notes
 
 - `preview` writes only to a temporary directory and never touches tracked files.
-- `generate` creates a Jekyll post and the corresponding WebP image when the media is eligible.
+- `generate` writes `_apod/YYYY-MM-DD-slug.md` and the corresponding WebP image when the media is eligible.
+  The entry stays factual: title, date, credit, NASA's explanation and the source link. An optional
+  `note:` field can be added by hand to the front matter; the generator never writes it.
+- Old entries were migrated from `_posts/`; their former `/blog/...` URLs redirect through
+  `redirect_from`. Duplicate detection still scans both folders.
 - `check` validates front matter and image references for a generated article.
 - Video entries are skipped, not failed: `preview` and `generate` print `Skipped: …` and exit 0,
   and the workflow records the reason in the run summary. Publishing a video day stays a manual

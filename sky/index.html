@@ -1,0 +1,40 @@
+---
+layout: default
+title: Sky - NASA Astronomy Picture of the Day
+description: >-
+  A daily archive of NASA's Astronomy Picture of the Day, collected automatically
+  with credits and links to the original entries.
+---
+{%- assign entries = site.apod | sort: "date" | reverse -%}
+<section class="section">
+  <p class="eyebrow">OFF-DUTY · SKY</p>
+  <h1 class="section-title">🔭 Sky</h1>
+  <p style="color: var(--muted); max-width: 680px;">
+    One image a day from NASA's Astronomy Picture of the Day, collected automatically.
+    Each entry keeps NASA's explanation, the image credit and a link to the original.
+    My own writing lives in the <a href="/blog/astronomy/">astronomy articles</a>.
+  </p>
+  <p class="sky-feed"><a href="/feed/apod.xml">RSS feed for sky entries</a></p>
+
+  {% if entries.size > 0 %}
+  <ul class="sky-grid">
+    {% for entry in entries %}
+    <li class="sky-item">
+      <a class="sky-card" href="{{ entry.url }}">
+        {% if entry.image %}
+        <img src="{{ entry.image }}" alt="{{ entry.title | escape }}"{% if entry.image_width %} width="{{ entry.image_width }}"{% endif %}{% if entry.image_height %} height="{{ entry.image_height }}"{% endif %} loading="lazy" decoding="async">
+        {% endif %}
+        <span class="sky-card-body">
+          <time datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%B %-d, %Y" }}</time>
+          <span class="sky-card-title">{{ entry.title }}</span>
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="sky-empty">No sky entries yet. Come back tomorrow.</p>
+  {% endif %}
+
+  <p style="margin-top: 2.5rem;"><a href="/blog/astronomy/">← Astronomy articles</a></p>
+</section>
