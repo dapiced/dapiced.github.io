@@ -66,7 +66,7 @@ jobs:
             "repos/${GITHUB_REPOSITORY}/issues?state=open&per_page=100" \
             --jq '.[] | select(.pull_request == null) | .title')"
 
-          if printf '%s\n' "$open_titles" | grep -Fxq "Refresh /now/ page"; then
+          if printf '%s\n' "$open_titles" | grep -Fx "Refresh /now/ page" >/dev/null; then
             echo "An open /now/ reminder already exists; no new issue created."
             exit 0
           fi

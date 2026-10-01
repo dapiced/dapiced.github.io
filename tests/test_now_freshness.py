@@ -54,6 +54,9 @@ def test_parse_updated_date_requires_one_exact_front_matter_field():
         '"updated": 2099-01-01',
         "'updated': 2099-01-01",
         "updated : 2099-01-01",
+        r'"up\u0064ated": 2099-01-01',
+        "? updated\n: 2099-01-01",
+        "!!str updated: 2099-01-01",
     ],
 )
 def test_parse_updated_date_rejects_alternate_updated_keys(alternate_key: str):
@@ -66,7 +69,7 @@ def test_parse_updated_date_rejects_alternate_updated_keys(alternate_key: str):
         "---\n"
     )
 
-    with pytest.raises(checker.FreshnessError, match="exactly one"):
+    with pytest.raises(checker.FreshnessError, match="canonical"):
         checker.parse_updated_date(page)
 
 

@@ -61,7 +61,8 @@ def test_workflow_notification_deduplicates_open_issue_without_labels_or_checkou
     assert "state=open&per_page=100" in notify_text
     assert "pull_request" in notify_text
     assert 'open_titles="$(gh api' in notify_text
-    assert 'grep -Fxq "Refresh /now/ page"' in notify_text
+    assert 'grep -Fx "Refresh /now/ page" >/dev/null' in notify_text
+    assert "grep -Fxq" not in notify_text
     assert "gh issue list" not in notify_text
     assert "issues: write" in text
     assert "labels" not in notify_text
@@ -77,7 +78,7 @@ def test_workflow_issue_lookup_fails_closed_before_exact_title_check():
 
     lookup_start = notify_text.index('open_titles="$(gh api')
     lookup_end = notify_text.index(')"', lookup_start)
-    exact_title_check = notify_text.index('grep -Fxq "Refresh /now/ page"')
+    exact_title_check = notify_text.index('grep -Fx "Refresh /now/ page"')
 
     assert lookup_start < lookup_end < exact_title_check
     assert "|| true" not in notify_text[lookup_start:lookup_end]
