@@ -516,12 +516,15 @@ a.beyond-card:hover {
   color: var(--text);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.sky-today:hover {
+.sky-today:hover,
+.sky-today:focus-within {
   text-decoration: none;
   border-color: rgba(88, 166, 255, 0.55);
   box-shadow: 0 8px 30px rgba(31, 111, 235, 0.18);
 }
-.sky-today img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
+.sky-today img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
+.sky-today-media { display: block; }
+.sky-today .beyond-more { align-self: flex-start; color: inherit; }
 .sky-today-body { display: flex; flex-direction: column; gap: 0.3rem; }
 .sky-today-label { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
 .sky-today-title { font-size: 1.05rem; color: var(--lightblue); }
