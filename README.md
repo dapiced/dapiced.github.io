@@ -62,7 +62,8 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 ## Structure
 
 - `index.html` - homepage (hero, about, projects, skills, timeline, blog preview).
-  Project cards are static HTML (indexable without JS) refreshed live from the GitHub API.
+  Project cards are static HTML (indexable without JS) rendered from `_data/repos.json`,
+  refreshed by workflow.
 - `resume/index.html` - professional resume at `/resume/`. It renders experience and
   technical capabilities directly from `_data/timeline.yml` and `_data/skills.yml`,
   uses LinkedIn as the public contact path, and offers browser printing instead of a
@@ -105,8 +106,10 @@ the generated navigation, skills, timeline, and off-duty cards still match those
 - **Cosmic Daily** (`cosmic-daily.yml`, daily at 12:00 UTC) fetches NASA's Astronomy Picture of
   the Day, converts the image to WebP, writes an entry in the `_apod/` collection (published under `/sky/`, kept out of the blog
   and its feed), opens a PR,
-  validates it and squash-merges it. Video days are skipped (the run summary says why); a real
-  failure opens an issue. Run it by hand from the Actions tab with a `date` to fill a gap.
+  validates it and squash-merges explicitly NASA/public-domain entries. Incomplete or
+  third-party rights metadata remains open for manual review; video days are skipped (the run
+  summary says why), and a real failure opens an issue. Run it by hand from the Actions tab with
+  a `date` to fill a gap.
   Details in [`tools/cosmic-daily/README.md`](tools/cosmic-daily/README.md).
 - **Pages deployment** (`pages.yml`) builds the site with the Gemfile and publishes it on every
   push to `main`. The legacy GitHub Pages builder is pinned to Jekyll 3.x and ignores the
@@ -128,10 +131,12 @@ the generated navigation, skills, timeline, and off-duty cards still match those
 - **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing once the Pages
   deployment has succeeded, so it reads the sitemap that was just published.
 
-> One-time step after this is merged: the repository still publishes through the legacy
-> builder. Switch it over with
-> `gh api -X PUT repos/dapiced/dapiced.github.io/pages -f build_type=workflow`.
-> Doing it before `pages.yml` is on `main` would stop deployments.
+- **Analytics** uses GoatCounter as the sole counter provider. It receives page-view
+  events without advertising profiles or a second analytics service; the site does not
+  add tracking pixels or cross-site identity data.
+- **License scope** is split deliberately: repository source code is MIT-licensed;
+  authored writing, portfolio text, personal media, and branding remain all rights
+  reserved unless a file says otherwise. Third-party assets keep their own licenses.
 
 ## SEO setup
 

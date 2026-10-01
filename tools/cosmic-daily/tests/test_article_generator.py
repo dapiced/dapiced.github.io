@@ -52,9 +52,11 @@ def test_generate_article_keeps_full_explanation():
     assert "..." not in article
 
 
-def test_generate_article_defaults_credit_and_escapes_quotes():
+def test_generate_article_preserves_missing_rights_as_manual_review():
     front_matter, _ = generate_article(
         _apod(title='The "Pillars" Again', copyright=None), "/assets/img/apod/x.webp", 1200, 800
     )
     assert 'title: "The \\"Pillars\\" Again"' in front_matter
-    assert 'credit: "NASA"' in front_matter
+    assert 'credit: "Rights metadata unavailable"' in front_matter
+    assert "rights_status: manual_review" in front_matter
+    assert 'credit: "NASA"' not in front_matter

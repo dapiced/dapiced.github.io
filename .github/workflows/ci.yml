@@ -33,7 +33,8 @@ jobs:
             tests/test_now_freshness.py \
             tests/test_now_workflow.py \
             tests/test_resume_page.py \
-            tests/test_site_data.py -q
+            tests/test_site_data.py \
+            tests/test_final_hardening_contracts.py -q
           python tools/site-checks/validate_site_data.py
           set +e
           python tools/site-checks/check_now_freshness.py

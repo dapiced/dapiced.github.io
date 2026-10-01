@@ -8,6 +8,7 @@ from typing import Optional
 from zoneinfo import ZoneInfo
 
 from .nasa_client import APODRecord
+from .rights_policy import evaluate_media_rights
 
 
 SEO_TEXT_MIN = 120
@@ -56,7 +57,8 @@ def generate_article(apod: APODRecord, image_path: str, width: int, height: int)
     date_value = apod.date
     offset = _local_timezone_offset_for(date_value)
     seo = build_seo_description(apod.title, apod.explanation)
-    credit = apod.copyright.strip() if apod.copyright and apod.copyright.strip() else "NASA"
+    decision = evaluate_media_rights(apod.media_type, apod.copyright)
+    credit = apod.copyright.strip() if apod.copyright and apod.copyright.strip() else "Rights metadata unavailable"
     front_matter = (
         "---\n"
         "layout: apod\n"
@@ -68,6 +70,7 @@ def generate_article(apod: APODRecord, image_path: str, width: int, height: int)
         f"image_width: {width}\n"
         f"image_height: {height}\n"
         f"credit: {_yaml_string(credit)}\n"
+        f"rights_status: {decision.status}\n"
         f"apod_date: {date_value}\n"
         f'apod_url: "{apod.apod_url}"\n'
         "generated_by: cosmic-daily\n"

@@ -1,8 +1,8 @@
 # `/now/` Page Freshness Implementation Plan
 
-**Status:** implementation completed and validated; PR publication pending.
+**Status:** implemented and validated; merged in PR #90 with follow-up corrections merged in PR #91.
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Completed steps are checked; publication was completed through PRs #90 and #91.
 
 **Goal:** Refresh `/now/` with four durable public themes and add a non-blocking 90-day freshness reminder that creates one stable GitHub issue.
 

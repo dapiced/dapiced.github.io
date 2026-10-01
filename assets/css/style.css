@@ -23,7 +23,7 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; color-scheme: dark; }
 
 body {
   margin: 0;
@@ -761,6 +761,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   padding: 1.3rem 1.3rem 1.1rem;
 }
 .beyond-card .icon { font-size: 1.6rem; }
+.beyond-card h2,
 .beyond-card h3 { margin: 0.5rem 0 0.4rem; font-size: 1.05rem; color: var(--lightblue); }
 .beyond-card p { margin: 0; font-size: 0.88rem; color: var(--muted); }
 

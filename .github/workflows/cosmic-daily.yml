@@ -34,6 +34,7 @@ jobs:
       target-date: ${{ steps.target.outputs.value }}
       pull-request: ${{ steps.create-pr.outputs.pull-request-number }}
       log-tail: ${{ steps.log.outputs.tail }}
+      result: ${{ steps.apod.outputs.result }}
 
     steps:
       - name: Checkout repository
@@ -91,6 +92,11 @@ jobs:
             post_path="$(grep 'Generated post:' /tmp/cosmic-daily.log | sed 's#.*Generated post: ##')"
             echo "post_path=$post_path" >> "$GITHUB_OUTPUT"
           fi
+          if grep -q "manual review" /tmp/cosmic-daily.log; then
+            echo "result=manual_review" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=generated" >> "$GITHUB_OUTPUT"
+          fi
 
           # Video days (and duplicates) exit 0 without a post: record why in
           # the run summary so the gap is explained without a notification.
@@ -122,14 +128,16 @@ jobs:
 
             - Generated from NASA APOD data
             - Validated with the local checker (rights, duplicates, front matter, image)
-            - This PR is auto-merged once validation passes; no manual approval step
+
+            This PR is auto-merged only when the rights policy marks the image as
+            safe. Third-party copyright metadata remains open for manual review.
           commit-message: "Add Cosmic Daily APOD entry for ${{ steps.target.outputs.value }}"
           delete-branch: true
 
       - name: Request Copilot review
         # Best-effort audit trail only: Copilot code review just leaves
         # comments, it never gates the merge below.
-        if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
+        if: ${{ steps.create-pr.outputs.pull-request-number != '' && steps.apod.outputs.result == 'generated' }}
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -142,7 +150,7 @@ jobs:
         # presence must all pass before this step is even reached (the job
         # stops at the first failed step). Once that passes, merge without
         # waiting on a human.
-        if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
+        if: ${{ steps.create-pr.outputs.pull-request-number != '' && steps.apod.outputs.result == 'generated' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

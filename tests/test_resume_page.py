@@ -52,8 +52,8 @@ def test_site_ci_runs_resume_source_contracts_before_building():
 
     assert "python -m pytest \\" in workflow
     assert "tests/test_resume_page.py \\" in workflow
-    assert "tests/test_site_data.py -q" in workflow
-    assert workflow.index("tests/test_site_data.py -q") < workflow.index(
+    assert "tests/test_site_data.py \\\n            tests/test_final_hardening_contracts.py -q" in workflow
+    assert workflow.index("tests/test_final_hardening_contracts.py -q") < workflow.index(
         "bundle exec jekyll build"
     )
 

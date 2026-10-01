@@ -34,7 +34,7 @@ def test_now_page_preserves_semantic_structure_and_safe_external_links():
     template = read_now_template()
 
     assert template.count("<h1") == 1
-    assert template.count("<h3>") == 4
+    assert template.count("<h2>") == 4
     assert "{{ page.updated }}" in template
     assert template.count('target="_blank"') >= 2
     assert template.count('rel="noopener"') >= 2
