@@ -48,6 +48,28 @@ def test_parse_updated_date_requires_one_exact_front_matter_field():
         checker.parse_updated_date("body\n---\nupdated: 2026-10-01\n---\n")
 
 
+@pytest.mark.parametrize(
+    "alternate_key",
+    [
+        '"updated": 2099-01-01',
+        "'updated': 2099-01-01",
+        "updated : 2099-01-01",
+    ],
+)
+def test_parse_updated_date_rejects_alternate_updated_keys(alternate_key: str):
+    checker = load_checker()
+    page = (
+        "---\n"
+        "layout: default\n"
+        "updated: 2026-10-01\n"
+        f"{alternate_key}\n"
+        "---\n"
+    )
+
+    with pytest.raises(checker.FreshnessError, match="exactly one"):
+        checker.parse_updated_date(page)
+
+
 def test_assess_freshness_marks_only_the_90_day_boundary_stale():
     checker = load_checker()
     today = date(2026, 10, 1)

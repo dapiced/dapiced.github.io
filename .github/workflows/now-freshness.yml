@@ -60,13 +60,13 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
-          if gh issue list \
-            --repo "$GITHUB_REPOSITORY" \
-            --state open \
-            --search "in:title Refresh /now/ page" \
-            --json title \
-            --jq '.[].title' \
-            | grep -Fxq "Refresh /now/ page"; then
+          open_titles="$(gh api \
+            --paginate \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/issues?state=open&per_page=100" \
+            --jq '.[] | select(.pull_request == null) | .title')"
+
+          if printf '%s\n' "$open_titles" | grep -Fxq "Refresh /now/ page"; then
             echo "An open /now/ reminder already exists; no new issue created."
             exit 0
           fi

@@ -49,3 +49,17 @@ def test_generated_now_check_rejects_missing_output(tmp_path: Path):
     )
 
     assert checker.main() == 1
+
+
+def test_generated_now_check_rejects_removed_migration_claim(tmp_path: Path):
+    checker = load_checker()
+    checker.ROOT = tmp_path
+    prepare_site(
+        tmp_path,
+        (
+            '<time datetime="2026-10-01">October 1, 2026</time>'
+            "<p>Migrating ~200 projects and 1,500 repositories.</p>"
+        ),
+    )
+
+    assert checker.main() == 1

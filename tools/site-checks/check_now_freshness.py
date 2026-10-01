@@ -11,6 +11,7 @@ from pathlib import Path
 
 DEFAULT_THRESHOLD_DAYS = 90
 UPDATED_FIELD = re.compile(r"^updated:\s*(\d{4}-\d{2}-\d{2})\s*$")
+UPDATED_KEY = re.compile(r"""^(?:updated|"updated"|'updated')\s*:""")
 
 
 class FreshnessError(ValueError):
@@ -49,7 +50,7 @@ def parse_updated_date(text: str) -> date:
         raise FreshnessError("front matter is missing") from error
 
     front_matter = lines[1:closing_delimiter]
-    candidates = [line for line in front_matter if line.startswith("updated:")]
+    candidates = [line for line in front_matter if UPDATED_KEY.match(line)]
     if len(candidates) != 1:
         if len(candidates) > 1:
             raise FreshnessError("updated field must appear exactly one time")
