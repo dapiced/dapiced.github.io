@@ -33,6 +33,145 @@ SCHEMAS = {
     },
 }
 
+APPROVED_SITE_DATA = {
+    "navigation": [
+        {"label": "About", "href": "/#about"},
+        {"label": "Projects", "href": "/#projects"},
+        {"label": "Portfolios", "href": "/portfolio/"},
+        {"label": "Timeline", "href": "/#timeline"},
+        {"label": "Blogs", "href": "/blog/"},
+        {"label": "Now", "href": "/now/"},
+        {
+            "label": "My LabML",
+            "href": "https://app.dominicdapice.com/",
+            "class": "nav-labml",
+            "target": "_blank",
+            "rel": "noopener",
+        },
+        {"label": "Resources", "href": "/resources/"},
+        {
+            "label": "Contact",
+            "href": "https://www.linkedin.com/in/dapiced/",
+            "target": "_blank",
+            "rel": "noopener",
+        },
+        {
+            "label": "GitHub ↗",
+            "href": "https://github.com/dapiced",
+            "class": "nav-gh",
+            "target": "_blank",
+            "rel": "noopener",
+        },
+    ],
+    "skills": [
+        {
+            "domain": "Cloud & Data",
+            "tags": ["Azure", "Databricks", "VMware", "Azure DevOps"],
+        },
+        {
+            "domain": "IaC & Automation",
+            "tags": [
+                "Ansible",
+                "Terraform",
+                "Packer",
+                "GitHub Actions",
+                "PowerShell",
+                "Bash",
+            ],
+        },
+        {"domain": "Languages", "tags": ["Python", "R", "JavaScript", "Perl"]},
+        {
+            "domain": "Systems",
+            "tags": ["Red Hat", "SUSE", "Windows", "IBM AIX", "Red Hat Satellite"],
+        },
+        {
+            "domain": "Databases",
+            "tags": ["PostgreSQL", "MSSQL", "MySQL", "Oracle"],
+        },
+        {
+            "domain": "ML & Data",
+            "tags": ["MLOps", "DataOps", "Machine Learning", "Kaggle"],
+        },
+    ],
+    "timeline": [
+        {
+            "year": "2026 - NOW",
+            "role": "Developer - Azure Infrastructure AI",
+            "description": (
+                "Azure for AI · Databricks platform · MLOps / DataOps · IaC · CI/CD"
+            ),
+        },
+        {
+            "year": "2018 - 2025",
+            "role": "Cloud / Linux Administrator & IaC Developer",
+            "description": (
+                "Self-service cloud for business clients · "
+                "IaC in NERC-regulated environments"
+            ),
+        },
+        {
+            "year": "2015 - 2018",
+            "role": "IT Standardization Linux System Administrator",
+            "description": (
+                "Fleet of 1000+ servers · patching and standardization at scale"
+            ),
+        },
+        {
+            "year": "2011 - 2015",
+            "role": "IT Linux System Administrator",
+            "description": (
+                "Physical & virtual server deployments · Linux appliances"
+            ),
+        },
+        {
+            "year": "2001 - 2011",
+            "role": "IT Linux System Administrator",
+            "description": (
+                "Installation and configuration of servers and Linux appliances"
+            ),
+        },
+        {
+            "year": "1998 - 2001",
+            "role": "IT Technician & System Administrator",
+            "description": (
+                "Internal IT and client support - where it all started"
+            ),
+        },
+    ],
+    "resources": [
+        {
+            "icon": "🌌",
+            "title": "Astronomy",
+            "description": (
+                "Exploring celestial objects and following the latest discoveries - "
+                "from JWST deep fields to backyard skies."
+            ),
+            "href": "/blog/astronomy/",
+            "more": "Read articles →",
+        },
+        {
+            "icon": "🧠",
+            "title": "Artificial Intelligence",
+            "description": (
+                "Studying ML advances and how they translate into real-world impact - "
+                "then testing myself on Kaggle."
+            ),
+            "href": "/blog/ai/",
+            "more": "Read articles →",
+        },
+        {
+            "icon": "⚛️",
+            "title": "Physics",
+            "description": (
+                "Fascinated by the fundamental laws that describe our universe - "
+                "the original distributed system."
+            ),
+            "href": "/blog/physics/",
+            "more": "Read articles →",
+        },
+    ],
+}
+
 
 class SiteDataError(ValueError):
     pass
@@ -113,6 +252,10 @@ def load_site_data(root: Path | str) -> dict[str, list[dict[str, Any]]]:
             raise SiteDataError(f"{path} must contain a non-empty list")
         for index, item in enumerate(data):
             _validate_item(name, index, item)
+        if data != APPROVED_SITE_DATA[name]:
+            raise SiteDataError(
+                f"{name} does not match the approved content and order"
+            )
         loaded[name] = data
 
     return loaded

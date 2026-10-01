@@ -133,6 +133,17 @@ class HomepageParser(HTMLParser):
             self._resource = None
 
 
+def parse_rendered_homepage(html: str) -> dict[str, list[dict[str, Any]]]:
+    parser = HomepageParser()
+    parser.feed(html)
+    return {
+        "navigation": parser.navigation,
+        "skills": parser.skills,
+        "timeline": parser.timeline,
+        "resources": parser.resources,
+    }
+
+
 def validate_rendered_homepage(root: Path | str) -> dict[str, int]:
     root_path = Path(root)
     homepage = root_path / "_site" / "index.html"
@@ -141,15 +152,7 @@ def validate_rendered_homepage(root: Path | str) -> dict[str, int]:
 
     validator = _load_validator(root_path)
     expected = validator.load_site_data(root_path)
-    parser = HomepageParser()
-    parser.feed(homepage.read_text(encoding="utf-8"))
-
-    rendered = {
-        "navigation": parser.navigation,
-        "skills": parser.skills,
-        "timeline": parser.timeline,
-        "resources": parser.resources,
-    }
+    rendered = parse_rendered_homepage(homepage.read_text(encoding="utf-8"))
     for name, expected_items in expected.items():
         if rendered[name] != expected_items:
             raise HtmlDataError(

@@ -164,6 +164,10 @@ def test_ci_validates_site_data_and_rendered_homepage(ci):
     commands = run_commands(ci["jobs"]["site"])
     assert "python tools/site-checks/validate_site_data.py" in commands
     assert "python tools/site-checks/check_site_data_html.py" in commands
+    assert commands.index("validate_site_data.py") < commands.index("bundle exec jekyll build")
+    assert commands.index("bundle exec jekyll build") < commands.index(
+        "check_site_data_html.py"
+    )
 
 
 def test_ci_installs_cosmic_daily_and_runs_pytest(ci):
