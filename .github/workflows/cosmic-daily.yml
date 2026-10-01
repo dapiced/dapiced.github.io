@@ -111,12 +111,12 @@ jobs:
           branch: "cosmic-daily/${{ steps.target.outputs.value }}"
           title: "Cosmic Daily: ${{ steps.target.outputs.value }}"
           body: |
-            Automated APOD article for ${{ steps.target.outputs.value }}.
+            Automated APOD entry for ${{ steps.target.outputs.value }} (published under /sky/).
 
             - Generated from NASA APOD data
             - Validated with the local checker (rights, duplicates, front matter, image)
             - This PR is auto-merged once validation passes; no manual approval step
-          commit-message: "Add Cosmic Daily APOD post for ${{ steps.target.outputs.value }}"
+          commit-message: "Add Cosmic Daily APOD entry for ${{ steps.target.outputs.value }}"
           delete-branch: true
 
       - name: Request Copilot review

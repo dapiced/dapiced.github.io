@@ -32,6 +32,11 @@ defaults:
       path: ""
     values:
       image: /assets/img/og-default.jpg
+  - scope:
+      path: ""
+      type: apod
+    values:
+      layout: apod
 social:
   name: Dominic D'Apice
   links:
@@ -46,6 +51,10 @@ collections:
   portfolio:
     output: true
     permalink: /portfolio/:name/
+  # Automated NASA APOD entries ("Sky"), kept apart from the author's blog posts.
+  apod:
+    output: true
+    permalink: /sky/:year/:month/:day/:title/
 
 markdown: kramdown
 plugins:
@@ -56,6 +65,9 @@ plugins:
 
 feed:
   path: feed.xml
+  collections:
+    apod:
+      path: "/feed/apod.xml"
 
 exclude:
   - README.md

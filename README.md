@@ -57,6 +57,8 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `blog/index.html` - post listing
 - `404.html` - custom not-found page
 - `_posts/` - blog posts (Markdown)
+- `_apod/` - daily NASA APOD entries (collection published under `/sky/`, own feed at `/feed/apod.xml`)
+- `sky/index.html` - image grid of the APOD entries
 - `_portfolio/` - case studies (Markdown, `layout: portfolio`)
 - `_layouts/` - page shells (`default.html` with Person JSON-LD and hreflang alternates,
   `post.html` / `portfolio.html` for articles)
@@ -66,13 +68,14 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
   (dates, "min read", comments heading, giscus language, back links)
 - `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos
 - `_config.yml` - Jekyll config: canonical `url`, SEO/feed/sitemap plugins, default og:image, social links
-- `tools/cosmic-daily/` - Python generator behind the daily APOD posts (excluded from the Jekyll build)
+- `tools/cosmic-daily/` - Python generator behind the daily APOD entries (excluded from the Jekyll build)
 - `.github/workflows/` - automation, see below
 
 ## Automation
 
 - **Cosmic Daily** (`cosmic-daily.yml`, daily at 12:00 UTC) fetches NASA's Astronomy Picture of
-  the Day, converts the image to WebP, writes a post tagged `astronomy, nasa, apod`, opens a PR,
+  the Day, converts the image to WebP, writes an entry in the `_apod/` collection (published under `/sky/`, kept out of the blog
+  and its feed), opens a PR,
   validates it and squash-merges it. Video days are skipped (the run summary says why); a real
   failure opens an issue. Run it by hand from the Actions tab with a `date` to fill a gap.
   Details in [`tools/cosmic-daily/README.md`](tools/cosmic-daily/README.md).

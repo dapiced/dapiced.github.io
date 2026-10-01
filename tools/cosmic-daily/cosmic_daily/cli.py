@@ -43,9 +43,9 @@ def _write_preview_files(apod, repo: RepositoryContext, output_dir: Path) -> tup
             raise ValueError(decision.reason)
         image_path, size = process_apod_image_with_fallback(_image_candidates(apod), image_target_dir, f"{apod.date}-{slug}")
         article_front, article_text = generate_article(apod, f"/assets/img/apod/{apod.date}-{slug}.webp", size[0], size[1])
-        post_path = output_dir / "_posts" / f"{apod.date}-apod-{slug}.md"
+        post_path = output_dir / "_apod" / f"{apod.date}-{slug}.md"
         post_path.parent.mkdir(parents=True, exist_ok=True)
-        post_path.write_text(article_front + article_text.split("---\n\n", 1)[1], encoding="utf-8")
+        post_path.write_text(article_text, encoding="utf-8")
         return post_path, image_path
     raise ValueError("Unsupported media type for preview generation.")
 
@@ -116,7 +116,7 @@ def generate(date_value: str | None = None) -> int:
         return EXIT_ERROR
 
     article_front, article_text = generate_article(apod, f"/assets/img/apod/{apod.date}-{slug}.webp", image_size[0], image_size[1])
-    post_path = repo.ensure_directory(repo.posts_dir) / f"{apod.date}-apod-{slug}.md"
+    post_path = repo.ensure_directory(repo.apod_dir) / f"{apod.date}-{slug}.md"
     if post_path.exists():
         print(f"Destination already exists: {post_path}")
         return EXIT_ERROR
@@ -135,8 +135,8 @@ def generate(date_value: str | None = None) -> int:
 
 def check(post_path: str | None = None) -> int:
     repo = RepositoryContext()
-    candidates = sorted(repo.list_post_files())
-    chosen = next((item for item in candidates if "apod" in item.name.lower()), None)
+    candidates = sorted(repo.list_apod_files())
+    chosen = candidates[-1] if candidates else None
     if post_path:
         chosen = Path(post_path)
     if chosen is None:
@@ -158,12 +158,15 @@ def check(post_path: str | None = None) -> int:
         print("Missing astronomy tag.")
         return EXIT_ERROR
 
-    image_match = next((line for line in content.splitlines() if "![" in line and "/assets/img/apod/" in line), None)
+    header = content.split("\n---", 1)[0]
+    image_match = next(
+        (line for line in header.splitlines() if line.startswith("image:") and "/assets/img/apod/" in line), None
+    )
     if not image_match:
         print("Missing article image reference.")
         return EXIT_ERROR
 
-    image_reference = image_match.split("(", 1)[1].split(")", 1)[0]
+    image_reference = image_match.split(":", 1)[1].strip().strip('"\'')
     resolved_image = repo.root / image_reference.lstrip("/")
     if not resolved_image.exists():
         print(f"Image file missing: {resolved_image}")
@@ -183,7 +186,7 @@ def check(post_path: str | None = None) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Generate APOD posts for the Jekyll site.")
+    parser = argparse.ArgumentParser(description="Generate APOD entries for the Jekyll /sky/ collection.")
     parser.add_argument("command", nargs="?", choices=["preview", "generate", "check"], default="preview")
     parser.add_argument("--date", help="APOD date in ISO format (YYYY-MM-DD)")
     parser.add_argument("--post-path", help="Path to post to validate")
