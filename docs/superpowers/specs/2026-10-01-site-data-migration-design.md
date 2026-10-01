@@ -1,6 +1,6 @@
 # Site Data Migration Design (E2)
 
-- **Status:** approved design, ready for implementation plan
+- **Status:** implementation completed and validated in PR #87; PR remains open and unmerged
 - **Date:** 2026-10-01
 - **Scope:** design only. This document defines the E2 data extraction for the homepage and global navigation without altering the hero, About section, animated roles, or the rest of E1/E3/E4 work.
 

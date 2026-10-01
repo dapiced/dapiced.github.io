@@ -1,5 +1,7 @@
 # Site Data Migration Implementation Plan
 
+> **Status:** Implementation completed and validated in [PR #87](https://github.com/dapiced/dapiced.github.io/pull/87); PR remains open and unmerged.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Move the approved homepage presentation data out of inline HTML into four YAML files and keep the current page output behavior identical.
@@ -42,7 +44,7 @@
 - Consumes: the exact output currently rendered in `_layouts/default.html` and `index.html`.
 - Produces: a YAML-backed contract the Liquid templates and validation script both use.
 
-- [ ] **Step 1: Write the failing validation test**
+- [x] **Step 1: Write the failing validation test**
 
 ```python
 def test_site_data_files_match_required_schema():
@@ -57,21 +59,21 @@ def test_site_data_files_match_required_schema():
     assert data["resources"][0]["title"] == "Astronomy"
 ```
 
-- [ ] **Step 2: Run the new test to verify it fails before the files exist**
+- [x] **Step 2: Run the new test to verify it fails before the files exist**
 
 Run: `pytest tests/test_site_data.py -q`
 Expected: FAIL because the required `_data/*.yml` files and validator do not exist yet.
 
-- [ ] **Step 3: Implement `_data/*.yml` and the validator**
+- [x] **Step 3: Implement `_data/*.yml` and the validator**
 
 Create the four YAML files with the exact current labels, ordering, and values from the homepage and header. Add `tools/site-checks/validate_site_data.py` to ensure the YAML files exist, load cleanly, contain the required keys, and keep the same sequence and external-link attributes.
 
-- [ ] **Step 4: Run the targeted validation and confirm it passes**
+- [x] **Step 4: Run the targeted validation and confirm it passes**
 
 Run: `pytest tests/test_site_data.py -q`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add _data/navigation.yml _data/skills.yml _data/timeline.yml _data/resources.yml tools/site-checks/validate_site_data.py tests/test_site_data.py
@@ -89,24 +91,24 @@ git commit -m "feat: add site data yaml contracts" -m "Co-authored-by: Copilot A
 - Consumes: `site.data.navigation`, `site.data.skills`, `site.data.timeline`, `site.data.resources`.
 - Produces: HTML identical in structure and classes to the current page.
 
-- [ ] **Step 1: Update the navigation loop**
+- [x] **Step 1: Update the navigation loop**
 
 Replace the inlined header list with a Liquid loop over `site.data.navigation`, preserving each item’s `label`, `href`, `class`, `target`, and `rel` values exactly.
 
-- [ ] **Step 2: Update the skills, timeline, and off-duty loops**
+- [x] **Step 2: Update the skills, timeline, and off-duty loops**
 
 Render the corresponding sections using the YAML data while matching the exact current DOM structure: `.skill-row`, `.skill-domain`, `.tag`, `.tl-item`, `.tl-year`, `.tl-role`, `.tl-desc`, `.beyond-card`, `.icon`, `.beyond-more`.
 
-- [ ] **Step 3: Update the repo docs**
+- [x] **Step 3: Update the repo docs**
 
 Add a README section describing the new `_data/` files, their purpose, and their expected schema.
 
-- [ ] **Step 4: Run the focused validation**
+- [x] **Step 4: Run the focused validation**
 
 Run: `pytest tests/test_site_data.py -q && bundle exec jekyll build`
 Expected: the data contract passes and the Jekyll site builds without template errors.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add _layouts/default.html index.html README.md
@@ -122,21 +124,21 @@ git commit -m "feat: render homepage data from yaml" -m "Co-authored-by: Copilot
 - Consumes: the repository test suite and the generated site build.
 - Produces: evidence that E2 is safe to push.
 
-- [ ] **Step 1: Run the Python suite**
+- [x] **Step 1: Run the Python suite**
 
 Run: `pytest -q`
 Expected: full repository Python suite passes.
 
-- [ ] **Step 2: Run the Jekyll build**
+- [x] **Step 2: Run the Jekyll build**
 
 Run: `bundle exec jekyll build`
 Expected: the static site builds successfully with the extracted YAML data and Liquid loops.
 
-- [ ] **Step 3: Review the generated homepage structure**
+- [x] **Step 3: Review the generated homepage structure**
 
 Sanity-check built HTML to confirm the skills, timeline, and off-duty cards still render with the expected class names and text from the YAML source.
 
-- [ ] **Step 4: Commit any final documentation or validation cleanups**
+- [x] **Step 4: Commit any final documentation or validation cleanups**
 
 ```bash
 git add README.md tools/site-checks/validate_site_data.py tests/test_site_data.py
@@ -152,21 +154,21 @@ git commit -m "docs: finalize site data validation" -m "Co-authored-by: Copilot 
 - Consumes: validated branch and GitHub repo state.
 - Produces: PR to `main` and evidence from GitHub checks.
 
-- [ ] **Step 1: Push the branch**
+- [x] **Step 1: Push the branch**
 
 Run: `git push -u origin dapiced-site-data-migration`
 Expected: branch is published to GitHub.
 
-- [ ] **Step 2: Create the PR**
+- [x] **Step 2: Create the PR**
 
 Run: `gh pr create --base main --head dapiced-site-data-migration --title "feat: extract homepage data into yaml" --body "## Summary\n\n- move the E2 homepage and navigation presentation data into `_data/*.yml`\n- render the matching homepage blocks with Liquid loops\n- add static schema validation and pytest coverage\n- validate the Python suite plus the Jekyll build"`
 Expected: PR opens and is ready for check review.
 
-- [ ] **Step 3: Review GitHub checks**
+- [x] **Step 3: Review GitHub checks**
 
 Run: `gh pr checks` and inspect any failing jobs.
 Expected: all required checks pass, or any failures are fixed and re-pushed before handoff.
 
-- [ ] **Step 4: Send the final handoff**
+- [x] **Step 4: Send the final handoff**
 
 Report the PR link, commits, validation commands, and check status to the user/coordinator without merging the PR.
