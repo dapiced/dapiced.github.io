@@ -50,9 +50,12 @@ def test_resume_template_renders_shared_timeline_and_skills():
 def test_site_ci_runs_resume_source_contracts_before_building():
     workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
 
-    test_command = "python -m pytest tests/test_resume_page.py tests/test_site_data.py -q"
-    assert test_command in workflow
-    assert workflow.index(test_command) < workflow.index("bundle exec jekyll build")
+    assert "python -m pytest \\" in workflow
+    assert "tests/test_resume_page.py \\" in workflow
+    assert "tests/test_site_data.py -q" in workflow
+    assert workflow.index("tests/test_site_data.py -q") < workflow.index(
+        "bundle exec jekyll build"
+    )
 
 
 def test_resume_template_has_accessible_structure_and_actions():

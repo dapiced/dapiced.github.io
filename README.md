@@ -113,8 +113,16 @@ the generated navigation, skills, timeline, and off-duty cards still match those
   Gemfile, so the plugin and Ruby versions were drifting from what runs locally. Blog tag
   archives depend on `jekyll-archives`, which is loaded through this Actions-based build.
 - **CI** (`ci.yml`) runs on pull requests and on `main`: it builds the site, checks that the
-  pages the rest of the site links to exist (`/sky/`, both feeds, the sitemap, the 404 page,
-  the `redirect_from` pages), and runs the Cosmic Daily test suite.
+  source contracts and generated pages remain valid, including `/now/`, checks that the pages
+  the rest of the site links to exist (`/sky/`, both feeds, the sitemap, the 404 page, the
+  `redirect_from` pages), and runs the Cosmic Daily test suite. It validates the `/now/`
+  date but does not fail a pull request just because the page is older than the reminder
+  threshold.
+- **`/now/` freshness** (`now-freshness.yml`, monthly on the first day at 14:17 UTC) checks
+  the exact `updated: YYYY-MM-DD` field with a 90-day threshold. When stale, it opens one
+  stable `Refresh /now/ page` issue and does not comment on an existing issue. Run it
+  manually from the Actions tab when you want an immediate check; update the page only after
+  reviewing its durable public facts.
 - **Dependabot** (`dependabot.yml`) opens weekly grouped PRs for the GitHub Actions, the
   Gemfile and the Cosmic Daily Python dependencies.
 - **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing once the Pages
