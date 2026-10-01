@@ -1,0 +1,16 @@
+{
+  "name": "Dominic D'Apice",
+  "short_name": "Dominic D'Apice",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "theme_color": "#04060f",
+  "background_color": "#04060f",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -62,7 +62,8 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 ## Structure
 
 - `index.html` - homepage (hero, about, projects, skills, timeline, blog preview).
-  Project cards are static HTML (indexable without JS) refreshed live from the GitHub API.
+  Project cards are static HTML (indexable without JS) rendered from `_data/repos.json`,
+  refreshed by workflow.
 - `resume/index.html` - professional resume at `/resume/`. It renders experience and
   technical capabilities directly from `_data/timeline.yml` and `_data/skills.yml`,
   uses LinkedIn as the public contact path, and offers browser printing instead of a
@@ -128,10 +129,12 @@ the generated navigation, skills, timeline, and off-duty cards still match those
 - **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing once the Pages
   deployment has succeeded, so it reads the sitemap that was just published.
 
-> One-time step after this is merged: the repository still publishes through the legacy
-> builder. Switch it over with
-> `gh api -X PUT repos/dapiced/dapiced.github.io/pages -f build_type=workflow`.
-> Doing it before `pages.yml` is on `main` would stop deployments.
+- **Analytics** uses GoatCounter as the sole counter provider. It receives page-view
+  events without advertising profiles or a second analytics service; the site does not
+  add tracking pixels or cross-site identity data.
+- **License scope** is split deliberately: repository source code is MIT-licensed;
+  authored writing, portfolio text, personal media, and branding remain all rights
+  reserved unless a file says otherwise. Third-party assets keep their own licenses.
 
 ## SEO setup
 

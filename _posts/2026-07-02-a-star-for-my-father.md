@@ -47,7 +47,7 @@ up.
 That very day, a star was registered in his name.
 
 <figure style="margin: 2rem 0; text-align: center;">
-  <img src="/assets/img/etoile-vincenzo.svg" alt="Animated celestial chart: the star Vincenzo D'Apice in the Andromeda constellation, beside galaxy M31" loading="lazy" style="width: 100%; border-radius: 12px;" />
+  <img src="/assets/img/etoile-vincenzo.svg" alt="Animated celestial chart: the star Vincenzo D'Apice in the Andromeda constellation, beside galaxy M31" width="900" height="480" loading="lazy" style="width: 100%; border-radius: 12px;" />
 </figure>
 
 It is real. It has coordinates, like an address in the sky:

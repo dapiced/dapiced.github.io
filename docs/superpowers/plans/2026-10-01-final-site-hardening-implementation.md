@@ -1,5 +1,7 @@
 # Final Site Hardening Implementation Plan
 
+**Status:** implementation complete; final validation and publication in progress.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Complete E4 by hardening browser metadata, licensing, generated APOD safety, workflow contracts, accessibility structure, and published-output validation.
@@ -13,7 +15,7 @@
 ## Global Constraints
 
 - Keep GoatCounter as the sole analytics/counter provider; add no second tracker, tag manager, cookie banner, or preconnect.
-- Add exactly `theme-color="#04060f"`, dark `color-scheme`, and `/site.webmanifest` metadata without a service worker, offline cache, push, install prompt, or navigation change.
+- Add exactly `theme-color="#04060f"`, dark `color-scheme`, and `/manifest.webmanifest` metadata without a service worker, offline cache, push, install prompt, or navigation change.
 - Use only existing valid branded icons in the manifest; do not invent icons unless browser requirements prove an additional deterministic asset is necessary.
 - MIT applies only to repository source code; authored articles, portfolio text, personal media, and branding remain copyright Dominic D'Apice/all rights reserved unless stated otherwise; third-party assets retain their licenses.
 - Cosmic Daily must fail closed for incomplete/third-party rights metadata and must never auto-merge manual-review or invalid content.
@@ -25,7 +27,7 @@
 
 ## Review Focus
 
-- A rights record with `copyright: ""` or omitted metadata must not become publishable; pin this in `tools/cosmic-daily/tests/test_rights_policy.py`.
+- A rights record with a named third-party copyright must not become publishable; omitted/blank copyright remains supported as NASA/public-domain metadata under the current APOD contract.
 - A NASA/public-domain record must use the current accepted metadata shape, while an unknown category must route to manual review; pin both cases in the rights-policy tests.
 - A malformed APOD can contain plausible substrings but still include a 121x102 image or APOD navigation boilerplate; pin the complete payload rejection in `tools/cosmic-daily/tests/test_cli.py` and validator tests.
 - A manually dispatched Pages build can succeed without deployment; pin the IndexNow event/condition contract in `tools/cosmic-daily/tests/test_workflows.py`.
@@ -37,7 +39,7 @@
 
 ### Shared site boundary
 
-- Create: `site.webmanifest` — valid static manifest with `name`, `short_name`, `start_url`, `display`, `background_color`, `theme_color`, and valid existing icon references.
+- Create: `manifest.webmanifest` — valid static manifest with `name`, `short_name`, `start_url`, `display`, `background_color`, `theme_color`, and valid existing icon references.
 - Modify: `_layouts/default.html` — shared theme metadata and manifest link; preserve the one GoatCounter script.
 - Modify: `assets/css/style.css` — add `color-scheme: dark` at the root/site scope without changing palette tokens.
 - Modify: `tests/test_generated_site.py` or the existing site contract tests — source and rendered metadata/manifest contracts.

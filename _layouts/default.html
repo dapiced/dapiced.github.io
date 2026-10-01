@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#04060f">
   <meta name="google-site-verification" content="xRBmKZ2Bo5NPBP8hoDyEF5khW3MNRqa9hSbtATuFgR0">
   {% assign kw = page.keywords | default: page.topics | default: page.tags | default: site.keywords %}
   {% if kw %}<meta name="keywords" content="{{ kw | join: ', ' }}">{% endif %}
@@ -22,6 +23,7 @@
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/assets/css/style.css?v={{ site.time | date: '%s' }}">
   <script type="application/ld+json">
   {

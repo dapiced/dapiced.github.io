@@ -115,7 +115,7 @@ A note in passing: in three messages, you reconstructed on your own the essentia
 
 <figure style="margin: 2rem 0; text-align: center;">
   <a href="/assets/img/nothingness-has-no-address.svg" target="_blank" rel="noopener">
-    <img src="/assets/img/nothingness-has-no-address.svg" alt="Poster 'Nothingness Has No Address': model A where the void is drawn then stamped CONTRADICTION, model B where the diagram begins at the boundary t₀, three topologies of the past, root commit / root CA / empty set, temporal and modal double lock" loading="lazy" style="width: 100%; border-radius: 12px;" />
+    <img src="/assets/img/nothingness-has-no-address.svg" alt="Poster 'Nothingness Has No Address': model A where the void is drawn then stamped CONTRADICTION, model B where the diagram begins at the boundary t₀, three topologies of the past, root commit / root CA / empty set, temporal and modal double lock" width="1200" height="1772" loading="lazy" style="width: 100%; border-radius: 12px;" />
   </a>
   <figcaption style="font-size: 0.85rem; color: var(--faint); margin-top: 0.6rem;">Four messages, one theorem. Click for full resolution.</figcaption>
 </figure>
