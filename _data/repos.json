@@ -1,0 +1,85 @@
+{
+  "repositories": [
+    {
+      "name": "titanic",
+      "url": "https://github.com/dapiced/titanic",
+      "description": "Titanic Kaggle competition",
+      "language": "Jupyter Notebook",
+      "language_color": "#DA5B0B",
+      "stars": 1,
+      "forks": 0
+    },
+    {
+      "name": "rhel_vmware_disk_manager",
+      "url": "https://github.com/dapiced/rhel_vmware_disk_manager",
+      "description": "An Ansible role that Added disk vmware, partition, lvg, lvol, format, mount and extend lv for rhel 7 and 8",
+      "language": "Python",
+      "language_color": "#3572A5",
+      "stars": 3,
+      "forks": 1
+    },
+    {
+      "name": "cedd-hackathon",
+      "url": "https://github.com/dapiced/cedd-hackathon",
+      "description": "CEED is a real-time monitoring system designed to detect a progressive emotional drift in young adults (16-22 years old) during c…",
+      "language": "Python",
+      "language_color": "#3572A5",
+      "stars": 2,
+      "forks": 0
+    },
+    {
+      "name": "patch_update_yum",
+      "url": "https://github.com/dapiced/patch_update_yum",
+      "description": "An Ansible role that upgrade yum packages",
+      "language": "Ansible",
+      "language_color": "#EE0000",
+      "stars": 2,
+      "forks": 2
+    },
+    {
+      "name": "LabML",
+      "url": "https://github.com/dapiced/LabML",
+      "description": "LabML - ML in Your Browser: a Complete Machine Learning Lab With No Backend",
+      "language": "TypeScript",
+      "language_color": "#bc8cff",
+      "stars": 1,
+      "forks": 0
+    },
+    {
+      "name": "vmware_vra_blue_print_compare",
+      "url": "https://github.com/dapiced/vmware_vra_blue_print_compare",
+      "description": "vmware_vra_blue_print_compare",
+      "language": "Ansible",
+      "language_color": "#EE0000",
+      "stars": 1,
+      "forks": 0
+    },
+    {
+      "name": "Mila_Hackathon_AI",
+      "url": "https://github.com/dapiced/Mila_Hackathon_AI",
+      "description": "The hackathon’s objective is clear: to design, test and document practical technical safeguards that reduce the risk of harm when…",
+      "language": "Python",
+      "language_color": "#3572A5",
+      "stars": 1,
+      "forks": 0
+    },
+    {
+      "name": "redhat_satellite_capsule_ansible_role_install",
+      "url": "https://github.com/dapiced/redhat_satellite_capsule_ansible_role_install",
+      "description": "Redhat satellite and capsule ansible role installation",
+      "language": "Ansible",
+      "language_color": "#EE0000",
+      "stars": 1,
+      "forks": 0
+    },
+    {
+      "name": "redhat_status_advanced",
+      "url": "https://github.com/dapiced/redhat_status_advanced",
+      "description": "Red Hat Status Checker - Advanced",
+      "language": "Python",
+      "language_color": "#3572A5",
+      "stars": 1,
+      "forks": 0
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+name: Repo data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 05:40 UTC daily. The homepage project cards are served from
+    # _data/repos.json, so this job is the only thing that refreshes them.
+    - cron: "40 5 * * *"
+
+# No ambient permissions: the refresh job asks for exactly what it needs.
+permissions: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Refresh repository cards
+        # The generator uses the standard library only, so there is nothing to
+        # install. A GitHub API failure exits non-zero and leaves the committed
+        # _data/repos.json untouched: no empty or partial data is ever written.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python tools/repo_cards/generate_repo_data.py
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/repo-data
+          title: "Refresh homepage project cards"
+          body: |
+            Automated refresh of `_data/repos.json` from the public GitHub
+            repositories of dapiced.
+
+            The homepage renders the project cards from this file at build
+            time, so no visitor-side GitHub API call is needed.
+          commit-message: "Refresh homepage project cards"
+          delete-branch: true

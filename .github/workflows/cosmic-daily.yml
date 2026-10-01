@@ -19,14 +19,21 @@ on:
     # it automatically once validation has passed.
     - cron: "0 12 * * *"
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
+# No ambient permissions: each job asks for exactly what it needs.
+permissions: {}
 
 jobs:
   cosmic-daily:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    outputs:
+      target-date: ${{ steps.target.outputs.value }}
+      pull-request: ${{ steps.create-pr.outputs.pull-request-number }}
+      log-tail: ${{ steps.log.outputs.tail }}
 
     steps:
       - name: Checkout repository
@@ -141,31 +148,59 @@ jobs:
         run: |
           gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --squash --delete-branch
 
+      - name: Capture log tail for the failure report
+        # Job outputs are single-line, so the tail crosses the job boundary
+        # base64-encoded. Runs even when a previous step failed.
+        id: log
+        if: always()
+        shell: bash
+        run: |
+          tail -n 60 /tmp/cosmic-daily.log 2>/dev/null > /tmp/cosmic-daily.tail || true
+          if [ ! -s /tmp/cosmic-daily.tail ]; then
+            echo 'Aucun log cosmic-daily disponible.' > /tmp/cosmic-daily.tail
+          fi
+          echo "tail=$(base64 -w0 /tmp/cosmic-daily.tail)" >> "$GITHUB_OUTPUT"
+
+  report-failure:
+    # Separate job so the only write grant for issue reporting is issues:write,
+    # with no access to repository contents or pull requests.
+    runs-on: ubuntu-latest
+    needs: cosmic-daily
+    if: failure()
+
+    permissions:
+      issues: write
+
+    steps:
       - name: Report failure by email (via GitHub issue notification)
-        # Opens an issue with error details whenever any prior step in this
-        # job failed (fetch error, rejected rights, validation failure,
-        # failed auto-merge, etc.). GitHub emails watchers of this repo when
-        # a new issue is created — check github.com/settings/notifications
-        # to confirm email delivery is enabled for "Issues".
+        # Opens an issue with error details whenever the generation job
+        # failed (fetch error, rejected rights, validation failure, failed
+        # auto-merge, etc.). GitHub emails watchers of this repo when a new
+        # issue is created — check github.com/settings/notifications to
+        # confirm email delivery is enabled for "Issues".
         # A video APOD is not a failure: the CLI exits 0 and the run summary
         # explains the skip. If an open issue already exists for the same
         # date (re-run of a failed job), the details are added as a comment
         # instead of opening a duplicate.
-        if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          LOG_TAIL_B64: ${{ needs.cosmic-daily.outputs.log-tail }}
+        shell: bash
         run: |
           run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          log_tail="$(tail -n 60 /tmp/cosmic-daily.log 2>/dev/null || echo 'Aucun log cosmic-daily disponible.')"
-          pr_ref="${{ steps.create-pr.outputs.pull-request-number && format('#{0}', steps.create-pr.outputs.pull-request-number) || 'aucune' }}"
+          log_tail="$(printf '%s' "$LOG_TAIL_B64" | base64 -d 2>/dev/null || echo 'Aucun log cosmic-daily disponible.')"
+          pr_number="${{ needs.cosmic-daily.outputs.pull-request }}"
+          if [ -n "$pr_number" ]; then pr_ref="#$pr_number"; else pr_ref="aucune"; fi
+          target="${{ needs.cosmic-daily.outputs.target-date }}"
           body="$(printf '%s\n\n- Date ciblee : `%s`\n- Declencheur : `%s`\n- Execution : %s\n- PR creee : %s\n\nDernieres lignes du log :\n```\n%s\n```\n' \
             "Le workflow Cosmic Daily a echoue et n'a pas ete publie." \
-            "${{ steps.target.outputs.value }}" \
+            "$target" \
             "${{ github.event_name }}" \
             "$run_url" \
             "$pr_ref" \
             "$log_tail")"
-          title="Cosmic Daily: echec le ${{ steps.target.outputs.value }}"
+          title="Cosmic Daily: echec le $target"
           existing="$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty' || true)"
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "$body" \
