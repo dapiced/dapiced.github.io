@@ -10,6 +10,7 @@ from datetime import date
 from pathlib import Path
 
 import yaml
+from PIL import Image, UnidentifiedImageError
 
 from .article_generator import generate_article, slugify_title
 from .image_processor import process_apod_image_with_fallback
@@ -169,6 +170,22 @@ def check(post_path: str | None = None) -> int:
     resolved_image = repo.root / image_reference.lstrip("/")
     if not resolved_image.exists():
         print(f"Image file missing: {resolved_image}")
+        return EXIT_ERROR
+    try:
+        with Image.open(resolved_image) as image:
+            actual_width, actual_height = image.size
+    except (OSError, UnidentifiedImageError) as exc:
+        print(f"Image file is not a readable raster image: {exc}")
+        return EXIT_ERROR
+    if (actual_width, actual_height) != (metadata["image_width"], metadata["image_height"]):
+        print(
+            "Image dimensions do not match front matter: "
+            f"declared {metadata['image_width']}x{metadata['image_height']}, "
+            f"actual {actual_width}x{actual_height}"
+        )
+        return EXIT_ERROR
+    if actual_width < MIN_IMAGE_DIMENSION or actual_height < MIN_IMAGE_DIMENSION:
+        print(f"Image dimensions are too small: {actual_width}x{actual_height}")
         return EXIT_ERROR
 
     duplicates = repo.find_duplicates(

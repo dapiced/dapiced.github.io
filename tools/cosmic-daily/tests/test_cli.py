@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 import cosmic_daily.cli as cli
 from cosmic_daily.nasa_client import APODRecord
@@ -92,7 +93,7 @@ def test_generate_reports_failure_when_no_image_url_works(monkeypatch, repo, cap
 
 def _fake_process(urls, target_dir, output_name):
     target = Path(target_dir) / f"{output_name}.webp"
-    target.write_bytes(b"webp")
+    Image.new("RGB", (1200, 800), "black").save(target, format="WEBP")
     return target, (1200, 800)
 
 
@@ -139,7 +140,7 @@ def test_check_rejects_malformed_apod_payload(monkeypatch, repo, capsys):
     entry = repo.root / "_apod" / "2026-10-01-nasa-science.md"
     image = repo.root / "assets" / "img" / "apod" / "2026-10-01-nasa-science.webp"
     image.parent.mkdir(parents=True)
-    image.write_bytes(b"placeholder")
+    Image.new("RGB", (121, 102), "black").save(image, format="WEBP")
     entry.parent.mkdir()
     entry.write_text(
         """---
@@ -149,8 +150,8 @@ date: 2026-10-01 08:00:00 -0400
 tags: [astronomy, nasa, apod]
 description: "NASA Science: Have you ever seen the full moon rise?"
 image: /assets/img/apod/2026-10-01-nasa-science.webp
-image_width: 121
-image_height: 102
+image_width: 320
+image_height: 320
 credit: "NASA"
 apod_date: 2026-10-01
 apod_url: "https://apod.nasa.gov/apod/ap20261001.html"

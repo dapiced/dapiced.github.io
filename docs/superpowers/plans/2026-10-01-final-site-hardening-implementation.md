@@ -27,7 +27,7 @@
 
 ## Review Focus
 
-- A rights record with a named third-party copyright must not become publishable; omitted/blank copyright remains supported as NASA/public-domain metadata under the current APOD contract.
+- A rights record with missing/blank or named third-party copyright must not become publishable; only explicit NASA/public-domain metadata is auto-publishable.
 - A NASA/public-domain record must use the current accepted metadata shape, while an unknown category must route to manual review; pin both cases in the rights-policy tests.
 - A malformed APOD can contain plausible substrings but still include a 121x102 image or APOD navigation boilerplate; pin the complete payload rejection in `tools/cosmic-daily/tests/test_cli.py` and validator tests.
 - A manually dispatched Pages build can succeed without deployment; pin the IndexNow event/condition contract in `tools/cosmic-daily/tests/test_workflows.py`.
