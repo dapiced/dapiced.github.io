@@ -83,3 +83,9 @@ def test_heading_order_and_editorial_intrinsic_dimensions():
 def test_apod_layout_links_the_dated_entry_on_science_nasa_gov():
     layout = (ROOT / "_layouts" / "apod.html").read_text(encoding="utf-8")
     assert 'href="https://science.nasa.gov/apod/?date={{ page.apod_date | date: "%y%m%d" }}"' in layout
+
+
+def test_python_test_suite_is_not_published():
+    config = (ROOT / "_config.yml").read_text(encoding="utf-8")
+    exclude = config.split("\nexclude:\n", 1)[1]
+    assert "  - tests/\n" in exclude
