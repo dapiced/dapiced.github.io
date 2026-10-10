@@ -9,6 +9,8 @@ from urllib.parse import urlparse
 
 import requests
 
+from .apod_page import fetch_apod_page
+
 
 APOD_ENDPOINT = "https://api.nasa.gov/planetary/apod"
 # DEMO_KEY is a shared, rate-limited key; requests can be slow under load, so
@@ -16,6 +18,10 @@ APOD_ENDPOINT = "https://api.nasa.gov/planetary/apod"
 REQUEST_TIMEOUT = (10, 45)
 MAX_ATTEMPTS = 3
 RETRY_BACKOFF_SECONDS = 5
+# Since APOD moved to science.nasa.gov, the API scrapes the redirected old page
+# and answers with the site name as title and the site logo as image.
+DEGRADED_TITLES = {"nasa science", "apod - nasa science"}
+DEGRADED_MEDIA_PATH = "/wp-content/"
 
 
 @dataclass
@@ -105,6 +111,9 @@ def fetch_apod(day: str | date | None = None, api_key: str | None = None) -> APO
     if hdurl:
         _validate_https_url(hdurl, "hdurl")
 
+    if _is_degraded(payload):
+        return _record_from_page(date.fromisoformat(chosen_day), apod_url, payload)
+
     return APODRecord(
         date=chosen_day,
         title=str(payload["title"]).strip(),
@@ -116,3 +125,31 @@ def fetch_apod(day: str | date | None = None, api_key: str | None = None) -> APO
         apod_url=str(apod_url),
         service_version=str(payload.get("service_version")) if payload.get("service_version") else None,
     )
+
+
+def _is_degraded(payload: Dict[str, Any]) -> bool:
+    if str(payload.get("title", "")).strip().lower() in DEGRADED_TITLES:
+        return True
+    for field_name in ("url", "hdurl"):
+        parsed = urlparse(str(payload.get(field_name) or ""))
+        if parsed.netloc.endswith("science.nasa.gov") and parsed.path.startswith(DEGRADED_MEDIA_PATH):
+            return True
+    return False
+
+
+def _record_from_page(day: date, apod_url: str, payload: Dict[str, Any]) -> APODRecord:
+    """Rebuild the record from the science.nasa.gov page; raises ApodUnavailableError."""
+    print("NASA API returned placeholder APOD metadata; reading the science.nasa.gov page instead.")
+    page = fetch_apod_page(day)
+    return APODRecord(
+        date=page.date,
+        title=page.title,
+        media_type="image",
+        url=page.image_urls[-1],
+        hdurl=page.image_urls[0] if len(page.image_urls) > 1 else None,
+        explanation=page.explanation,
+        copyright=page.credit,
+        apod_url=apod_url,
+        service_version=str(payload.get("service_version")) if payload.get("service_version") else None,
+    )
+

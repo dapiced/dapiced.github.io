@@ -6,6 +6,7 @@ import pytest
 from PIL import Image
 
 import cosmic_daily.cli as cli
+from cosmic_daily.apod_page import ApodUnavailableError
 from cosmic_daily.nasa_client import APODRecord
 from cosmic_daily.repository import RepositoryContext
 
@@ -52,6 +53,24 @@ def test_preview_skips_video_entries_without_failing(monkeypatch, repo, capsys):
     assert exit_code == cli.EXIT_SUCCESS
     assert '"media_type": "video"' in output
     assert "Skipped" in output
+
+
+def _unavailable(target):
+    raise ApodUnavailableError("APOD page has no still image from the APOD media library")
+
+
+@pytest.mark.parametrize("command", ["generate", "preview"])
+def test_unavailable_apod_entry_is_skipped_without_failing(monkeypatch, repo, capsys, command):
+    monkeypatch.setattr(cli, "fetch_apod", _unavailable)
+
+    exit_code = getattr(cli, command)("2026-10-10")
+
+    output = capsys.readouterr().out
+    assert exit_code == cli.EXIT_SUCCESS
+    # The workflow keys its run summary on lines starting with "Skipped:".
+    assert any(line.startswith("Skipped: APOD entry unavailable") for line in output.splitlines())
+    assert not (repo.root / "_apod").exists()
+    assert not (repo.root / "assets").exists()
 
 
 @pytest.mark.parametrize("copyright", ["Jane Photographer", None, "   "])
