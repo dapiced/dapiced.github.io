@@ -99,12 +99,15 @@ def test_pages_build_publishes_an_artifact(pages):
     assert uses_action(build, "actions/upload-pages-artifact@")
 
 
-def test_pages_deploy_only_runs_for_main_pushes(pages):
+def test_pages_deploy_only_runs_on_main(pages):
     deploy = pages["jobs"]["deploy"]
     assert deploy["needs"] == "build"
     condition = deploy["if"]
     assert "github.event_name == 'push'" in condition
-    assert "refs/heads/main" in condition
+    # cosmic-daily.yml dispatches pages.yml on main after an auto-merge.
+    assert "github.event_name == 'workflow_dispatch'" in condition
+    assert "github.ref == 'refs/heads/main'" in condition
+    assert "pull_request" not in condition
 
 
 def test_pages_deploy_targets_the_github_pages_environment(pages):
@@ -120,6 +123,9 @@ def test_ci_runs_on_pull_requests_and_main(ci):
     triggers = ci["on"]
     assert "pull_request" in triggers
     assert triggers["push"]["branches"] == ["main"]
+    # cosmic-daily.yml dispatches CI on its own PRs (GITHUB_TOKEN PRs fire no
+    # pull_request event).
+    assert "workflow_dispatch" in triggers
 
 
 def test_ci_is_read_only(ci):
@@ -229,10 +235,12 @@ def test_cosmic_daily_grants_no_default_permissions(cosmic):
     assert cosmic["permissions"] == {}
 
 
-def test_cosmic_daily_generation_job_can_only_commit_and_open_prs(cosmic):
+def test_cosmic_daily_generation_job_can_only_commit_open_prs_and_dispatch(cosmic):
     assert cosmic["jobs"]["cosmic-daily"]["permissions"] == {
         "contents": "write",
         "pull-requests": "write",
+        # Needed to dispatch and watch ci.yml and to dispatch pages.yml.
+        "actions": "write",
     }
 
 
@@ -268,6 +276,27 @@ def test_cosmic_daily_actions_stay_pinned(cosmic):
         "actions/setup-python@v7",
         "peter-evans/create-pull-request@v8",
     }
+
+
+def _step(cosmic, name):
+    return next(step for step in steps_of(cosmic["jobs"]["cosmic-daily"]) if step.get("name") == name)
+
+
+def test_cosmic_daily_runs_ci_on_its_pull_request_before_merging(cosmic):
+    names = [step.get("name") for step in steps_of(cosmic["jobs"]["cosmic-daily"])]
+    assert names.index("Create pull request") < names.index("Run CI on the pull request")
+    assert names.index("Run CI on the pull request") < names.index("Auto-merge validated post")
+    ci_step = _step(cosmic, "Run CI on the pull request")
+    # Runs for every generated PR, manual review included, so checks show.
+    assert ci_step["if"] == "${{ steps.create-pr.outputs.pull-request-number != '' }}"
+    assert "continue-on-error" not in ci_step
+    assert "gh workflow run ci.yml" in ci_step["run"]
+    assert "gh run watch" in ci_step["run"] and "--exit-status" in ci_step["run"]
+
+
+def test_cosmic_daily_dispatches_the_pages_deployment_after_auto_merge(cosmic):
+    commands = _step(cosmic, "Auto-merge validated post")["run"]
+    assert commands.index("gh pr merge") < commands.index("gh workflow run pages.yml --ref main")
 
 
 def test_cosmic_daily_still_validates_before_merging(cosmic):

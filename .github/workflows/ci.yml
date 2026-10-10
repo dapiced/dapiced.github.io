@@ -3,11 +3,16 @@ name: CI
 # Runs on every pull request and on main. The site job proves the Jekyll build
 # still works and that the pages the rest of the site links to are generated;
 # the cosmic-daily job runs the Python test suite behind the APOD generator.
+#
+# workflow_dispatch lets cosmic-daily.yml run this CI on its own pull requests:
+# PRs opened with the default GITHUB_TOKEN never fire pull_request, but a
+# dispatch from that token does start a run, attached to the branch head.
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
