@@ -51,6 +51,9 @@ The default mode is `preview`.
   day is skipped with `Skipped: APOD entry unavailable (...)` and exit 0, like a video day.
 - The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or
   cannot fit the size budget; the command fails only when every candidate fails.
+- PRs and merges made with the default `GITHUB_TOKEN` fire no workflow, so the job dispatches
+  `ci.yml` on the generated PR branch and waits for it (a red CI stops the run before any merge),
+  then dispatches `pages.yml` on `main` after an auto-merge so the entry is actually deployed.
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.
 - Scheduled runs auto-merge only explicit NASA/public-domain rights metadata accepted by the
   rights policy: a credit is accepted when every part of it (split on `/`, `,`, `;`, `&`, `and`,

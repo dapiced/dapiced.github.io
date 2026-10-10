@@ -29,6 +29,9 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      # Dispatch and watch ci.yml on the generated PR, then dispatch pages.yml
+      # after an auto-merge: the GITHUB_TOKEN's PRs and pushes fire no workflow.
+      actions: write
 
     outputs:
       target-date: ${{ steps.target.outputs.value }}
@@ -134,6 +137,35 @@ jobs:
           commit-message: "Add Cosmic Daily APOD entry for ${{ steps.target.outputs.value }}"
           delete-branch: true
 
+      - name: Run CI on the pull request
+        # A PR opened with the GITHUB_TOKEN does not trigger ci.yml, so dispatch
+        # it on the PR branch and wait for the result. Its checks show on the
+        # PR, and a red CI stops the job before any merge (and opens the
+        # failure issue).
+        if: ${{ steps.create-pr.outputs.pull-request-number != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
+          BRANCH: cosmic-daily/${{ steps.target.outputs.value }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          head_sha="$(gh pr view "$PR_NUMBER" --json headRefOid --jq .headRefOid)"
+          gh workflow run ci.yml --ref "$BRANCH"
+          run_id=""
+          for _ in $(seq 1 30); do
+            run_id="$(gh run list --workflow ci.yml --branch "$BRANCH" --event workflow_dispatch \
+              --json databaseId,headSha \
+              --jq "map(select(.headSha == \"$head_sha\")) | .[0].databaseId // empty")"
+            [ -n "$run_id" ] && break
+            sleep 5
+          done
+          if [ -z "$run_id" ]; then
+            echo "CI run for $head_sha did not start on $BRANCH"
+            exit 1
+          fi
+          gh run watch "$run_id" --exit-status --interval 15
+
       - name: Request Copilot review
         # Best-effort audit trail only: Copilot code review just leaves
         # comments, it never gates the merge below.
@@ -145,16 +177,18 @@ jobs:
           gh pr edit "${{ steps.create-pr.outputs.pull-request-number }}" --add-reviewer Copilot
 
       - name: Auto-merge validated post
-        # The real safety gate is the "Validate generated post" step above:
-        # rights policy, duplicate detection, front matter/tags, and image
-        # presence must all pass before this step is even reached (the job
-        # stops at the first failed step). Once that passes, merge without
-        # waiting on a human.
+        # Gates, in order: the "Validate generated post" step (rights policy,
+        # duplicate detection, front matter/tags, image presence) and the CI
+        # run above must both pass before this step is reached (the job stops
+        # at the first failed step). Once they do, merge without waiting on a
+        # human, then dispatch the Pages deployment: a merge made with the
+        # GITHUB_TOKEN does not fire pages.yml on its own.
         if: ${{ steps.create-pr.outputs.pull-request-number != '' && steps.apod.outputs.result == 'generated' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --squash --delete-branch
+          gh workflow run pages.yml --ref main
 
       - name: Capture log tail for the failure report
         # Job outputs are single-line, so the tail crosses the job boundary
