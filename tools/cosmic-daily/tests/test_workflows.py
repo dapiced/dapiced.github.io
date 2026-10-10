@@ -294,6 +294,20 @@ def test_cosmic_daily_runs_ci_on_its_pull_request_before_merging(cosmic):
     assert "gh run watch" in ci_step["run"] and "--exit-status" in ci_step["run"]
 
 
+def test_cosmic_daily_removes_the_placeholder_pull_request_run_before_merging(cosmic):
+    names = [step.get("name") for step in steps_of(cosmic["jobs"]["cosmic-daily"])]
+    cleanup = "Remove the placeholder pull_request CI run"
+    assert names.index("Run CI on the pull request") < names.index(cleanup)
+    assert names.index(cleanup) < names.index("Auto-merge validated post")
+    step = _step(cosmic, cleanup)
+    # Cosmetic cleanup: it must never block a publication.
+    assert step["continue-on-error"] is True
+    assert "--event pull_request" in step["run"]
+    # Only the bot's own commit: a run from a later human push is kept.
+    assert ".headSha ==" in step["run"]
+    assert "gh run cancel" in step["run"] and "gh run delete" in step["run"]
+
+
 def test_cosmic_daily_dispatches_the_pages_deployment_after_auto_merge(cosmic):
     commands = _step(cosmic, "Auto-merge validated post")["run"]
     assert commands.index("gh pr merge") < commands.index("gh workflow run pages.yml --ref main")

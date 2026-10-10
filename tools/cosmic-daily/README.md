@@ -54,6 +54,8 @@ The default mode is `preview`.
 - PRs and merges made with the default `GITHUB_TOKEN` fire no workflow, so the job dispatches
   `ci.yml` on the generated PR branch and waits for it (a red CI stops the run before any merge),
   then dispatches `pages.yml` on `main` after an auto-merge so the entry is actually deployed.
+  GitHub still creates an empty `pull_request` CI run for the bot's PR that never starts a job and
+  turns red once the branch is deleted; the job cancels and deletes it (cosmetic, never blocking).
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.
 - Scheduled runs auto-merge only explicit NASA/public-domain rights metadata accepted by the
   rights policy: a credit is accepted when every part of it (split on `/`, `,`, `;`, `&`, `and`,

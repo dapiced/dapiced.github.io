@@ -166,6 +166,36 @@ jobs:
           fi
           gh run watch "$run_id" --exit-status --interval 15
 
+      - name: Remove the placeholder pull_request CI run
+        # Opening the PR with the GITHUB_TOKEN still makes GitHub create a
+        # ci.yml "pull_request" run, but it never starts a job: it sits
+        # pending and turns into a red "failure" once the branch is merged
+        # and deleted. The real CI is the dispatched run above, so cancel and
+        # delete that empty run (matched on the bot's head commit, so a run
+        # from a later human push is left alone). Cosmetic: never blocks.
+        if: ${{ always() && steps.create-pr.outputs.pull-request-number != '' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
+          BRANCH: cosmic-daily/${{ steps.target.outputs.value }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          head_sha="$(gh pr view "$PR_NUMBER" --json headRefOid --jq .headRefOid)"
+          ids="$(gh run list --workflow ci.yml --branch "$BRANCH" --event pull_request \
+            --json databaseId,headSha \
+            --jq "map(select(.headSha == \"$head_sha\")) | .[].databaseId")"
+          for id in $ids; do
+            gh run cancel "$id" || true
+            for _ in $(seq 1 12); do
+              [ "$(gh run view "$id" --json status --jq .status)" = "completed" ] && break
+              sleep 5
+            done
+            gh run delete "$id"
+            echo "Deleted placeholder CI run $id"
+          done
+
       - name: Request Copilot review
         # Best-effort audit trail only: Copilot code review just leaves
         # comments, it never gates the merge below.
