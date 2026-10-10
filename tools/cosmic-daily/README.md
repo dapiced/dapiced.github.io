@@ -47,14 +47,16 @@ The default mode is `preview`.
   placeholder data (title `NASA Science`, the NASA logo as image). When that happens the entry is
   read from `https://science.nasa.gov/apod/?date=YYMMDD` instead: title, explanation (without the
   "Tomorrow's picture" footer), credit line and image from the APOD media library. The credit is
-  passed to the rights policy unchanged, so anything other than plain NASA/public domain stays in
-  manual review. If the page is for another date or its title, image or credit cannot be found, the
+  passed to the rights policy unchanged. If the page is for another date or its title, image or credit cannot be found, the
   day is skipped with `Skipped: APOD entry unavailable (...)` and exit 0, like a video day.
 - The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or
   cannot fit the size budget; the command fails only when every candidate fails.
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.
 - Scheduled runs auto-merge only explicit NASA/public-domain rights metadata accepted by the
-  rights policy. Validated manual-review candidates remain open in a PR and are never auto-merged.
+  rights policy: a credit is accepted when every part of it (split on `/`, `,`, `;`, `&`, `and`,
+  ` - `) is NASA, a NASA center, or a listed NASA mission partner such as JPL-Caltech, GSFC, MSSS,
+  ASU/LRO or HiRISE/LPL (`NASA_CREDIT_PARTS` in `rights_policy.py`). Any other name, or any mention
+  of copyright or a license, keeps the entry in manual review. Validated manual-review candidates remain open in a PR and are never auto-merged.
   Invalid images or content still fail and open an issue titled
   `Cosmic Daily: echec le YYYY-MM-DD`; a re-run of the same day comments on the existing open
   issue instead of creating another one.
