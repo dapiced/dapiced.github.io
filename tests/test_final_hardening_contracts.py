@@ -78,3 +78,8 @@ def test_heading_order_and_editorial_intrinsic_dimensions():
     nothing = (ROOT / "_posts" / "2026-07-02-nothingness-has-no-address.md").read_text(encoding="utf-8")
     assert re.search(r'etoile-vincenzo\.svg"[^>]*\bwidth="900"[^>]*\bheight="480"', star)
     assert re.search(r'nothingness-has-no-address\.svg"[^>]*\bwidth="1200"[^>]*\bheight="1772"', nothing)
+
+
+def test_apod_layout_links_the_dated_entry_on_science_nasa_gov():
+    layout = (ROOT / "_layouts" / "apod.html").read_text(encoding="utf-8")
+    assert 'href="https://science.nasa.gov/apod/?date={{ page.apod_date | date: "%y%m%d" }}"' in layout

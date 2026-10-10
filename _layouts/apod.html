@@ -28,7 +28,9 @@ layout: default
 
   <p class="apod-source">
     Source: NASA Astronomy Picture of the Day.
-    {% if page.apod_url %}<a href="{{ page.apod_url }}" rel="noopener">Read the full entry on apod.nasa.gov →</a>{% endif %}
+    {% comment %}APOD moved to science.nasa.gov: apod.nasa.gov/apod/apYYMMDD.html now redirects to the
+    APOD home page, so link the dated entry there. apod_url stays the entry's identity in front matter.{% endcomment %}
+    {% if page.apod_date %}<a href="https://science.nasa.gov/apod/?date={{ page.apod_date | date: "%y%m%d" }}" rel="noopener">Read the full entry on science.nasa.gov →</a>{% elsif page.apod_url %}<a href="{{ page.apod_url }}" rel="noopener">Read the full entry on apod.nasa.gov →</a>{% endif %}
   </p>
 
   <p class="post-footer"><a href="/sky/">← All sky entries</a> · <a href="/blog/">Blog</a></p>
