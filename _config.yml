@@ -83,3 +83,5 @@ exclude:
   - LICENSE
   - tools/
   - tests/
+  - docs/
+  - pytest.ini

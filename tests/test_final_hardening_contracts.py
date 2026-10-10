@@ -85,7 +85,8 @@ def test_apod_layout_links_the_dated_entry_on_science_nasa_gov():
     assert 'href="https://science.nasa.gov/apod/?date={{ page.apod_date | date: "%y%m%d" }}"' in layout
 
 
-def test_python_test_suite_is_not_published():
+def test_repository_internals_are_not_published():
     config = (ROOT / "_config.yml").read_text(encoding="utf-8")
     exclude = config.split("\nexclude:\n", 1)[1]
-    assert "  - tests/\n" in exclude
+    for entry in ("tests/", "docs/", "pytest.ini"):
+        assert f"  - {entry}\n" in exclude, entry
