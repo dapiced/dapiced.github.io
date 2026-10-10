@@ -43,6 +43,13 @@ The default mode is `preview`.
 - Video entries are skipped, not failed: `preview` and `generate` print `Skipped: …` and exit 0,
   and the workflow records the reason in the run summary. Publishing a video day stays a manual
   decision.
+- APOD moved to `science.nasa.gov` in autumn 2026, and `api.nasa.gov` now answers some days with
+  placeholder data (title `NASA Science`, the NASA logo as image). When that happens the entry is
+  read from `https://science.nasa.gov/apod/?date=YYMMDD` instead: title, explanation (without the
+  "Tomorrow's picture" footer), credit line and image from the APOD media library. The credit is
+  passed to the rights policy unchanged, so anything other than plain NASA/public domain stays in
+  manual review. If the page is for another date or its title, image or credit cannot be found, the
+  day is skipped with `Skipped: APOD entry unavailable (...)` and exit 0, like a video day.
 - The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or
   cannot fit the size budget; the command fails only when every candidate fails.
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.

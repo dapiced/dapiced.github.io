@@ -12,6 +12,7 @@ from pathlib import Path
 import yaml
 from PIL import Image, UnidentifiedImageError
 
+from .apod_page import ApodUnavailableError
 from .article_generator import generate_article, slugify_title
 from .image_processor import process_apod_image_with_fallback
 from .nasa_client import APODRecord, fetch_apod
@@ -81,6 +82,11 @@ def preview(date_value: str | None = None) -> int:
     target = date_value or date.today().isoformat()
     try:
         apod = fetch_apod(target)
+    except ApodUnavailableError as exc:
+        # NASA served placeholder data and the entry page could not be read
+        # reliably either: skip the day rather than publish something wrong.
+        print(f"Skipped: APOD entry unavailable ({exc})")
+        return EXIT_SUCCESS
     except Exception as exc:
         print(f"Preview failed: {exc}")
         return EXIT_ERROR
@@ -125,6 +131,10 @@ def generate(date_value: str | None = None) -> int:
     repo = RepositoryContext()
     try:
         apod = fetch_apod(target)
+    except ApodUnavailableError as exc:
+        _emit_github_output(apod_date=target, result="unavailable", post_path="", image_path="")
+        print(f"Skipped: APOD entry unavailable ({exc})")
+        return EXIT_SUCCESS
     except Exception as exc:
         print(f"Generation failed: {exc}")
         return EXIT_ERROR
