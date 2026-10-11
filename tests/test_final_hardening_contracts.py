@@ -51,7 +51,7 @@ def test_completed_hardening_docs_match_the_implemented_contracts():
         assert nonexistent_reference not in plan
     assert "tests/test_final_hardening_contracts.py" in plan
     assert "tools/cosmic-daily/tests/test_cli.py" in plan
-    assert "only explicit NASA/public-domain rights metadata" in readme
+    assert "every credited still image is republished" in readme
     assert "manual-review candidates remain open" in readme
     assert "Preview-only runs do not open failure issues" in readme
 

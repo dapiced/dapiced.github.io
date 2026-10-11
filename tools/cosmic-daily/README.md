@@ -30,7 +30,7 @@ The default mode is `preview`.
 ## Notes
 
 - `preview` generates and validates only in a temporary directory and never touches tracked files.
-  Third-party, missing, or blank rights metadata is reported as manual review and still exits 0.
+  Missing or blank rights metadata is reported as manual review and still exits 0.
   Preview-only runs do not open failure issues.
 - `generate` writes `_apod/YYYY-MM-DD-slug.md` and the corresponding WebP image for an
   explicitly allowed image or for a validated manual-review candidate.
@@ -57,11 +57,12 @@ The default mode is `preview`.
   GitHub still creates an empty `pull_request` CI run for the bot's PR that never starts a job and
   turns red once the branch is deleted; the job cancels and deletes it (cosmetic, never blocking).
 - The repository workflow dispatch action supports `publish=false` for preview-only runs and `publish=true` to generate a branch and PR.
-- Scheduled runs auto-merge only explicit NASA/public-domain rights metadata accepted by the
-  rights policy: a credit is accepted when every part of it (split on `/`, `,`, `;`, `&`, `and`,
-  ` - `) is NASA, a NASA center, or a listed NASA mission partner such as JPL-Caltech, GSFC, MSSS,
-  ASU/LRO or HiRISE/LPL (`NASA_CREDIT_PARTS` in `rights_policy.py`). Any other name, or any mention
-  of copyright or a license, keeps the entry in manual review. Validated manual-review candidates remain open in a PR and are never auto-merged.
+- Rights policy (owner's choice, 2026-10-11): every credited still image is republished and
+  auto-merged with its credit, third-party credits included (photographers, ESA, NOIRLab, NSF...),
+  as on apod.nasa.gov itself. Third-party images stay their owners' property; the site credits
+  them and removes one on request. Only a missing or blank credit (written as
+  `Rights metadata unavailable`) is held for manual review:
+  validated manual-review candidates remain open in a PR and are never auto-merged.
   Invalid images or content still fail and open an issue titled
   `Cosmic Daily: echec le YYYY-MM-DD`; a re-run of the same day comments on the existing open
   issue instead of creating another one.

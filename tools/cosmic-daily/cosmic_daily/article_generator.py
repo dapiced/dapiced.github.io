@@ -8,7 +8,7 @@ from typing import Optional
 from zoneinfo import ZoneInfo
 
 from .nasa_client import APODRecord
-from .rights_policy import evaluate_media_rights
+from .rights_policy import UNATTRIBUTED_CREDIT, evaluate_media_rights
 
 
 SEO_TEXT_MIN = 120
@@ -58,7 +58,7 @@ def generate_article(apod: APODRecord, image_path: str, width: int, height: int)
     offset = _local_timezone_offset_for(date_value)
     seo = build_seo_description(apod.title, apod.explanation)
     decision = evaluate_media_rights(apod.media_type, apod.copyright)
-    credit = apod.copyright.strip() if apod.copyright and apod.copyright.strip() else "Rights metadata unavailable"
+    credit = apod.copyright.strip() if apod.copyright and apod.copyright.strip() else UNATTRIBUTED_CREDIT
     front_matter = (
         "---\n"
         "layout: apod\n"
