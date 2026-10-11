@@ -73,7 +73,7 @@ def test_unavailable_apod_entry_is_skipped_without_failing(monkeypatch, repo, ca
     assert not (repo.root / "assets").exists()
 
 
-@pytest.mark.parametrize("copyright", ["Jane Photographer", None, "   "])
+@pytest.mark.parametrize("copyright", [None, "   "])
 def test_preview_manual_review_is_successful_and_persists_nothing(monkeypatch, repo, capsys, copyright):
     record = _record()
     record = APODRecord(**{**record.__dict__, "copyright": copyright})
@@ -97,7 +97,8 @@ def test_preview_manual_review_ignores_existing_published_duplicate(monkeypatch,
         '---\napod_date: 2026-09-13\napod_url: "https://apod.nasa.gov/apod/ap20260913.html"\n---\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(cli, "fetch_apod", lambda target: _record())
+    uncredited = APODRecord(**{**_record().__dict__, "copyright": None})
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: uncredited)
     monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
 
     assert cli.preview("2026-09-13") == cli.EXIT_SUCCESS
@@ -235,14 +236,17 @@ The actual explanation. APOD's main NASA site has moved. Tomorrow's picture: sha
     assert "Validation failed" in capsys.readouterr().out
 
 
-def test_generate_marks_third_party_rights_for_manual_review(monkeypatch, repo, capsys):
+def test_generate_publishes_third_party_credit_without_manual_review(monkeypatch, repo, capsys):
+    # Owner's choice: third-party images are republished with their credit.
     monkeypatch.setattr(cli, "fetch_apod", lambda target: _record())
     monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
 
     assert cli.generate("2026-09-13") == cli.EXIT_SUCCESS
     output = capsys.readouterr().out
-    assert "manual review" in output.lower()
-    assert (repo.root / "_apod" / "2026-09-13-example-title.md").exists()
+    assert "manual review" not in output.lower()
+    content = (repo.root / "_apod" / "2026-09-13-example-title.md").read_text(encoding="utf-8")
+    assert 'credit: "Jane Photographer"' in content
+    assert "rights_status: allowed" in content
 
 
 @pytest.mark.parametrize("copyright", [None, "   "])

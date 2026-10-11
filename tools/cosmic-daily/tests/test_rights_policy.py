@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from cosmic_daily.rights_policy import evaluate_media_rights
+from cosmic_daily.rights_policy import UNATTRIBUTED_CREDIT, evaluate_media_rights
 
 
 def test_allows_nasa_image():
@@ -9,14 +9,15 @@ def test_allows_nasa_image():
     assert decision.status == "allowed"
 
 
-def test_routes_image_with_external_copyright_to_manual_review():
+def test_allows_image_with_third_party_credit():
+    # Owner's choice (2026-10-11): third-party images are republished with credit.
     decision = evaluate_media_rights("image", "Jane Photographer")
-    assert decision.allowed is False
-    assert decision.status == "manual_review"
+    assert decision.allowed is True
+    assert decision.status == "allowed"
 
 
 def test_routes_missing_or_blank_copyright_to_manual_review():
-    for copyright_value in (None, "", "   "):
+    for copyright_value in (None, "", "   ", UNATTRIBUTED_CREDIT):
         decision = evaluate_media_rights("image", copyright_value)
         assert decision.allowed is False
         assert decision.status == "manual_review"
@@ -48,21 +49,16 @@ def test_allows_credits_made_only_of_nasa_centers_and_mission_partners():
         assert decision.allowed is True
 
 
-def test_keeps_any_non_nasa_name_in_manual_review():
-    # Real APOD credits from October 2026, plus mixed NASA/partner credits.
+def test_allows_any_credited_still_image():
+    # Real APOD credits from October 2026: photographers, agencies, mixed.
     for credit in (
         "Tom Williams",
-        "Neelam and Ajay Talwar",
+        "NSF, B. Gudbjartsson, IceCube Collaboration",
         "ESA, CAS, SMILE, UVI",
         "NASA, ESA, STScI",
         "International Gemini Observatory/NOIRLab/NSF/AURA",
-        "Image Credit: NASA, JPL-Caltech, MSSS - Panorama: Andrew Bodrov",
+        "Copyright: John Entwistle",
     ):
         decision = evaluate_media_rights("image", credit)
-        assert decision.status == "manual_review", credit
-        assert decision.allowed is False
-
-
-def test_copyright_or_license_mention_is_never_auto_published():
-    for credit in ("Copyright: NASA", "NASA © 2026", "NASA (license: CC BY 4.0)"):
-        assert evaluate_media_rights("image", credit).status == "manual_review", credit
+        assert decision.status == "allowed", credit
+        assert decision.allowed is True
