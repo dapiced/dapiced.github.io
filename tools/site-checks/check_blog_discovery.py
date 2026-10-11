@@ -373,7 +373,9 @@ def check() -> list[str]:
                 errors.append(f"{relative}: broken tag archive link {href!r}")
         if relative.parts[:2] != ("blog", "tag"):
             continue
-        for linked_post in re.findall(r'href="(/sky/[^"]*)"', path.read_text(encoding="utf-8")):
+        # APOD entries live under /sky/<date>/...; the bare /sky/ index is the
+        # site-wide "Sky of the day" menu link and is allowed everywhere.
+        for linked_post in re.findall(r'href="(/sky/[^"]+)"', path.read_text(encoding="utf-8")):
             errors.append(f"{relative}: archive links to excluded APOD content {linked_post}")
 
     for path in (SITE / "portfolio").rglob("*.html"):
