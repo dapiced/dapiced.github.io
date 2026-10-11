@@ -44,6 +44,7 @@ def test_site_data_files_match_required_schema():
             "target": "_blank",
             "rel": "noopener",
         },
+        {"label": "Sky of the day", "href": "/sky/", "class": "nav-sky"},
         {"label": "Resources", "href": "/resources/"},
         {
             "label": "Contact",
@@ -124,7 +125,7 @@ def test_validate_site_data_rejects_unpaired_external_link_attributes(tmp_path: 
 
     with pytest.raises(
         validator.SiteDataError,
-        match=r"navigation\[10\].*target and rel",
+        match=r"navigation\[11\].*target and rel",
     ):
         validator.load_site_data(tmp_path)
 

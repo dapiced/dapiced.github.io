@@ -49,6 +49,7 @@ APPROVED_SITE_DATA = {
             "target": "_blank",
             "rel": "noopener",
         },
+        {"label": "Sky of the day", "href": "/sky/", "class": "nav-sky"},
         {"label": "Resources", "href": "/resources/"},
         {
             "label": "Contact",

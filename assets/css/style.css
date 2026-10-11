@@ -85,7 +85,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 }
 
 .nav-inner {
-  max-width: 1080px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0.7rem 1.2rem;
   display: flex;
@@ -126,6 +126,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 }
 
 .nav-links a {
+  white-space: nowrap;
   color: var(--muted);
   font-size: 0.92rem;
   letter-spacing: 0.04em;
@@ -133,6 +134,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 .nav-links a:hover { color: var(--lightblue); text-decoration: none; }
 .nav-gh { color: var(--cyan) !important; }
 .nav-labml { color: var(--gold) !important; }
+.nav-sky { color: #7dd3fc !important; }
 
 .nav-toggle {
   display: none;
@@ -145,7 +147,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   cursor: pointer;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .nav-toggle { display: block; }
   .nav-links {
     display: none;
@@ -303,6 +305,14 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   box-shadow: 0 4px 24px rgba(227, 179, 65, 0.4);
 }
 .btn-labml:hover { color: #0d0a04; box-shadow: 0 6px 30px rgba(227, 179, 65, 0.6); }
+
+.btn-sky {
+  background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+  color: #04121c;
+  border: none;
+  box-shadow: 0 4px 24px rgba(56, 189, 248, 0.4);
+}
+.btn-sky:hover { color: #04121c; box-shadow: 0 6px 30px rgba(56, 189, 248, 0.6); }
 
 .hero-coords {
   margin-top: 3.2rem;
