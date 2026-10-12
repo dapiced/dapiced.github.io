@@ -82,14 +82,20 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `_data/i18n.yml` - interface strings for article pages in `en` and `fr`, picked by `page.lang`
   (dates, "min read", comments heading, giscus language, back links)
 - `_data/navigation.yml` - ordered header links (`label`, `href`, and optional `class`,
-  `target`, `rel`)
+  `target`, `rel`). Kept short on purpose (seven entries); secondary pages such as
+  Projects, Resources and Contact live in the footer
 - `_data/skills.yml` - ordered homepage skill groups (`domain` and an ordered `tags` list)
 - `_data/timeline.yml` - ordered career entries (`year`, `role`, `description`). Together
   with `_data/skills.yml`, this is also the source of truth for `/resume/`; update these
   files rather than copying resume content into the page template.
 - `_data/resources.yml` - ordered off-duty cards (`icon`, `title`, `description`, `href`,
   `more`)
-- `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos
+- `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos.
+  `assets/icons/` holds the PNG app icons of the manifest; `assets/vendor/` holds
+  third-party code served from this site (Mermaid, checksum-verified against the npm
+  package) so no page depends on a CDN
+- `_plugins/asset_digest.rb` - `{{ '/assets/css/style.css' | asset_digest }}` appends a
+  hash of the file content (`?v=…`), so CSS and JS stay cached until they really change
 - `_config.yml` - Jekyll config: canonical `url`, SEO/feed/sitemap plugins, default og:image, social links
 - `tools/cosmic-daily/` - Python generator behind the daily APOD entries (excluded from the Jekyll build)
 - `.github/workflows/` - automation, see below
@@ -150,3 +156,16 @@ the generated navigation, skills, timeline, and off-duty cards still match those
 - `BingSiteAuth.xml` + `3678…d.txt` - Bing site verification and [IndexNow](https://www.indexnow.org/) key
   for instant URL submission to Bing.
 - Google verification is a meta tag in `_layouts/default.html`.
+
+## Editorial rules
+
+- The author's current employer is never named on the site or in the repository;
+  `tests/test_no_employer_mention.py` fails the build if it appears.
+- Gold is reserved for references to Vincenzo D'Apice (his star, the dedication).
+
+## Security headers
+
+GitHub Pages cannot send custom headers; they are added by Cloudflare in front of the
+site. The step-by-step setup and the tested Content-Security-Policy are in
+[`docs/infra/cloudflare-phase0.md`](docs/infra/cloudflare-phase0.md). Do not add inline
+`<script>` blocks or third-party script hosts without updating that policy.

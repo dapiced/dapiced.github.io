@@ -36,11 +36,9 @@ SCHEMAS = {
 APPROVED_SITE_DATA = {
     "navigation": [
         {"label": "About", "href": "/#about"},
-        {"label": "Projects", "href": "/#projects"},
-        {"label": "Portfolios", "href": "/portfolio/"},
-        {"label": "Timeline", "href": "/#timeline"},
+        {"label": "Portfolio", "href": "/portfolio/"},
+        {"label": "Blog", "href": "/blog/"},
         {"label": "Resume", "href": "/resume/"},
-        {"label": "Blogs", "href": "/blog/"},
         {"label": "Now", "href": "/now/"},
         {
             "label": "My LabML",
@@ -50,20 +48,6 @@ APPROVED_SITE_DATA = {
             "rel": "noopener",
         },
         {"label": "Sky of the day", "href": "/sky/", "class": "nav-sky"},
-        {"label": "Resources", "href": "/resources/"},
-        {
-            "label": "Contact",
-            "href": "https://www.linkedin.com/in/dapiced/",
-            "target": "_blank",
-            "rel": "noopener",
-        },
-        {
-            "label": "GitHub ↗",
-            "href": "https://github.com/dapiced",
-            "class": "nav-gh",
-            "target": "_blank",
-            "rel": "noopener",
-        },
     ],
     "skills": [
         {

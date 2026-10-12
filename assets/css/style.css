@@ -132,8 +132,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   letter-spacing: 0.04em;
 }
 .nav-links a:hover { color: var(--lightblue); text-decoration: none; }
-.nav-gh { color: var(--cyan) !important; }
-.nav-labml { color: var(--gold) !important; }
+.nav-labml { color: #56d364 !important; }   /* gold is reserved for Vincenzo's star */
 .nav-sky { color: #7dd3fc !important; }
 
 .nav-toggle {
@@ -147,7 +146,7 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   cursor: pointer;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 980px) {
   .nav-toggle { display: block; }
   .nav-links {
     display: none;
@@ -298,14 +297,15 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
   box-shadow: 0 4px 24px rgba(124, 58, 237, 0.4);
 }
 
-.btn-labml {
-  background: linear-gradient(90deg, #e3b341, #f2994a);
-  color: #0d0a04;
-  border: none;
-  box-shadow: 0 4px 24px rgba(227, 179, 65, 0.4);
-}
-.btn-labml:hover { color: #0d0a04; box-shadow: 0 6px 30px rgba(227, 179, 65, 0.6); }
 
+/* LabML keeps its own colour: gold is reserved for Vincenzo's star */
+.btn-labml {
+  background: linear-gradient(90deg, #2ea043, #56d364);
+  color: #04140a;
+  border: none;
+  box-shadow: 0 4px 24px rgba(63, 185, 80, 0.35);
+}
+.btn-labml:hover { color: #04140a; box-shadow: 0 6px 30px rgba(63, 185, 80, 0.55); }
 .btn-sky {
   background: linear-gradient(90deg, #38bdf8, #7dd3fc);
   color: #04121c;
@@ -1028,6 +1028,24 @@ a.beyond-card:hover {
 .footer-links { list-style: none; display: flex; gap: 1.3rem; justify-content: center; padding: 0; margin: 0 0 1rem; position: relative; flex-wrap: wrap; }
 .footer-links a { font-size: 0.85rem; color: var(--muted); }
 .footer-links a:hover { color: var(--lightblue); }
+.footer-explore { margin-top: -0.4rem; }
+.footer-explore a { font-family: var(--mono); font-size: 0.8rem; }
+
+/* text for screen readers only (e.g. the static version of the typed roles) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 12 September, Vincenzo's birthday: the motto turns gold for the day */
+.motto.vincenzo-day { color: #e3b341; text-shadow: 0 0 18px rgba(227, 179, 65, 0.35); }
 
 /* tooltip revealed when hovering Vincenzo's golden star */
 .gold-tip {

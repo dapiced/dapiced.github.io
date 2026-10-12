@@ -31,11 +31,9 @@ def test_site_data_files_match_required_schema():
 
     assert data["navigation"] == [
         {"label": "About", "href": "/#about"},
-        {"label": "Projects", "href": "/#projects"},
-        {"label": "Portfolios", "href": "/portfolio/"},
-        {"label": "Timeline", "href": "/#timeline"},
+        {"label": "Portfolio", "href": "/portfolio/"},
+        {"label": "Blog", "href": "/blog/"},
         {"label": "Resume", "href": "/resume/"},
-        {"label": "Blogs", "href": "/blog/"},
         {"label": "Now", "href": "/now/"},
         {
             "label": "My LabML",
@@ -45,20 +43,6 @@ def test_site_data_files_match_required_schema():
             "rel": "noopener",
         },
         {"label": "Sky of the day", "href": "/sky/", "class": "nav-sky"},
-        {"label": "Resources", "href": "/resources/"},
-        {
-            "label": "Contact",
-            "href": "https://www.linkedin.com/in/dapiced/",
-            "target": "_blank",
-            "rel": "noopener",
-        },
-        {
-            "label": "GitHub ↗",
-            "href": "https://github.com/dapiced",
-            "class": "nav-gh",
-            "target": "_blank",
-            "rel": "noopener",
-        },
     ]
     assert data["skills"][0] == {
         "domain": "Cloud & Data",
@@ -117,7 +101,7 @@ def test_validate_site_data_rejects_unpaired_external_link_attributes(tmp_path: 
         )
 
     navigation = yaml.safe_load((data_dir / "navigation.yml").read_text(encoding="utf-8"))
-    del navigation[-1]["rel"]
+    navigation[-1]["target"] = "_blank"
     (data_dir / "navigation.yml").write_text(
         yaml.safe_dump(navigation, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
@@ -125,7 +109,7 @@ def test_validate_site_data_rejects_unpaired_external_link_attributes(tmp_path: 
 
     with pytest.raises(
         validator.SiteDataError,
-        match=r"navigation\[11\].*target and rel",
+        match=r"navigation\[6\].*target and rel",
     ):
         validator.load_site_data(tmp_path)
 
