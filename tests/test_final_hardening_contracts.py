@@ -12,15 +12,22 @@ def test_default_layout_declares_dark_theme_and_manifest():
     assert '<link rel="manifest" href="/manifest.webmanifest">' in layout
 
 
-def test_manifest_is_minimal_and_uses_branded_icon():
+def test_manifest_uses_branded_icons_without_service_worker():
     manifest = json.loads((ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
     assert manifest["name"] == "Dominic D'Apice"
+    # Installable PWA (standalone + service worker) is planned for a later phase.
     assert manifest["display"] == "browser"
     assert manifest["start_url"] == "/"
     assert manifest["theme_color"] == "#04060f"
     assert manifest["background_color"] == "#04060f"
-    assert manifest["icons"] == [{"src": "/assets/favicon.svg", "sizes": "64x64", "type": "image/svg+xml"}]
     assert "service_worker" not in manifest
+
+    icons = {(icon["sizes"], icon.get("purpose", "any")): icon for icon in manifest["icons"]}
+    assert icons[("any", "any")]["src"] == "/assets/favicon.svg"
+    for size, purpose in (("192x192", "any"), ("512x512", "any"), ("512x512", "maskable")):
+        icon = icons[(size, purpose)]
+        assert icon["type"] == "image/png"
+        assert (ROOT / icon["src"].lstrip("/")).is_file(), icon["src"]
 
 
 def test_license_and_readme_define_split_scope():

@@ -345,7 +345,7 @@ def check() -> list[str]:
             for listing in blog_index.unordered_lists
         ):
             errors.append("blog index must contain ul#all-posts[data-initial='8']")
-        if not any(src == "/assets/js/blog-index.js" for src in blog_index.scripts):
+        if not any(src.split("?", 1)[0] == "/assets/js/blog-index.js" for src in blog_index.scripts):
             errors.append("blog index must load the deferred blog-index.js enhancement")
         post_list = next(
             (listing for listing in blog_index.unordered_lists if listing.get("id") == "all-posts"),

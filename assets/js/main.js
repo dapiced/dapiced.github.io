@@ -17,6 +17,45 @@
     var gold = { x: 0, y: 0 };
     var goldHover = false;
 
+    /* Once per visit, his star twinkles "PAPA" in Morse (.--. .- .--. .-),
+       an echo of the signal sent across space and time in Interstellar.
+       Timing follows the standard: dot = 1 unit, dash = 3, gap inside a
+       letter = 1, gap between letters = 3. */
+    var MORSE_UNIT_MS = 240;
+    var MORSE_DELAY_MS = 9000;
+    var morse = (function () {
+      var letters = { P: ".--.", A: ".-" };
+      var steps = [];               // [isOn, durationInUnits]
+      "PAPA".split("").forEach(function (letter, li) {
+        if (li > 0) steps.push([false, 3]);
+        letters[letter].split("").forEach(function (sym, si) {
+          if (si > 0) steps.push([false, 1]);
+          steps.push([true, sym === "." ? 1 : 3]);
+        });
+      });
+      return steps;
+    })();
+    var morseStart = null;          // timestamp (ms) when the sequence began
+
+    function morsePulse(t) {
+      if (morseStart === null) return null;
+      var units = (t - morseStart) / MORSE_UNIT_MS;
+      for (var i = 0; i < morse.length; i++) {
+        if (units < morse[i][1]) return morse[i][0] ? 1.35 : 0.3;
+        units -= morse[i][1];
+      }
+      morseStart = null;            // sequence finished: back to normal twinkle
+      return null;
+    }
+
+    function morseAlreadyPlayed() {
+      try {
+        if (sessionStorage.getItem("papa-morse")) return true;
+        sessionStorage.setItem("papa-morse", "1");
+      } catch (e) { /* storage blocked: play it, at most once per page */ }
+      return false;
+    }
+
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -65,7 +104,15 @@
       };
     }
 
+    /* ~30 fps is plenty for twinkling and halves the CPU/battery cost */
+    var FRAME_MS = 1000 / 30;
+    var lastFrame = 0;
+    var rafId = null;
+
     function draw(t) {
+      rafId = requestAnimationFrame(draw);
+      if (t - lastFrame < FRAME_MS) return;
+      lastFrame = t;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       var sec = t / 1000;
 
@@ -79,7 +126,8 @@
         ctx.fill();
       }
 
-      drawGold((goldHover ? 1.0 : 0.7) + 0.3 * Math.sin(sec * 1.1));
+      var signal = morsePulse(t);
+      drawGold(signal !== null ? signal : (goldHover ? 1.0 : 0.7) + 0.3 * Math.sin(sec * 1.1));
 
       if (meteor) {
         var m = meteor;
@@ -97,12 +145,20 @@
         m.y += m.vy;
         m.life -= 0.012;
         if (m.life <= 0 || m.x > canvas.width + 150) meteor = null;
-      } else if (Math.random() < 0.0025) {
+      } else if (Math.random() < 0.005) {   // per frame, at 30 fps
         spawnMeteor();
       }
 
       ctx.globalAlpha = 1;
-      requestAnimationFrame(draw);
+    }
+
+    function start() {
+      if (rafId === null) rafId = requestAnimationFrame(draw);
+    }
+
+    function stop() {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = null;
     }
 
     function drawStatic() {
@@ -127,7 +183,7 @@
       if (reduceMotion) drawStatic();
     });
 
-    /* hovering near his star reveals his name */
+    /* hovering (or tapping) near his star reveals his name */
     var tip = document.createElement("div");
     tip.className = "gold-tip";
     tip.setAttribute("aria-hidden", "true");
@@ -135,8 +191,9 @@
                     '<span class="tip-sub">1937-2022 · Papa’s star</span>';
     document.body.appendChild(tip);
 
-    window.addEventListener("mousemove", function (e) {
-      var near = Math.hypot(e.clientX - gold.x, e.clientY - gold.y) < 24;
+    function revealNear(e) {
+      var reach = e.pointerType === "touch" ? 36 : 24;
+      var near = Math.hypot(e.clientX - gold.x, e.clientY - gold.y) < reach;
       if (near !== goldHover) {
         goldHover = near;
         tip.classList.toggle("visible", near);
@@ -146,12 +203,23 @@
         tip.style.left = gold.x + "px";
         tip.style.top = (gold.y + 18) + "px";
       }
-    }, { passive: true });
+    }
+    window.addEventListener("pointermove", revealNear, { passive: true });
+    window.addEventListener("pointerdown", revealNear, { passive: true });
 
     if (reduceMotion) {
       drawStatic();
     } else {
-      requestAnimationFrame(draw);
+      start();
+      /* no animation while the tab is hidden */
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) stop(); else start();
+      });
+      if (!morseAlreadyPlayed()) {
+        setTimeout(function () {
+          if (!document.hidden) morseStart = performance.now();
+        }, MORSE_DELAY_MS);
+      }
     }
   }
 
@@ -188,10 +256,12 @@
       setTimeout(typeTick, deleting ? 28 : 55);
     }
 
-    if (reduceMotion) {
-      rolesEl.textContent = roles[0];
-    } else {
-      typeTick();
+    /* The first role is already in the HTML (readable without JavaScript and
+       by screen readers through the .sr-only text): pause on it, then erase. */
+    if (!reduceMotion) {
+      ci = roles[0].length;
+      deleting = true;
+      setTimeout(typeTick, 2200);
     }
   }
 
@@ -303,6 +373,13 @@
     };
     updateStar();
     setInterval(updateStar, 60000);
+  }
+
+  /* ---------- 12 September: Vincenzo's birthday (1937) ---------- */
+  var today = new Date();
+  if (today.getMonth() === 8 && today.getDate() === 12) {
+    var motto = document.getElementById("motto");
+    if (motto) motto.classList.add("vincenzo-day");
   }
 
   /* ---------- footer year ---------- */
