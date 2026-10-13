@@ -1,0 +1,25 @@
+{%- comment -%}
+  "Montréal tonight" sky chart (assets/js/sky-map.js). Strings: _data/i18n.yml
+  sky_map_*. The canvas has a live text alternative (aria-label + status line).
+{%- endcomment -%}
+{%- assign map_lang = page.lang | default: site.lang -%}
+{%- assign map_t = site.data.i18n[map_lang] | default: site.data.i18n.en -%}
+<figure class="sky-map" data-catalog="/assets/data/sky-catalog.json" data-locale="{% if map_lang == "fr" %}fr-CA{% else %}en-CA{% endif %}"
+  data-directions="{{ map_t.sky_map_directions }}" data-label="{{ map_t.sky_map_label | escape }}"
+  data-status-up="{{ map_t.sky_map_status_up | escape }}" data-status-down="{{ map_t.sky_map_status_down | escape }}"
+  data-error="{{ map_t.sky_map_error | escape }}">
+  <figcaption>
+    <span class="sky-map-eyebrow">{{ map_t.sky_map_eyebrow }}</span>
+    <h2 class="sky-map-title">{{ map_t.sky_map_title }}</h2>
+    <p class="sky-map-intro">{{ map_t.sky_map_intro }}</p>
+  </figcaption>
+  <canvas class="sky-map-canvas" role="img" aria-label="{{ map_t.sky_map_title | escape }}" width="600" height="600"></canvas>
+  <div class="sky-map-controls">
+    <label for="sky-map-time">{{ map_t.sky_map_time }} <output class="sky-map-clock" for="sky-map-time"></output></label>
+    <input class="sky-map-time" id="sky-map-time" type="range" min="-12" max="12" step="0.25" value="0">
+    <button class="btn btn-ghost sky-map-now" type="button">{{ map_t.sky_map_now }}</button>
+  </div>
+  <p class="sky-map-status" aria-live="polite"></p>
+  <p class="sky-map-credit">{{ map_t.sky_map_credit }}</p>
+</figure>
+<script src="{{ '/assets/js/sky-map.js' | asset_digest }}" defer></script>

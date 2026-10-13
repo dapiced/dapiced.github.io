@@ -45,6 +45,18 @@ en:
   show_more: "Show all posts ({n} more)"
   sky_today_label: "Sky of the day · NASA APOD"
   sky_today_more: "Browse the sky archive →"
+  # sky map (_includes/sky-map.html)
+  sky_map_eyebrow: "LIVE · 45°30′N 73°34′W"
+  sky_map_title: "Montréal tonight"
+  sky_map_intro: "The 1,600 stars visible to the naked eye above Montréal, computed in your browser for the time you choose. Vincenzo's star is the gold one."
+  sky_map_label: "Sky chart over Montréal ({time})."
+  sky_map_time: "Time:"
+  sky_map_now: "Now"
+  sky_map_directions: "N,NE,E,SE,S,SW,W,NW"
+  sky_map_status_up: "✦ Vincenzo's star (ν Andromedae) is {alt}° above the horizon, to the {dir}."
+  sky_map_status_down: "✦ Vincenzo's star is below the horizon at this time. Move the slider: it comes back within hours."
+  sky_map_error: "The star catalogue could not be loaded."
+  sky_map_credit: "Star catalogue and constellation lines: d3-celestial by Olaf Frohn (BSD-3-Clause)."
   # command palette
   palette_open: "Search and commands"
   palette_title: "Command palette"
@@ -119,6 +131,18 @@ fr:
     - décembre
   sky_today_label: "Ciel du jour · APOD de la NASA"
   sky_today_more: "Parcourir les archives du ciel (EN) →"
+  # sky map (_includes/sky-map.html)
+  sky_map_eyebrow: "EN DIRECT · 45°30′N 73°34′O"
+  sky_map_title: "Montréal ce soir"
+  sky_map_intro: "Les 1 600 étoiles visibles à l'œil nu au-dessus de Montréal, calculées dans votre navigateur pour l'heure de votre choix. L'étoile de Vincenzo est celle en or."
+  sky_map_label: "Carte du ciel au-dessus de Montréal ({time})."
+  sky_map_time: "Heure :"
+  sky_map_now: "Maintenant"
+  sky_map_directions: "N,NE,E,SE,S,SO,O,NO"
+  sky_map_status_up: "✦ L'étoile de Vincenzo (ν Andromedae) est à {alt}° au-dessus de l'horizon, direction {dir}."
+  sky_map_status_down: "✦ L'étoile de Vincenzo est sous l'horizon à cette heure. Déplacez le curseur : elle revient en quelques heures."
+  sky_map_error: "Le catalogue d'étoiles n'a pas pu être chargé."
+  sky_map_credit: "Catalogue d'étoiles et tracés des constellations : d3-celestial, d'Olaf Frohn (BSD-3-Clause)."
   # command palette
   palette_open: "Recherche et commandes"
   palette_title: "Palette de commandes"

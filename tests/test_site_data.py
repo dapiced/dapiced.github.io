@@ -43,7 +43,7 @@ def test_site_data_files_match_required_schema():
             "target": "_blank",
             "rel": "noopener",
         },
-        {"label": "Sky of the day", "label_fr": "Ciel du jour", "href": "/sky/", "class": "nav-sky"},
+        {"label": "Sky of the day", "label_fr": "Ciel du jour", "href": "/sky/", "href_fr": "/fr/ciel/", "class": "nav-sky"},
     ]
     assert data["skills"][0] == {
         "domain": "Cloud & Data",

@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Sky - NASA Astronomy Picture of the Day
+lang: en
+translation_url: /fr/ciel/
 description: >-
   A daily archive of NASA's Astronomy Picture of the Day, collected automatically
   with credits and links to the original entries.
@@ -15,6 +17,10 @@ description: >-
     My own writing lives in the <a href="/blog/astronomy/">astronomy articles</a>.
   </p>
   <p class="sky-feed"><a href="/feed/apod.xml">RSS feed for sky entries</a></p>
+
+  {% include sky-map.html %}
+
+  <h2 class="sky-archive-title">Picture of the day</h2>
 
   {% if entries.size > 0 %}
   <ul class="sky-grid">

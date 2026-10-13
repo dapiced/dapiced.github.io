@@ -1,0 +1,48 @@
+---
+layout: default
+title: Ciel - l'image astronomique du jour de la NASA
+description: >-
+  La carte du ciel de Montréal ce soir, avec l'étoile de Vincenzo, et l'archive
+  quotidienne de l'image astronomique du jour de la NASA.
+lang: fr
+translation_url: /sky/
+---
+{%- comment -%}
+  Version française de sky/index.html. Les fiches APOD restent en anglais
+  (texte de la NASA) et sont marquées comme telles.
+{%- endcomment -%}
+{%- assign entries = site.apod | sort: "date" | reverse -%}
+<section class="section">
+  <p class="eyebrow">HORS SERVICE · CIEL</p>
+  <h1 class="section-title">🔭 Ciel</h1>
+  <p style="color: var(--muted); max-width: 680px;">
+    Une image par jour tirée de l'Astronomy Picture of the Day de la NASA, récupérée
+    automatiquement. Chaque fiche garde l'explication de la NASA (en anglais), le crédit de
+    l'image et un lien vers l'original.
+  </p>
+  <p class="sky-feed"><a href="/feed/apod.xml" hreflang="en">Flux RSS du ciel (EN)</a></p>
+
+  {% include sky-map.html %}
+
+  <h2 class="sky-archive-title">Image du jour</h2>
+  {% if entries.size > 0 %}
+  <ul class="sky-grid">
+    {% for entry in entries %}
+    <li class="sky-item">
+      <a class="sky-card" href="{{ entry.url }}" hreflang="en">
+        {% if entry.image %}
+        {%- assign thumb = entry.image | replace: "/assets/img/apod/", "/assets/img/apod/thumbs/" -%}
+        <img src="{{ thumb }}" alt="{{ entry.title | escape }}" lang="en"{% if entry.image_width %} width="{{ entry.image_width }}"{% endif %}{% if entry.image_height %} height="{{ entry.image_height }}"{% endif %} loading="lazy" decoding="async">
+        {% endif %}
+        <span class="sky-card-body">
+          <time datetime="{{ entry.date | date_to_xmlschema }}">{% include localized-date.html date=entry.date lang="fr" %}</time>
+          <span class="sky-card-title" lang="en">{{ entry.title }}</span>
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="sky-empty">Aucune image pour l'instant. Revenez demain.</p>
+  {% endif %}
+</section>

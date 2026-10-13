@@ -45,6 +45,7 @@ jobs:
             tests/test_about_page.py \
             tests/test_french_section.py \
             tests/test_pwa.py \
+            tests/test_sky_map.py \
             tests/test_site_data.py \
             tests/test_final_hardening_contracts.py -q
           python tools/site-checks/validate_site_data.py

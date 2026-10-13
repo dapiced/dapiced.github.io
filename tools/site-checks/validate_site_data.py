@@ -76,6 +76,7 @@ APPROVED_SITE_DATA = {
             "label": "Sky of the day",
             "label_fr": "Ciel du jour",
             "href": "/sky/",
+            "href_fr": "/fr/ciel/",
             "class": "nav-sky"
         }
     ],

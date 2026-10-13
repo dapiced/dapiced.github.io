@@ -15,6 +15,7 @@ PAIRS = [
     ("resume/index.html", "fr/cv/index.html"),
     ("portfolio/index.html", "fr/realisations/index.html"),
     ("blog/index.html", "fr/blogue/index.html"),
+    ("sky/index.html", "fr/ciel/index.html"),
 ]
 
 

@@ -17,6 +17,7 @@ GOLD_SELECTORS = {
     ".footer-dedication a",
     ".footer-dedication a:hover",
     ".palette-output.palette-vincenzo",  # `ping vincenzo` in the command palette
+    ".sky-map-status",                   # where his star is, under the sky map
 }
 
 
