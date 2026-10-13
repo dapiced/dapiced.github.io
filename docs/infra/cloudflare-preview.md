@@ -103,7 +103,7 @@ fichier) se régénère immédiatement avec **Roll**.
 
 | Symptôme | Cause probable | Correction |
 |---|---|---|
-| Le job **Deploy preview** se termine en quelques secondes avec la notice « Preview disabled » | La notice nomme ce qui manque : variable `CLOUDFLARE_ACCOUNT_ID` (souvent créée par erreur sous *Secrets and variables → Agents*) et/ou secret `CLOUDFLARE_PAGES_TOKEN` | Variable : **Settings → Secrets and variables → Actions → Variables** (l'adresse finit par `/settings/variables/actions`) ou variable de l'environnement `preview`. Secret : environnement `preview`. Pousser ensuite un commit sur la PR. |
+| Le job **Deploy preview** se termine en quelques secondes avec la notice « Preview disabled » | La notice nomme ce qui manque : variable `CLOUDFLARE_ACCOUNT_ID` (souvent créée par erreur sous *Secrets and variables → Agents*, ou avec une faute de frappe dans le nom, par exemple `CLOUDFARE_…` sans le L) et/ou secret `CLOUDFLARE_PAGES_TOKEN` | Variable : **Settings → Secrets and variables → Actions → Variables** (l'adresse finit par `/settings/variables/actions`) ou variable de l'environnement `preview`. Secret : environnement `preview`. Pousser ensuite un commit sur la PR. |
 | « Authentication error » au déploiement | Jeton expiré, révoqué ou mal collé | Voir « Renouveler le jeton ». |
 | « Project not found » | Projet `dominicdapice-preview` absent, ou autre nom | Créer le projet (étape 1) ou définir la variable `CLOUDFLARE_PAGES_PROJECT`. |
 | Pas de commentaire sur la PR | Le déploiement a échoué avant | Lire le journal du job **Deploy preview**. |
