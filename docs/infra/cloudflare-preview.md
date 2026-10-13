@@ -14,15 +14,11 @@ journal ce qui manque.
 
 ## Ce que tu fais (environ 10 minutes, une seule fois)
 
-### 1. Créer le projet Pages vide
+### 1. Le projet Pages (automatique)
 
-Tableau de bord Cloudflare → **Workers & Pages** → **Create** → onglet **Pages** →
-**Upload assets** (Direct Upload).
-
-- Project name : `dominicdapice-preview`
-- Dépose n'importe quel petit fichier (par exemple un `index.html` contenant
-  « preview ») puis **Deploy**. Ce premier dépôt sert seulement à créer le projet.
-- Ne connecte **pas** le dépôt GitHub : c'est GitHub Actions qui construit le site.
+Rien à faire : au premier déploiement, le workflow crée lui-même le projet
+`dominicdapice-preview` (Direct Upload, sans connexion Git) s'il n'existe pas.
+Il apparaît ensuite dans **Workers & Pages**.
 
 ### 2. Relever l'Account ID
 
@@ -37,7 +33,7 @@ Icône de profil → **My Profile** → **API Tokens** → **Create Token** →
 | Champ | Valeur |
 |---|---|
 | Token name | `github-actions-pages-preview` |
-| Permissions | **Account** · **Cloudflare Pages** · **Edit** (et rien d'autre) |
+| Permissions | **Account** · **Cloudflare Pages** · **Edit** (et rien d'autre ; le premier menu doit être *Account*, pas *User* ni *Zone*) |
 | Account Resources | Include · ton compte |
 | Client IP Address Filtering | vide (les runners GitHub changent d'IP) |
 | TTL | une date d'expiration, par exemple dans 1 an (à noter pour le renouveler) |
@@ -105,5 +101,6 @@ fichier) se régénère immédiatement avec **Roll**.
 |---|---|---|
 | Le job **Deploy preview** se termine en quelques secondes avec la notice « Preview disabled » | La notice nomme ce qui manque : variable `CLOUDFLARE_ACCOUNT_ID` (souvent créée par erreur sous *Secrets and variables → Agents*, ou avec une faute de frappe dans le nom, par exemple `CLOUDFARE_…` sans le L) et/ou secret `CLOUDFLARE_PAGES_TOKEN` | Variable : **Settings → Secrets and variables → Actions → Variables** (l'adresse finit par `/settings/variables/actions`) ou variable de l'environnement `preview`. Secret : environnement `preview`. Pousser ensuite un commit sur la PR. |
 | « Authentication error » au déploiement | Jeton expiré, révoqué ou mal collé | Voir « Renouveler le jeton ». |
-| « Project not found » | Projet `dominicdapice-preview` absent, ou autre nom | Créer le projet (étape 1) ou définir la variable `CLOUDFLARE_PAGES_PROJECT`. |
+| « Pages API refused », `10000 Authentication error`, ou `9109 Invalid access token` pour la liste des comptes | Le jeton est actif mais n'a aucune permission de niveau compte (permission *User* ou *Zone*, ou mauvais jeton collé) | Créer un nouveau jeton personnalisé **Account · Cloudflare Pages · Edit** (étape 3) et remplacer le secret. Le résumé avant création doit afficher `<compte> - Cloudflare Pages:Edit`. |
+| « Project creation failed » | Nom déjà pris sur `pages.dev` ou quota atteint | Définir la variable `CLOUDFLARE_PAGES_PROJECT` avec un autre nom. |
 | Pas de commentaire sur la PR | Le déploiement a échoué avant | Lire le journal du job **Deploy preview**. |

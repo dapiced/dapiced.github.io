@@ -136,9 +136,25 @@ jobs:
             *"$CLOUDFLARE_ACCOUNT_ID"*) ;;
             True*) echo "::warning title=Account ID mismatch::CLOUDFLARE_ACCOUNT_ID is not one of the accounts the token can see (list above). Check that it is the Account ID, not the Zone ID." ;;
           esac
+          case "$list" in
+            True*) ;;
+            *) echo "::error title=Pages API refused::The token is active but has no Account · Cloudflare Pages · Edit permission on this account (codes above). Create a custom token with that permission and update the secret CLOUDFLARE_PAGES_TOKEN of the preview environment."; exit 1 ;;
+          esac
           case "$project" in
             True*) echo "Token can reach the Pages project." ;;
-            *) echo "::error title=Pages project not reachable::The token is active but Cloudflare refuses the Pages API for this account or project (codes above)."; exit 1 ;;
+            *)
+              # First run: the token works but the project does not exist yet. Create it
+              # (Direct Upload, no Git connection) so nobody has to click through the dashboard.
+              echo "Project $PROJECT not found; creating it."
+              created="$(curl -sS -X POST -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" \
+                --data "{\"name\":\"$PROJECT\",\"production_branch\":\"main\"}" "$base" \
+                | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("success"), ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))')"
+              echo "Create project: success errors = $created"
+              case "$created" in
+                True*) echo "Project $PROJECT created." ;;
+                *) echo "::error title=Project creation failed::Could not create the Pages project $PROJECT (codes above)."; exit 1 ;;
+              esac
+              ;;
           esac
 
       - name: Deploy to Cloudflare Pages
