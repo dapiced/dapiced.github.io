@@ -1,0 +1,74 @@
+---
+layout: default
+title: Colophon - how this site is built
+description: >-
+  How dominicdapice.com is built and run: Jekyll, GitHub Actions, Cloudflare,
+  self-hosted fonts, no cookies, offline support, and the checks every change
+  goes through.
+lang: en
+translation_url: /fr/colophon/
+---
+{%- comment -%}
+  Colophon. Keep it factual: every claim here is checked by the repository
+  (workflows, tests, docs/infra). French version: fr/colophon/index.html.
+{%- endcomment -%}
+<article class="section post colophon-page">
+  <header class="post-header">
+    <p class="eyebrow">MISSION CONTROL · COLOPHON</p>
+    <h1 class="post-title">How this site is built</h1>
+  </header>
+  <div class="post-content">
+    <p class="lead">
+      A personal site run like a small production system: everything is in
+      <a href="https://github.com/dapiced/dapiced.github.io" target="_blank" rel="noopener">one public repository</a>,
+      every change goes through a pull request, and nothing reaches the site without passing its checks.
+    </p>
+
+    <h2 id="stack">Stack</h2>
+    <ul>
+      <li><strong>Jekyll 4.4</strong> generates static HTML. No framework, no build-time JavaScript bundler; plain CSS and a few small scripts.</li>
+      <li><strong>GitHub Actions</strong> builds and deploys to <strong>GitHub Pages</strong>, with <strong>Cloudflare</strong> in front for TLS, security headers and caching.</li>
+      <li>Every pull request also gets its own preview on <strong>Cloudflare Pages</strong>, marked <code>noindex</code>.</li>
+    </ul>
+
+    <h2 id="automation">Automation</h2>
+    <ul>
+      <li><strong>Cosmic Daily</strong> fetches NASA's Astronomy Picture of the Day every morning, checks the image rights, and opens its own pull request.</li>
+      <li>Project cards are refreshed from the GitHub API on a schedule, then committed.</li>
+      <li>New pages are announced to search engines through IndexNow; external links are checked weekly.</li>
+      <li>Share cards for LinkedIn are drawn by a small Python tool, one per article.</li>
+    </ul>
+
+    <h2 id="quality">Checks on every change</h2>
+    <ul>
+      <li>Python and JavaScript tests for the data, the templates and the scripts.</li>
+      <li>Every internal link resolved; accessibility (axe, WCAG 2.2 AA) on every page, at two widths and in both themes.</li>
+      <li>Lighthouse budgets for performance, accessibility, best practices and SEO.</li>
+      <li>End-to-end checks in a real browser for the command palette and offline support.</li>
+      <li>A secret scan of the whole git history.</li>
+    </ul>
+
+    <h2 id="privacy">Privacy and security</h2>
+    <ul>
+      <li>No cookies and no tracking. Page views are counted by <strong>GoatCounter</strong>, which stores no personal data.</li>
+      <li>Comments use <strong>giscus</strong> (GitHub Discussions) and load only on articles.</li>
+      <li>Fonts and scripts are self-hosted: no third-party CDN. A strict Content Security Policy and HSTS are set at the edge.</li>
+    </ul>
+
+    <h2 id="design">Design</h2>
+    <ul>
+      <li>Two themes, <em>Night</em> and <em>Dawn</em>. At dawn the stars fade and one remains.</li>
+      <li>Type: <strong>Archivo Expanded</strong> for titles, <strong>IBM Plex Sans</strong> and <strong>IBM Plex Mono</strong> for text and code, all under the SIL Open Font License.</li>
+      <li>Gold is used for one thing only: my father, Vincenzo, and his star. A test enforces it.</li>
+      <li>The site works offline for the pages you have read, and the <a href="/sky/">sky map</a> computes the stars above Montréal in your browser.</li>
+    </ul>
+
+    <h2 id="credits">Credits</h2>
+    <ul>
+      <li>Astronomy pictures: <a href="https://apod.nasa.gov/" target="_blank" rel="noopener">NASA APOD</a> and their credited authors.</li>
+      <li>Star catalogue and constellation lines: <a href="https://github.com/ofrohn/d3-celestial" target="_blank" rel="noopener">d3-celestial</a> by Olaf Frohn (BSD-3-Clause).</li>
+      <li>Diagrams: <a href="https://mermaid.js.org/" target="_blank" rel="noopener">Mermaid</a>, self-hosted.</li>
+      <li>Code written with an AI coding assistant, reviewed and merged by me, one pull request at a time.</li>
+    </ul>
+  </div>
+</article>

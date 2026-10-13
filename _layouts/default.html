@@ -119,6 +119,7 @@
     <ul class="footer-links footer-explore" aria-label="{{ chrome_t.footer_more }}">
       <li><a href="/#projects">{{ chrome_t.footer_projects }}</a></li>
       <li><a href="/resources/">{{ chrome_t.footer_resources }}</a></li>
+      <li><a href="{% if chrome_lang == "fr" %}/fr/colophon/{% else %}/colophon/{% endif %}">Colophon</a></li>
       <li><a href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">{{ chrome_t.footer_contact }}</a></li>
     </ul>
     <p class="footer-dedication"><a href="/blog/2026/07/a-star-for-my-father/"{% if chrome_lang == "fr" %} hreflang="en"{% endif %}>{{ chrome_t.dedication }}</a></p>

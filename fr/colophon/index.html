@@ -1,0 +1,73 @@
+---
+layout: default
+title: Colophon - comment ce site est construit
+description: >-
+  Comment dominicdapice.com est construit et exploité : Jekyll, GitHub Actions,
+  Cloudflare, polices auto-hébergées, aucun témoin, lecture hors ligne et les
+  vérifications que subit chaque changement.
+lang: fr
+translation_url: /colophon/
+---
+{%- comment -%}
+  Version française de colophon/index.html (vouvoiement, pages piliers).
+{%- endcomment -%}
+<article class="section post colophon-page">
+  <header class="post-header">
+    <p class="eyebrow">CENTRE DE CONTRÔLE · COLOPHON</p>
+    <h1 class="post-title">Comment ce site est construit</h1>
+  </header>
+  <div class="post-content">
+    <p class="lead">
+      Un site personnel exploité comme un petit système de production : tout se trouve dans
+      <a href="https://github.com/dapiced/dapiced.github.io" target="_blank" rel="noopener">un dépôt public</a>,
+      chaque changement passe par une demande de fusion (pull request), et rien n'arrive en ligne sans avoir réussi ses vérifications.
+    </p>
+
+    <h2 id="outils">Outils</h2>
+    <ul>
+      <li><strong>Jekyll 4.4</strong> génère du HTML statique. Aucun cadriciel, aucun empaqueteur JavaScript : du CSS natif et quelques petits scripts.</li>
+      <li><strong>GitHub Actions</strong> construit et déploie sur <strong>GitHub Pages</strong>, avec <strong>Cloudflare</strong> devant pour le TLS, les en-têtes de sécurité et la mise en cache.</li>
+      <li>Chaque demande de fusion obtient aussi son propre aperçu sur <strong>Cloudflare Pages</strong>, marqué <code>noindex</code>.</li>
+    </ul>
+
+    <h2 id="automatisation">Automatisation</h2>
+    <ul>
+      <li><strong>Cosmic Daily</strong> récupère chaque matin l'image astronomique du jour de la NASA, vérifie les droits de l'image et ouvre sa propre demande de fusion.</li>
+      <li>Les cartes de projets sont actualisées depuis l'API GitHub selon un horaire, puis versionnées.</li>
+      <li>Les nouvelles pages sont signalées aux moteurs de recherche par IndexNow ; les liens externes sont vérifiés chaque semaine.</li>
+      <li>Les cartes de partage pour LinkedIn sont dessinées par un petit outil Python, une par article.</li>
+    </ul>
+
+    <h2 id="qualite">Vérifications à chaque changement</h2>
+    <ul>
+      <li>Des tests Python et JavaScript pour les données, les gabarits et les scripts.</li>
+      <li>Tous les liens internes résolus ; l'accessibilité (axe, WCAG 2.2 AA) sur chaque page, en deux largeurs et dans les deux thèmes.</li>
+      <li>Des budgets Lighthouse pour la performance, l'accessibilité, les bonnes pratiques et le référencement.</li>
+      <li>Des tests de bout en bout dans un vrai navigateur pour la palette de commandes et la lecture hors ligne.</li>
+      <li>Une recherche de secrets dans tout l'historique git.</li>
+    </ul>
+
+    <h2 id="confidentialite">Confidentialité et sécurité</h2>
+    <ul>
+      <li>Aucun témoin (cookie) et aucun pistage. Les pages vues sont comptées par <strong>GoatCounter</strong>, qui ne conserve aucune donnée personnelle.</li>
+      <li>Les commentaires passent par <strong>giscus</strong> (GitHub Discussions) et ne se chargent que sur les articles.</li>
+      <li>Les polices et les scripts sont auto-hébergés : aucun CDN tiers. Une politique de sécurité du contenu (CSP) stricte et HSTS sont appliqués en périphérie.</li>
+    </ul>
+
+    <h2 id="design">Design</h2>
+    <ul>
+      <li>Deux thèmes, <em>Nuit</em> et <em>Aube</em>. À l'aube, les étoiles s'effacent et une seule reste.</li>
+      <li>Polices : <strong>Archivo Expanded</strong> pour les titres, <strong>IBM Plex Sans</strong> et <strong>IBM Plex Mono</strong> pour le texte et le code, toutes sous licence SIL Open Font.</li>
+      <li>L'or ne sert qu'à une chose : mon père, Vincenzo, et son étoile. Un test le garantit.</li>
+      <li>Le site fonctionne hors ligne pour les pages que vous avez lues, et la <a href="/fr/ciel/">carte du ciel</a> calcule les étoiles au-dessus de Montréal dans votre navigateur.</li>
+    </ul>
+
+    <h2 id="credits">Crédits</h2>
+    <ul>
+      <li>Images astronomiques : <a href="https://apod.nasa.gov/" target="_blank" rel="noopener">APOD de la NASA</a> et leurs auteurs crédités.</li>
+      <li>Catalogue d'étoiles et tracés des constellations : <a href="https://github.com/ofrohn/d3-celestial" target="_blank" rel="noopener">d3-celestial</a>, d'Olaf Frohn (BSD-3-Clause).</li>
+      <li>Schémas : <a href="https://mermaid.js.org/" target="_blank" rel="noopener">Mermaid</a>, auto-hébergé.</li>
+      <li>Code écrit avec un assistant de programmation IA, relu et fusionné par moi, une demande de fusion à la fois.</li>
+    </ul>
+  </div>
+</article>
