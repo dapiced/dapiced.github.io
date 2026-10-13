@@ -30,7 +30,7 @@ def test_site_data_files_match_required_schema():
     data = validator.load_site_data(ROOT)
 
     assert data["navigation"] == [
-        {"label": "About", "label_fr": "À propos", "href": "/#about"},
+        {"label": "About", "label_fr": "À propos", "href": "/about/", "href_fr": "/fr/a-propos/"},
         {"label": "Portfolio", "label_fr": "Portfolio", "href": "/portfolio/"},
         {"label": "Blog", "label_fr": "Blogue", "href": "/blog/"},
         {"label": "Resume", "label_fr": "CV", "href": "/resume/"},
@@ -121,7 +121,7 @@ def test_templates_render_the_four_data_contracts_with_liquid_loops():
 
     assert "{% for item in site.data.navigation %}" in layout
     assert "{{ item.label | escape }}" in layout
-    assert "{{ item.href | escape }}" in layout
+    assert "{{ nav_href | escape }}" in layout and "item.href_fr" in layout
 
     for data_name, variable in (
         ("skills", "group"),

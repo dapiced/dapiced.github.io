@@ -91,7 +91,8 @@
       </div>
       <ul class="nav-links" id="nav-links">
         {% for item in site.data.navigation %}
-        <li><a{% if item.class %} class="{{ item.class | escape }}"{% endif %} href="{{ item.href | escape }}"{% if item.target %} target="{{ item.target | escape }}"{% endif %}{% if item.rel %} rel="{{ item.rel | escape }}"{% endif %}>{% if chrome_lang == "fr" and item.label_fr %}{{ item.label_fr | escape }}{% else %}{{ item.label | escape }}{% endif %}</a></li>
+        {%- if chrome_lang == "fr" and item.href_fr %}{% assign nav_href = item.href_fr %}{% else %}{% assign nav_href = item.href %}{% endif %}
+        <li><a{% if item.class %} class="{{ item.class | escape }}"{% endif %} href="{{ nav_href | escape }}"{% if item.target %} target="{{ item.target | escape }}"{% endif %}{% if item.rel %} rel="{{ item.rel | escape }}"{% endif %}>{% if chrome_lang == "fr" and item.label_fr %}{{ item.label_fr | escape }}{% else %}{{ item.label | escape }}{% endif %}</a></li>
         {% endfor %}
       </ul>
     </nav>

@@ -49,6 +49,56 @@ keywords:
   <p class="hero-coords"><a href="https://fr.wikipedia.org/wiki/Nu_Andromedae" target="_blank" rel="noopener" title="ν Andromedae - Vincenzo Star">RA 00h 49m 55.1s · DEC +41° 11′ 56.1″ - FATHER'S HOME · SIGNAL STRONG ✦</a></p>
 </section>
 
+<!-- ================= PATHS ================= -->
+{%- assign latest_post = site.posts | where_exp: "post", "post.lang != 'fr'" | first %}
+<section class="section paths" id="paths" aria-labelledby="paths-title">
+  <h2 class="section-title" id="paths-title">Where would you like to start?</h2>
+  <div class="beyond-grid paths-grid">
+    <a class="path-card" href="{{ latest_post.url }}">
+      <span class="path-who">Coming from LinkedIn</span>
+      <h3>The full context of the post</h3>
+      <p>{{ latest_post.title | escape }}</p>
+      <span class="path-more">Read the latest post →</span>
+    </a>
+    <a class="path-card" href="#profile">
+      <span class="path-who">Recruiting</span>
+      <h3>My profile in 60 seconds</h3>
+      <p>Role, experience, stack, languages and where I'm based, on one screen.</p>
+      <span class="path-more">See the profile →</span>
+    </a>
+    <a class="path-card" href="/portfolio/">
+      <span class="path-who">Fellow engineer</span>
+      <h3>How I work</h3>
+      <p>Case studies with the architecture, the trade-offs and what went wrong.</p>
+      <span class="path-more">Open the portfolio →</span>
+    </a>
+    <a class="path-card" href="/sky/">
+      <span class="path-who">Here for the sky</span>
+      <h3>Tonight, above Montréal</h3>
+      <p>NASA's picture of the day, and the star that carries my father's name.</p>
+      <span class="path-more">Look up →</span>
+    </a>
+  </div>
+</section>
+
+<!-- ================= PROFILE (60 seconds) ================= -->
+<section class="section" id="profile" aria-labelledby="profile-title">
+  <p class="eyebrow">00 · PROFILE IN 60 SECONDS</p>
+  <h2 class="section-title" id="profile-title">At a glance</h2>
+  <dl class="profile-facts">
+    <div><dt>Role</dt><dd>Developer, Azure Infrastructure for AI</dd></div>
+    <div><dt>Experience</dt><dd>25+ years: Linux, cloud, Infrastructure as Code, data platforms</dd></div>
+    <div><dt>Core stack</dt><dd>Azure · Databricks · Terraform · Ansible · Python · CI/CD · MLOps / DataOps</dd></div>
+    <div><dt>Based in</dt><dd>Montréal, Canada</dd></div>
+    <div><dt>Languages</dt><dd>French and English</dd></div>
+    <div><dt>Studying</dt><dd>University Certificate in Data Science, Université TÉLUQ</dd></div>
+  </dl>
+  <p class="profile-actions">
+    <a class="btn btn-primary" href="/resume/">Full resume</a>
+    <a class="btn btn-ghost" href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </p>
+</section>
+
 <!-- ================= ABOUT ================= -->
 <section class="section" id="about">
   <p class="eyebrow">01 · MISSION CONTROL</p>
@@ -73,6 +123,7 @@ keywords:
         competing on <a href="https://www.kaggle.com/dominicdapice" target="_blank" rel="noopener">Kaggle</a>
         to test theory against real-world problems.
       </p>
+      <p><a class="about-more" href="/about/">The full story, values included →</a></p>
     </div>
     <div class="about-side reveal">
       <div class="stat-chips">

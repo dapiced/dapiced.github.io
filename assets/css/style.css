@@ -998,7 +998,8 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 
 .beyond-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
 
-.beyond-card {
+.beyond-card,
+.path-card {
   background: linear-gradient(160deg, var(--panel), var(--panel-2));
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -1006,27 +1007,68 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 }
 .beyond-card .icon { font-size: 1.6rem; }
 .beyond-card h2,
-.beyond-card h3 { margin: 0.5rem 0 0.4rem; font-size: 1.05rem; color: var(--lightblue); }
-.beyond-card p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+.beyond-card h3,
+.path-card h3 { margin: 0.5rem 0 0.4rem; font-size: 1.05rem; color: var(--lightblue); }
+.beyond-card p,
+.path-card p { margin: 0; font-size: 0.88rem; color: var(--muted); }
 
-a.beyond-card {
+a.beyond-card,
+a.path-card {
   display: block;
   color: var(--text);
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-a.beyond-card:hover {
+a.beyond-card:hover,
+a.path-card:hover {
   text-decoration: none;
   transform: translateY(-3px);
   border-color: rgb(var(--rgb-signal) / 0.55);
   box-shadow: 0 8px 30px rgb(var(--rgb-accent-blue) / 0.18);
 }
-.beyond-card .beyond-more {
+.beyond-card .beyond-more,
+.path-card .path-more {
   display: inline-block;
   margin-top: 0.7rem;
   font-family: var(--mono);
   font-size: 0.76rem;
   color: var(--cyan);
 }
+
+/* ---------- homepage paths and 60-second profile ---------- */
+
+.paths { padding-top: var(--space-4); }
+.paths .section-title { font-size: 1.35rem; }
+.paths-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+.path-who {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.profile-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: var(--space-3) var(--space-6);
+  margin: var(--space-5) 0;
+}
+.profile-facts div { padding: var(--space-3) 0; border-top: 1px solid var(--border); }
+.profile-facts dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.profile-facts dd { margin: var(--space-1) 0 0; color: var(--heading); }
+.profile-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0; }
+.about-more { font-family: var(--mono); font-size: 0.85rem; }
+
+/* ---------- about page ---------- */
+
+.about-page .lead { font-size: 1.12rem; color: var(--heading); }
+.about-values { max-width: 780px; margin: var(--space-4) 0 var(--space-6); }
 
 /* ---------- sky (NASA APOD collection) ---------- */
 
