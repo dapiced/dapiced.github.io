@@ -242,7 +242,25 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 
 .nav-actions { display: flex; align-items: center; gap: 0.6rem; order: 3; }
 
-/* Night / Dawn switch (assets/js/theme.js) */
+/* language switch, shown on pages that have a translation */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.lang-switch:hover { border-color: var(--cyan); color: var(--cyan); text-decoration: none; }
+
+/* Night / Dawn switch (main.js) */
 .theme-toggle {
   display: inline-flex;
   align-items: center;

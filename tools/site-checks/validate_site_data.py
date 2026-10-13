@@ -11,7 +11,7 @@ import yaml
 SCHEMAS = {
     "navigation": {
         "required": {"label": str, "href": str},
-        "optional": {"class": str, "target": str, "rel": str},
+        "optional": {"label_fr": str, "class": str, "target": str, "rel": str},
     },
     "skills": {
         "required": {"domain": str, "tags": list},
@@ -35,19 +35,20 @@ SCHEMAS = {
 
 APPROVED_SITE_DATA = {
     "navigation": [
-        {"label": "About", "href": "/#about"},
-        {"label": "Portfolio", "href": "/portfolio/"},
-        {"label": "Blog", "href": "/blog/"},
-        {"label": "Resume", "href": "/resume/"},
-        {"label": "Now", "href": "/now/"},
+        {"label": "About", "label_fr": "À propos", "href": "/#about"},
+        {"label": "Portfolio", "label_fr": "Portfolio", "href": "/portfolio/"},
+        {"label": "Blog", "label_fr": "Blogue", "href": "/blog/"},
+        {"label": "Resume", "label_fr": "CV", "href": "/resume/"},
+        {"label": "Now", "label_fr": "Maintenant", "href": "/now/"},
         {
             "label": "My LabML",
+            "label_fr": "Mon LabML",
             "href": "https://app.dominicdapice.com/",
             "class": "nav-labml",
             "target": "_blank",
             "rel": "noopener",
         },
-        {"label": "Sky of the day", "href": "/sky/", "class": "nav-sky"},
+        {"label": "Sky of the day", "label_fr": "Ciel du jour", "href": "/sky/", "class": "nav-sky"},
     ],
     "skills": [
         {

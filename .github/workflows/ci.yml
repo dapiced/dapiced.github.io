@@ -76,6 +76,7 @@ jobs:
           set -euo pipefail
           python tools/site-checks/check_site_data_html.py
           python tools/site-checks/check_now_generated.py
+          python tools/site-checks/check_i18n_generated.py
           for path in \
             _site/index.html \
             _site/now/index.html \

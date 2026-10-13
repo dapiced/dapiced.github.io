@@ -224,8 +224,9 @@
     var tip = document.createElement("div");
     tip.className = "gold-tip";
     tip.setAttribute("aria-hidden", "true");
+    var french = document.documentElement.lang === "fr";
     tip.innerHTML = '<span class="tip-name">✦ Vincenzo D’Apice</span>' +
-                    '<span class="tip-sub">1937-2022 · Papa’s star</span>';
+                    '<span class="tip-sub">1937-2022 · ' + (french ? "l’étoile de papa" : "Papa’s star") + "</span>";
     document.body.appendChild(tip);
 
     function revealNear(e) {
@@ -440,17 +441,32 @@
         Math.sin(DEC) * Math.cos(LAT) - Math.cos(DEC) * Math.cos(haR) * Math.sin(LAT)
       ) / D2R;
       az = (az + 360) % 360;
-      var dirs = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"];
-      var dir = dirs[Math.round(az / 45) % 8];
+      var french = document.documentElement.lang === "fr";
+      var index = Math.round(az / 45) % 8;
       var msg;
-      if (alt > 5) {
-        msg = "✦ Right now, Vincenzo’s star shines " + Math.round(alt) +
-              "° above Montréal’s horizon, to the " + dir + " - look up.";
-      } else if (alt > 0) {
-        msg = "✦ Right now, Vincenzo’s star is skimming Montréal’s horizon to the " + dir + ".";
+      if (french) {
+        var dirFr = ["nord", "nord-est", "est", "sud-est", "sud", "sud-ouest", "ouest", "nord-ouest"][index];
+        var toward = /^[aeiou]/.test(dirFr) ? "vers l’" + dirFr : "vers le " + dirFr;
+        if (alt > 5) {
+          msg = "✦ En ce moment, l’étoile de Vincenzo brille à " + Math.round(alt) +
+                "° au-dessus de l’horizon de Montréal, " + toward + ". Levez les yeux.";
+        } else if (alt > 0) {
+          msg = "✦ En ce moment, l’étoile de Vincenzo frôle l’horizon de Montréal, " + toward + ".";
+        } else {
+          msg = "✦ L’étoile de Vincenzo est brièvement sous l’horizon. Elle revient dans quelques heures : " +
+                "elle ne quitte presque jamais le ciel de Montréal.";
+        }
       } else {
-        msg = "✦ Vincenzo’s star is briefly below the horizon - it returns within hours. " +
-              "It almost never leaves Montréal’s sky.";
+        var dir = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"][index];
+        if (alt > 5) {
+          msg = "✦ Right now, Vincenzo’s star shines " + Math.round(alt) +
+                "° above Montréal’s horizon, to the " + dir + " - look up.";
+        } else if (alt > 0) {
+          msg = "✦ Right now, Vincenzo’s star is skimming Montréal’s horizon to the " + dir + ".";
+        } else {
+          msg = "✦ Vincenzo’s star is briefly below the horizon - it returns within hours. " +
+                "It almost never leaves Montréal’s sky.";
+        }
       }
       starStatus.textContent = msg;
     };
