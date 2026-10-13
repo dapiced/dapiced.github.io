@@ -1047,6 +1047,9 @@ a.beyond-card:hover {
 /* 12 September, Vincenzo's birthday: the motto turns gold for the day */
 .motto.vincenzo-day { color: #e3b341; text-shadow: 0 0 18px rgba(227, 179, 65, 0.35); }
 
+/* the golden star is clickable: it sends "PAPA" in Morse again */
+body.gold-near { cursor: pointer; }
+
 /* tooltip revealed when hovering Vincenzo's golden star */
 .gold-tip {
   position: fixed;
