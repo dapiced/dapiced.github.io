@@ -124,6 +124,11 @@ jobs:
         working-directory: tools/site-checks/browser
         run: node axe-check.mjs
 
+      # Command palette end to end: shortcuts, search, keyboard, axe on the dialog.
+      - name: Command palette
+        working-directory: tools/site-checks/browser
+        run: node palette-check.mjs
+
       # Median of 3 runs on representative pages; thresholds in lighthouserc.json.
       - name: Lighthouse
         working-directory: tools/site-checks/browser

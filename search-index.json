@@ -1,0 +1,35 @@
+---
+layout: null
+permalink: /search-index.json
+sitemap: false
+---
+{%- comment -%}
+  Site-wide index for the command palette (assets/js/command-palette.js):
+  pages, authored posts, portfolio entries and Sky pictures. Kept small on
+  purpose (title, description, tags), fetched only when the palette opens.
+{%- endcomment -%}
+[
+{%- assign first = true -%}
+{%- for p in site.pages -%}
+  {%- if p.title and p.sitemap != false and p.layout != "tag-archive" and p.url != "/404.html" and p.url contains "/" -%}
+  {%- unless p.url contains ".json" or p.url contains ".xml" or p.url contains ".txt" -%}
+  {%- unless first %},{% endunless %}{% assign first = false %}
+  {"kind":"page","title":{{ p.title | split: " | " | first | jsonify }},"url":{{ p.url | jsonify }},"lang":{{ p.lang | default: "en" | jsonify }},"tags":[],"excerpt":{{ p.description | default: "" | strip_html | normalize_whitespace | jsonify }}}
+  {%- endunless -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- for post in site.posts -%}
+  {%- unless first %},{% endunless %}{% assign first = false %}
+  {"kind":"post","title":{{ post.title | jsonify }},"url":{{ post.url | jsonify }},"lang":{{ post.lang | default: "en" | jsonify }},"date":{{ post.date | date: "%Y-%m-%d" | jsonify }},"tags":{{ post.tags | jsonify }},"excerpt":{{ post.description | default: "" | strip_html | normalize_whitespace | jsonify }}}
+{%- endfor -%}
+{%- assign portfolio = site.portfolio | sort: "date" | reverse -%}
+{%- for entry in portfolio -%}
+  {%- unless first %},{% endunless %}{% assign first = false %}
+  {"kind":"portfolio","title":{{ entry.title | jsonify }},"url":{{ entry.url | jsonify }},"lang":{{ entry.lang | default: "en" | jsonify }},"date":{{ entry.date | date: "%Y-%m-%d" | jsonify }},"tags":{{ entry.tags | jsonify }},"excerpt":{{ entry.description | default: "" | strip_html | normalize_whitespace | jsonify }}}
+{%- endfor -%}
+{%- assign sky = site.apod | sort: "date" | reverse -%}
+{%- for entry in sky -%}
+  {%- unless first %},{% endunless %}{% assign first = false %}
+  {"kind":"sky","title":{{ entry.title | jsonify }},"url":{{ entry.url | jsonify }},"lang":"en","date":{{ entry.date | date: "%Y-%m-%d" | jsonify }},"tags":{{ entry.tags | jsonify }},"excerpt":{{ entry.description | default: "" | strip_html | normalize_whitespace | jsonify }}}
+{%- endfor %}
+]

@@ -42,6 +42,21 @@ en:
   toc_title: "On this page"
   related_title: "Related posts"
   show_more: "Show all posts ({n} more)"
+  # command palette
+  palette_open: "Search and commands"
+  palette_title: "Command palette"
+  palette_placeholder: "Search the site or type a command"
+  palette_results: "Results"
+  palette_hint: "↑ ↓ to move · Enter to open · Esc to close"
+  palette_empty: "Nothing matches. Try another word."
+  palette_error: "The search index could not be loaded; commands still work."
+  palette_kind_go: "Go to"
+  palette_kind_action: "Action"
+  palette_kind_page: "Page"
+  palette_kind_post: "Post"
+  palette_kind_portfolio: "Portfolio"
+  palette_kind_sky: "Sky"
+  palette_ping_reply: "pong · ν Andromedae, 617 light-years away."
 
 fr:
   # page chrome
@@ -98,3 +113,18 @@ fr:
     - octobre
     - novembre
     - décembre
+  # command palette
+  palette_open: "Recherche et commandes"
+  palette_title: "Palette de commandes"
+  palette_placeholder: "Chercher dans le site ou taper une commande"
+  palette_results: "Résultats"
+  palette_hint: "↑ ↓ pour se déplacer · Entrée pour ouvrir · Échap pour fermer"
+  palette_empty: "Aucun résultat. Essayez un autre mot."
+  palette_error: "L’index de recherche n’a pas pu être chargé ; les commandes fonctionnent toujours."
+  palette_kind_go: "Aller à"
+  palette_kind_action: "Action"
+  palette_kind_page: "Page"
+  palette_kind_post: "Billet"
+  palette_kind_portfolio: "Portfolio"
+  palette_kind_sky: "Ciel"
+  palette_ping_reply: "pong · ν Andromedae, à 617 années-lumière."
