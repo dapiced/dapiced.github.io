@@ -77,8 +77,11 @@
     <nav class="nav-inner" aria-label="{{ chrome_t.nav_label }}">
       <a class="brand" href="/"><span class="brand-planet" aria-hidden="true"></span>dominic@azure<span class="brand-cursor" aria-hidden="true">▌</span></a>
       <div class="nav-actions">
+        {%- comment -%} Always visible: the translation when it exists, otherwise the other language's homepage. {%- endcomment -%}
         {%- if page.translation_url %}
         <a class="lang-switch" href="{{ page.translation_url }}" hreflang="{{ other_lang }}" lang="{{ other_lang }}" aria-label="{{ other_lang | upcase }}, {{ chrome_t.lang_switch }}">{{ other_lang | upcase }}</a>
+        {%- else %}
+        <a class="lang-switch lang-switch-home" href="{% if other_lang == "fr" %}/fr/{% else %}/{% endif %}" hreflang="{{ other_lang }}" lang="{{ other_lang }}" aria-label="{{ other_lang | upcase }}, {{ chrome_t.lang_switch_home }}" title="{{ chrome_t.lang_switch_home }}">{{ other_lang | upcase }}</a>
         {%- endif %}
         <button class="palette-open" type="button" data-shortcut="Ctrl K" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K /" aria-label="{{ chrome_t.palette_open }}"
           data-title="{{ chrome_t.palette_title }}" data-placeholder="{{ chrome_t.palette_placeholder }}" data-results="{{ chrome_t.palette_results }}"

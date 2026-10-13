@@ -31,9 +31,9 @@ def test_site_data_files_match_required_schema():
 
     assert data["navigation"] == [
         {"label": "About", "label_fr": "À propos", "href": "/about/", "href_fr": "/fr/a-propos/"},
-        {"label": "Portfolio", "label_fr": "Portfolio", "href": "/portfolio/"},
-        {"label": "Blog", "label_fr": "Blogue", "href": "/blog/"},
-        {"label": "Resume", "label_fr": "CV", "href": "/resume/"},
+        {"label": "Portfolio", "label_fr": "Réalisations", "href": "/portfolio/", "href_fr": "/fr/realisations/"},
+        {"label": "Blog", "label_fr": "Blogue", "href": "/blog/", "href_fr": "/fr/blogue/"},
+        {"label": "Resume", "label_fr": "CV", "href": "/resume/", "href_fr": "/fr/cv/"},
         {"label": "Now", "label_fr": "Maintenant", "href": "/now/"},
         {
             "label": "My LabML",
@@ -47,12 +47,16 @@ def test_site_data_files_match_required_schema():
     ]
     assert data["skills"][0] == {
         "domain": "Cloud & Data",
+        "domain_fr": "Infonuagique et données",
         "tags": ["Azure", "Databricks", "VMware", "Azure DevOps"],
     }
     assert data["timeline"][0] == {
         "year": "2026 - NOW",
+        "year_fr": "2026 - AUJOURD'HUI",
         "role": "Developer - Azure Infrastructure AI",
         "description": "Azure for AI · Databricks platform · MLOps / DataOps · IaC · CI/CD",
+        "role_fr": "Développeur - infrastructure Azure pour l'IA",
+        "description_fr": "Azure pour l'IA · plateforme Databricks · MLOps / DataOps · IaC · CI/CD",
     }
     assert data["resources"][0] == {
         "icon": "🌌",
@@ -63,6 +67,12 @@ def test_site_data_files_match_required_schema():
         ),
         "href": "/blog/astronomy/",
         "more": "Read articles →",
+        "title_fr": "Astronomie",
+        "description_fr": (
+            "Explorer les objets célestes et suivre les dernières découvertes, "
+            "des champs profonds de JWST au ciel de la cour arrière."
+        ),
+        "more_fr": "Lire les articles (EN) →",
     }
 
 
@@ -117,7 +127,8 @@ def test_validate_site_data_rejects_unpaired_external_link_attributes(tmp_path: 
 
 def test_templates_render_the_four_data_contracts_with_liquid_loops():
     layout = (ROOT / "_layouts" / "default.html").read_text(encoding="utf-8")
-    homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+    # / and /fr/ share the homepage body.
+    homepage = (ROOT / "_includes" / "home.html").read_text(encoding="utf-8")
 
     assert "{% for item in site.data.navigation %}" in layout
     assert "{{ item.label | escape }}" in layout

@@ -4,7 +4,9 @@
 - every page declares <html lang>, a full og:locale (fr_CA / en_CA) that matches
   it, and French pages render the French navigation, footer and buttons;
 - every page with a translation_url links to it with reciprocal hreflang
-  alternates and a language switch in the header.
+  alternates and a language switch in the header;
+- every other page still shows the switch, pointing to the homepage of the
+  other language (/ or /fr/).
 """
 from __future__ import annotations
 
@@ -53,6 +55,14 @@ def main() -> int:
                     fail(f"{rel}: French chrome string '{key}' missing")
         switch = re.search(r'<a class="lang-switch" href="([^"]+)" hreflang="([a-z]{2})"', html)
         alternate = re.findall(r'<link rel="alternate" hreflang="([a-z-]+)" href="([^"]+)">', html)
+        home_switch = re.search(r'<a class="lang-switch lang-switch-home" href="([^"]+)" hreflang="([a-z]{2})"', html)
+        if not switch and not home_switch:
+            fail(f"{rel}: no language switch in the header")
+        if home_switch:
+            target, target_lang = home_switch.groups()
+            expected = "/fr/" if lang == "en" else "/"
+            if target != expected or target_lang == lang:
+                fail(f"{rel}: untranslated page should switch to {expected}, not {target}")
         if switch:
             pairs += 1
             target, target_lang = switch.groups()

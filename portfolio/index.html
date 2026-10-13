@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Portfolio - Case Studies in AI, Data & Infrastructure
+lang: en
+translation_url: /fr/realisations/
 description: >-
   Deep-dive case studies: AI safety hackathons, machine learning under real-world
   constraints, MLOps pipelines. The stories behind the code.
@@ -33,7 +35,7 @@ keywords:
       <p class="post-meta">
         <time datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%B %-d, %Y" }}</time>
         {% if entry.tags and entry.tags.size > 0 %} · {% for tag in entry.tags %}#{{ tag }} {% endfor %}{% endif %}
-        {% if entry.translation_url %} · <a href="{{ entry.translation_url }}">version française 🇫🇷</a>{% endif %}
+        {% if entry.translation_url %} · <a href="{{ entry.translation_url }}" hreflang="fr" lang="fr">version française 🇫🇷</a>{% endif %}
       </p>
       <p class="excerpt">{{ entry.description }}</p>
     </li>

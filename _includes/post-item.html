@@ -1,9 +1,16 @@
+{%- comment -%}
+  One post in a list, in the language of the page that lists it: localized
+  date and labels, a language marker when the post is in the other language.
+{%- endcomment -%}
+{%- assign item_page_lang = page.lang | default: site.lang -%}
+{%- assign item_lang = include.post.lang | default: "en" -%}
+{%- assign item_t = site.data.i18n[item_page_lang] | default: site.data.i18n.en -%}
 <li class="post-item" id="post-{{ include.post.slug }}">
-  <a class="post-link" href="{{ include.post.url }}">{{ include.post.title }}</a>
+  <a class="post-link" href="{{ include.post.url }}"{% if item_lang != item_page_lang %} hreflang="{{ item_lang }}" lang="{{ item_lang }}"{% endif %}>{{ include.post.title }}</a>
   <p class="post-meta">
-    <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: "%B %-d, %Y" }}</time><span class="list-views" data-path="{{ include.post.url }}" hidden> · 👁 <span class="list-views-n"></span> visitors</span>
+    <time datetime="{{ include.post.date | date_to_xmlschema }}">{% include localized-date.html date=include.post.date lang=item_page_lang %}</time>{% if item_lang != item_page_lang %} · <span class="post-lang">{{ item_lang | upcase }}</span>{% endif %}<span class="list-views" data-path="{{ include.post.url }}" hidden> · 👁 <span class="list-views-n"></span> {{ item_t.visitors }}</span>
     {% if include.post.tags and include.post.tags.size > 0 %} · {% for tag in include.post.tags %}<a class="tag" href="/blog/tag/{{ tag | slugify }}/">#{{ tag }}</a> {% endfor %}{% endif %}
-    {% if include.post.translation_url %} · <a href="{{ include.post.translation_url }}">version française 🇫🇷</a>{% endif %}
+    {% if include.post.translation_url %} · {% if item_lang == "fr" %}<a href="{{ include.post.translation_url }}" hreflang="en" lang="en">English version 🇬🇧</a>{% else %}<a href="{{ include.post.translation_url }}" hreflang="fr" lang="fr">version française 🇫🇷</a>{% endif %}{% endif %}
   </p>
-  <p class="excerpt">{{ include.post.excerpt | strip_html | truncate: 220 }}</p>
+  <p class="excerpt"{% if item_lang != item_page_lang %} lang="{{ item_lang }}"{% endif %}>{{ include.post.excerpt | strip_html | truncate: 220 }}</p>
 </li>

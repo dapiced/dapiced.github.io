@@ -299,12 +299,9 @@ def validate_rendered_homepage(root: Path | str) -> dict[str, int]:
     validator = _load_validator(root_path)
     expected = validator.load_site_data(root_path)
     rendered = parse_rendered_homepage(homepage.read_text(encoding="utf-8"))
-    # The homepage is English: navigation shows `label` and `href`, not the
-    # French `label_fr` / `href_fr`.
-    expected["navigation"] = [
-        {key: value for key, value in item.items() if key not in ("label_fr", "href_fr")}
-        for item in expected["navigation"]
-    ]
+    # The homepage is English: it shows the English fields, never the French
+    # `*_fr` ones (label_fr, href_fr, role_fr...), which /fr/ renders.
+    expected = english_only(expected)
     for name, expected_items in expected.items():
         if rendered[name] != expected_items:
             raise HtmlDataError(
@@ -315,6 +312,13 @@ def validate_rendered_homepage(root: Path | str) -> dict[str, int]:
     return {name: len(items) for name, items in rendered.items()}
 
 
+def english_only(data: dict) -> dict:
+    return {
+        name: [{key: value for key, value in item.items() if not key.endswith("_fr")} for item in items]
+        for name, items in data.items()
+    }
+
+
 def validate_rendered_resume(root: Path | str) -> dict[str, int]:
     root_path = Path(root)
     resume = root_path / "_site" / "resume" / "index.html"
@@ -322,7 +326,7 @@ def validate_rendered_resume(root: Path | str) -> dict[str, int]:
         raise HtmlDataError(f"generated resume is missing: {resume}")
 
     validator = _load_validator(root_path)
-    expected = validator.load_site_data(root_path)
+    expected = english_only(validator.load_site_data(root_path))
     rendered = parse_rendered_resume(resume.read_text(encoding="utf-8"))
 
     for name in ("timeline", "skills"):

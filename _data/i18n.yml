@@ -7,6 +7,7 @@ en:
   theme_to_light: "Switch to dawn theme"
   theme_to_dark: "Switch to night theme"
   lang_switch: "Lire en français"
+  lang_switch_home: "Accueil en français (cette page n'est pas encore traduite)"
   footer_more: "More pages"
   footer_projects: "Projects"
   footer_resources: "Resources"
@@ -42,6 +43,8 @@ en:
   toc_title: "On this page"
   related_title: "Related posts"
   show_more: "Show all posts ({n} more)"
+  sky_today_label: "Sky of the day · NASA APOD"
+  sky_today_more: "Browse the sky archive →"
   # command palette
   palette_open: "Search and commands"
   palette_title: "Command palette"
@@ -65,6 +68,7 @@ fr:
   theme_to_light: "Passer au thème Aube"
   theme_to_dark: "Passer au thème Nuit"
   lang_switch: "Read in English"
+  lang_switch_home: "English homepage (this page is not translated yet)"
   footer_more: "Autres pages"
   footer_projects: "Projets"
   footer_resources: "Ressources"
@@ -113,6 +117,8 @@ fr:
     - octobre
     - novembre
     - décembre
+  sky_today_label: "Ciel du jour · APOD de la NASA"
+  sky_today_more: "Parcourir les archives du ciel (EN) →"
   # command palette
   palette_open: "Recherche et commandes"
   palette_title: "Palette de commandes"

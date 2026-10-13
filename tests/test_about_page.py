@@ -42,8 +42,8 @@ def test_contact_is_linkedin_only():
 
 
 def test_homepage_leads_to_about_and_profile():
-    home = (ROOT / "index.html").read_text(encoding="utf-8")
-    assert 'href="/about/"' in home
+    home = (ROOT / "_includes" / "home.html").read_text(encoding="utf-8")
+    assert "/about/" in home and "/fr/a-propos/" in home
     assert 'id="profile"' in home and 'href="#profile"' in home
     assert home.count('class="path-card"') == 4
     nav = yaml.safe_load((ROOT / "_data" / "navigation.yml").read_text(encoding="utf-8"))

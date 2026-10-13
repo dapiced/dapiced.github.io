@@ -1,0 +1,149 @@
+# Homepage strings, keyed by page.lang. One template (_includes/home.html)
+# renders / (en) and /fr/ (fr). French: vouvoiement on pillar pages.
+en:
+  eyebrow: "MONTRÉAL · CANADA · EARTH · ORION ARM"
+  roles_sr: "Developer - Azure Infrastructure AI. 25+ years automating complex systems. MLOps, DataOps and Infrastructure as Code. Kaggle competitor and Data Science student."
+  roles:
+    - "Developer - Azure Infrastructure AI"
+    - "25+ years automating complex systems"
+    - "MLOps · DataOps · Infrastructure as Code"
+    - "Kaggle competitor · Data Science student"
+    - "Stargazer - of night skies and repositories"
+  cta_portfolio: "Portfolio"
+  cta_blog: "Blog"
+  cta_labml: "My LabML"
+  cta_sky: "Sky of the day"
+  coords: "RA 00h 49m 55.1s · DEC +41° 11′ 56.1″ - FATHER'S HOME · SIGNAL STRONG ✦"
+  coords_title: "ν Andromedae - Vincenzo Star"
+  coords_href: "https://en.wikipedia.org/wiki/Nu_Andromedae"
+
+  paths_title: "Where would you like to start?"
+  path_linkedin_who: "Coming from LinkedIn"
+  path_linkedin_title: "The full context of the post"
+  path_linkedin_more: "Read the latest post →"
+  path_recruiter_who: "Recruiting"
+  path_recruiter_title: "My profile in 60 seconds"
+  path_recruiter_text: "Role, experience, stack, languages and where I'm based, on one screen."
+  path_recruiter_more: "See the profile →"
+  path_engineer_who: "Fellow engineer"
+  path_engineer_title: "How I work"
+  path_engineer_text: "Case studies with the architecture, the trade-offs and what went wrong."
+  path_engineer_more: "Open the portfolio →"
+  path_sky_who: "Here for the sky"
+  path_sky_title: "Tonight, above Montréal"
+  path_sky_text: "NASA's picture of the day, and the star that carries my father's name."
+  path_sky_more: "Look up →"
+
+  profile_eyebrow: "00 · PROFILE IN 60 SECONDS"
+  profile_title: "At a glance"
+  profile_facts:
+    - [Role, "Developer, Azure Infrastructure for AI"]
+    - [Experience, "25+ years: Linux, cloud, Infrastructure as Code, data platforms"]
+    - [Core stack, "Azure · Databricks · Terraform · Ansible · Python · CI/CD · MLOps / DataOps"]
+    - [Based in, "Montréal, Canada"]
+    - [Languages, "French and English"]
+    - [Studying, "University Certificate in Data Science, Université TÉLUQ"]
+  profile_resume: "Full resume"
+
+  about_eyebrow: "01 · MISSION CONTROL"
+  about_title: "About"
+  about_html:
+    - 'I design, deploy, and operate <strong>Azure platforms that power AI workloads</strong> - Databricks environments, data pipelines, and mission-critical systems. <strong>25+ years</strong> in the machine room taught me one thing: anything done twice by hand deserves to be automated.'
+    - 'My work sits where infrastructure meets data science: building and operating <strong>Databricks</strong> platforms with performance, security, and compliance in mind; automating operations end-to-end with <strong>IaC, CI/CD, and orchestration</strong>; and applying <strong>MLOps / DataOps</strong> practices - model lifecycle, data governance, monitoring, observability.'
+    - 'Currently finishing a <strong>University Certificate in Data Science</strong> and competing on <a href="https://www.kaggle.com/dominicdapice" target="_blank" rel="noopener">Kaggle</a> to test theory against real-world problems.'
+  about_more: "The full story, values included →"
+  stats:
+    - ["25+", "Years in IT"]
+    - ["1000+", "Servers managed"]
+    - ["∞", "Manual steps eliminated"]
+    - ["1", "Sky, watched nightly"]
+
+  projects_eyebrow: "02 · FEATURED MISSIONS"
+  projects_title: "Projects"
+  projects_note: "// data refreshed from the GitHub API by a scheduled job, then committed to the repository"
+  skills_eyebrow: "03 · ONBOARD SYSTEMS"
+  skills_title: "Skills"
+  timeline_eyebrow: "04 · FLIGHT LOG"
+  timeline_title: "25+ years of service"
+  beyond_eyebrow: "05 · BEYOND THE TERMINAL"
+  beyond_title: "Off-duty"
+  astro_alt: "Dominic D'Apice in an astronaut suit, Earth visible through the porthole"
+  quote: "After 25 years of managing clouds, I still spend my clearest nights looking at the real ones."
+  blog_eyebrow: "06 · MISSION LOG"
+  blog_title: "Latest from the blog"
+  blog_all: "cat /var/log/mission/* - all posts →"
+  blog_href: "/blog/"
+
+fr:
+  eyebrow: "MONTRÉAL · CANADA · TERRE · BRAS D'ORION"
+  roles_sr: "Développeur, infrastructure Azure pour l'IA. Plus de 25 ans à automatiser des systèmes complexes. MLOps, DataOps et Infrastructure as Code. Compétiteur Kaggle et étudiant en science des données."
+  roles:
+    - "Développeur - infrastructure Azure pour l'IA"
+    - "25 ans à automatiser des systèmes complexes"
+    - "MLOps · DataOps · Infrastructure as Code"
+    - "Compétiteur Kaggle · étudiant en science des données"
+    - "Observateur d'étoiles et de dépôts Git"
+  cta_portfolio: "Réalisations"
+  cta_blog: "Blogue"
+  cta_labml: "Mon LabML"
+  cta_sky: "Ciel du jour"
+  coords: "AD 00h 49m 55,1s · DÉC +41° 11′ 56,1″ - CHEZ PAPA · SIGNAL FORT ✦"
+  coords_title: "ν Andromedae - l'étoile de Vincenzo"
+  coords_href: "https://fr.wikipedia.org/wiki/Nu_Andromedae"
+
+  paths_title: "Par où voulez-vous commencer ?"
+  path_linkedin_who: "Vous arrivez de LinkedIn"
+  path_linkedin_title: "Le contexte complet du billet"
+  path_linkedin_more: "Lire le dernier billet →"
+  path_recruiter_who: "Vous recrutez"
+  path_recruiter_title: "Mon profil en 60 secondes"
+  path_recruiter_text: "Rôle, expérience, outils, langues et lieu de travail, sur un seul écran."
+  path_recruiter_more: "Voir le profil →"
+  path_engineer_who: "Vous êtes ingénieur"
+  path_engineer_title: "Ma façon de travailler"
+  path_engineer_text: "Des études de cas avec l'architecture, les compromis et ce qui n'a pas marché."
+  path_engineer_more: "Voir les réalisations →"
+  path_sky_who: "Vous venez pour le ciel"
+  path_sky_title: "Ce soir, au-dessus de Montréal"
+  path_sky_text: "L'image astronomique du jour de la NASA, et l'étoile qui porte le nom de mon père."
+  path_sky_more: "Levez les yeux →"
+
+  profile_eyebrow: "00 · PROFIL EN 60 SECONDES"
+  profile_title: "En un coup d'œil"
+  profile_facts:
+    - [Rôle, "Développeur, infrastructure Azure pour l'IA"]
+    - [Expérience, "Plus de 25 ans : Linux, infonuagique, Infrastructure as Code, plateformes de données"]
+    - [Outils principaux, "Azure · Databricks · Terraform · Ansible · Python · CI/CD · MLOps / DataOps"]
+    - [Lieu, "Montréal, Canada"]
+    - [Langues, "Français et anglais"]
+    - [Études, "Certificat universitaire en science des données, Université TÉLUQ"]
+  profile_resume: "CV complet"
+
+  about_eyebrow: "01 · CENTRE DE CONTRÔLE"
+  about_title: "À propos"
+  about_html:
+    - 'Je conçois, déploie et exploite des <strong>plateformes Azure qui font tourner des charges d''IA</strong> : environnements Databricks, pipelines de données et systèmes critiques. <strong>Plus de 25 ans</strong> en salle des machines m''ont appris une chose : ce qui se fait deux fois à la main mérite d''être automatisé.'
+    - 'Mon travail se situe là où l''infrastructure rencontre la science des données : bâtir et exploiter des plateformes <strong>Databricks</strong> en pensant performance, sécurité et conformité ; automatiser les opérations de bout en bout avec l''<strong>IaC, le CI/CD et l''orchestration</strong> ; appliquer les pratiques <strong>MLOps / DataOps</strong> : cycle de vie des modèles, gouvernance des données, surveillance, observabilité.'
+    - 'Je termine un <strong>certificat universitaire en science des données</strong> et je participe à des compétitions <a href="https://www.kaggle.com/dominicdapice" target="_blank" rel="noopener">Kaggle</a> pour confronter la théorie à des problèmes réels.'
+  about_more: "Toute l'histoire, valeurs comprises →"
+  stats:
+    - ["25+", "Années en TI"]
+    - ["1000+", "Serveurs gérés"]
+    - ["∞", "Étapes manuelles éliminées"]
+    - ["1", "Ciel, observé chaque nuit"]
+
+  projects_eyebrow: "02 · MISSIONS EN VEDETTE"
+  projects_title: "Projets"
+  projects_note: "// données actualisées depuis l'API GitHub par une tâche planifiée, puis versionnées dans le dépôt (descriptions en anglais)"
+  skills_eyebrow: "03 · SYSTÈMES DE BORD"
+  skills_title: "Compétences"
+  timeline_eyebrow: "04 · JOURNAL DE VOL"
+  timeline_title: "Plus de 25 ans de service"
+  beyond_eyebrow: "05 · AU-DELÀ DU TERMINAL"
+  beyond_title: "Hors service"
+  astro_alt: "Dominic D'Apice en combinaison d'astronaute, la Terre visible par le hublot"
+  quote: "Après 25 ans à gérer des nuages informatiques, je passe encore mes nuits les plus claires à regarder les vrais."
+  blog_eyebrow: "06 · JOURNAL DE MISSION"
+  blog_title: "Derniers billets"
+  blog_all: "cat /var/log/mission/* - tous les billets →"
+  blog_href: "/fr/blogue/"
