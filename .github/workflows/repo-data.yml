@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write  # dispatch CI on the refresh PR (see the last step)
 
     steps:
       - name: Checkout repository
@@ -36,6 +37,7 @@ jobs:
         run: python tools/repo_cards/generate_repo_data.py
 
       - name: Create pull request
+        id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
           branch: chore/repo-data
@@ -48,3 +50,13 @@ jobs:
             time, so no visitor-side GitHub API call is needed.
           commit-message: "Refresh homepage project cards"
           delete-branch: true
+
+      - name: Run CI on the pull request
+        # A PR opened with the GITHUB_TOKEN does not trigger ci.yml, so its
+        # required checks (main's ruleset, docs/infra/github-ruleset.md) would
+        # never report and the PR could not be merged. Dispatch CI on the PR
+        # branch: its checks attach to the PR head commit.
+        if: ${{ steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run ci.yml --ref chore/repo-data
