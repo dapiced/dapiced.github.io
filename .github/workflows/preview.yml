@@ -89,6 +89,34 @@ jobs:
         with:
           node-version: "lts/*"
 
+      # Fails early with a readable reason (never printing the token) when
+      # the secret is wrong: invalid, expired, or pasted with extra spaces.
+      - name: Verify Cloudflare token
+        if: steps.config.outputs.enabled == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          trimmed="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+          echo "Token length: ${#CLOUDFLARE_API_TOKEN} characters (${#trimmed} without whitespace)."
+          if [ "${#trimmed}" -ne "${#CLOUDFLARE_API_TOKEN}" ]; then
+            echo "::error title=Token has whitespace::The secret contains spaces or line breaks; paste the token again without them."
+            exit 1
+          fi
+          verify() {
+            curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$1" \
+              | python3 -c 'import json,sys; d=json.load(sys.stdin); r=d.get("result") or {}; print(d.get("success"), r.get("status","-"), r.get("expires_on","-"), ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))'
+          }
+          user="$(verify https://api.cloudflare.com/client/v4/user/tokens/verify)"
+          account="$(verify "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/tokens/verify")"
+          echo "User token check:    success status expires errors = $user"
+          echo "Account token check: success status expires errors = $account"
+          case "$user $account" in
+            *"True active"*) echo "Token is active." ;;
+            *) echo "::error title=Cloudflare token rejected::Neither check accepts the token (see the two lines above). Roll it in Cloudflare and update the secret CLOUDFLARE_PAGES_TOKEN of the preview environment."; exit 1 ;;
+          esac
+
       - name: Deploy to Cloudflare Pages
         if: steps.config.outputs.enabled == 'true'
         env:
