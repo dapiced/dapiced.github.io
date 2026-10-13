@@ -1034,6 +1034,16 @@ a.path-card:hover {
   color: var(--cyan);
 }
 
+/* GoatCounter visitor counts arrive after the page renders: their space is
+   reserved (invisible, number at least 3 characters wide) so the meta line
+   never re-wraps and pushes the article down (CLS). */
+.views-pending { visibility: hidden; }
+.views-n { display: inline-block; min-width: 3ch; text-align: right; }
+
+/* The typed roles of the hero can take two lines on a phone (longer in
+   French): reserve both so the buttons below never move. */
+@media (max-width: 640px) { .hero-roles { min-height: 3.4em; } }
+
 /* ---------- homepage paths and 60-second profile ---------- */
 
 .paths { padding-top: var(--space-4); }
