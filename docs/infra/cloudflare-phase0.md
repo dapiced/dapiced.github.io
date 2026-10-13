@@ -43,16 +43,19 @@ Tableau de bord Cloudflare → domaine `dominicdapice.com` → **Rules** →
 Valeur de la CSP (une seule ligne) :
 
 ```
-default-src 'self'; script-src 'self' https://gc.zgo.at https://giscus.app; style-src 'self' 'unsafe-inline' https://giscus.app; img-src 'self' data: https://dapiced.goatcounter.com; font-src 'self'; media-src 'self'; connect-src 'self' https://dapiced.goatcounter.com; frame-src https://giscus.app; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+default-src 'self'; script-src 'self' https://giscus.app; style-src 'self' 'unsafe-inline' https://giscus.app; img-src 'self' data: https://dapiced.goatcounter.com; font-src 'self'; media-src 'self'; connect-src 'self' https://dapiced.goatcounter.com; frame-src https://giscus.app; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 ```
 
 Pourquoi chaque source est là :
 
 | Directive | Source | Raison |
 |---|---|---|
-| `script-src` | `gc.zgo.at` | script de comptage GoatCounter |
 | `script-src`, `frame-src`, `style-src` | `giscus.app` | commentaires sous les articles |
 | `connect-src`, `img-src` | `dapiced.goatcounter.com` | envoi des pages vues et compteurs de visiteurs |
+
+Le script GoatCounter lui-même (`count.v5.js`, version figée, licence ISC) est servi
+depuis le site (`assets/vendor/goatcounter-v5/`), comme Mermaid : aucun hôte de script
+tiers sur les pages ordinaires, ce qui fait aussi passer le test SRI de l'Observatory.
 | `style-src` | `'unsafe-inline'` | quelques attributs `style=""` (pastilles de langage, 404) et les styles générés par Mermaid ; à retirer en phase 1 avec le design system |
 | `frame-ancestors` | `'none'` | empêche d'intégrer le site dans une iframe (clickjacking) ; n'existe qu'en en-tête, pas en `<meta>` |
 

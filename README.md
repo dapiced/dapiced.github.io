@@ -93,7 +93,7 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `assets/` - CSS, JS (starfield, typed roles, projects fetch), favicon, images, videos.
   `assets/icons/` holds the PNG app icons of the manifest; `assets/vendor/` holds
   third-party code served from this site (Mermaid, checksum-verified against the npm
-  package) so no page depends on a CDN
+  package, and GoatCounter's versioned `count.v5.js`) so no page depends on a CDN
 - `_plugins/asset_digest.rb` - `{{ '/assets/css/style.css' | asset_digest }}` appends a
   hash of the file content (`?v=…`), so CSS and JS stay cached until they really change
 - `_config.yml` - Jekyll config: canonical `url`, SEO/feed/sitemap plugins, default og:image, social links
