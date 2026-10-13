@@ -1,0 +1,62 @@
+{
+  "a-star-for-my-father": {
+    "inputs": "1d1e7545756c9bcce0b3d2fbee6333e01cc604231c41401c6fb1d3d5f0fcab35",
+    "source": "_posts/2026-07-02-a-star-for-my-father.md"
+  },
+  "autonomous-ai-agents-2026": {
+    "inputs": "cf664138d4c6f9407b41a2c319686c9a04d93e236bbb9408e2a001f9cbe9b0f9",
+    "source": "_posts/2026-08-14-autonomous-ai-agents-2026.md"
+  },
+  "cedd-hackathon-emotional-drift-detection": {
+    "inputs": "2be1d3da0444c9b41aca2274dbe2469328cefada43fcabd3a6814ff9efd1a571",
+    "source": "_portfolio/cedd-hackathon-emotional-drift-detection.md"
+  },
+  "hackathon-cedd-derive-emotionnelle": {
+    "inputs": "b404089d6d1d30a2e490076fd0741228888c587024d0a5f28c39e6cb03a7c0e0",
+    "source": "_portfolio/hackathon-cedd-derive-emotionnelle.md"
+  },
+  "hackathon-mila-garde-fou-bilingue": {
+    "inputs": "cd1c4d5e3338fb669bd40365f0e2890123af924fb29528c1d0a93f3e14b8795e",
+    "source": "_portfolio/hackathon-mila-garde-fou-bilingue.md"
+  },
+  "hello-universe": {
+    "inputs": "77ee53df30ff0417bde9573d9920536827a24e152c0c9ff10658e5f0c6657518",
+    "source": "_posts/2026-07-02-hello-universe.md"
+  },
+  "labml-le-ml-dans-votre-navigateur": {
+    "inputs": "f39aa8b618f7372615020f4c08a5f8833057ceab13542c8bfb7b560782e5dc4c",
+    "source": "_portfolio/labml-le-ml-dans-votre-navigateur.md"
+  },
+  "labml-ml-in-your-browser": {
+    "inputs": "6eb5e3e4f14daaee1be846ea9c312de745d10d7704f98bb36c9dec52f29202d9",
+    "source": "_portfolio/labml-ml-in-your-browser.md"
+  },
+  "mila-hackathon-bilingual-guardrail": {
+    "inputs": "7a737fa394da7863ca7d2c66a99a70fa81229a56d620efd384c2e7e5b1f05f16",
+    "source": "_portfolio/mila-hackathon-bilingual-guardrail.md"
+  },
+  "nothingness-has-no-address": {
+    "inputs": "53e027a484a35c7dc835e9f8e7836b3b8d41e8025adfdcb9c50bf0b31c39a170",
+    "source": "_posts/2026-07-02-nothingness-has-no-address.md"
+  },
+  "tail-f-dev-world-databells": {
+    "inputs": "7ae3e4a12739f75a574798eaf2c9832683dc25224b8cdd618d9cfb74093d8132",
+    "source": "_posts/2026-07-17-tail-f-dev-world-databells.md"
+  },
+  "the-oldest-system-in-production": {
+    "inputs": "6f49e9159326b3761408c71119a0e2ca6a69a2b871dc92b74962c8e83ef4556a",
+    "source": "_posts/2026-07-13-the-oldest-system-in-production.md"
+  },
+  "the-universe-just-went-to-production": {
+    "inputs": "3358a3c827977ad790d44544be87392e8628adb5156b9f59438c10d3bcf501d1",
+    "source": "_posts/2026-07-11-the-universe-just-went-to-production.md"
+  },
+  "titanic-kaggle-robust-submission": {
+    "inputs": "ec29f1c02fd0ab1c82c5894e64bd72c57060644de0e147bbc0425c9bb6fdbff7",
+    "source": "_portfolio/titanic-kaggle-robust-submission.md"
+  },
+  "titanic-kaggle-soumission-robuste": {
+    "inputs": "7e0214d3dedae7f3a3a25d6550a0f2228c0d99df051d9daf33034d42eb95c6fe",
+    "source": "_portfolio/titanic-kaggle-soumission-robuste.md"
+  }
+}

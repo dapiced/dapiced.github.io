@@ -5,6 +5,8 @@ date: 2026-07-02 14:00:00 -0400
 tags: [tribute, family, stars]
 description: "A tribute to my father Vincenzo D'Apice - and the real star registered in his name in the Andromeda constellation, visible to the naked eye."
 image: /assets/img/vincenzo-et-dominic.jpg
+og_accent: vincenzo
+og_photo_focus: 0.15
 ---
 
 <p style="text-align:center; font-family: Georgia, serif; font-style: italic; color: var(--muted); font-size: 1.05rem;">

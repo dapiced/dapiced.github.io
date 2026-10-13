@@ -41,6 +41,7 @@ jobs:
             tests/test_no_employer_mention.py \
             tests/test_sky_thumbnails.py \
             tests/test_design_system.py \
+            tests/test_og_cards.py \
             tests/test_site_data.py \
             tests/test_final_hardening_contracts.py -q
           python tools/site-checks/validate_site_data.py
@@ -97,6 +98,10 @@ jobs:
               || { echo "redirect_from declared but no redirect page emitted"; exit 1; }
           fi
           python tools/site-checks/check_blog_discovery.py
+          # Share cards (tools/og-cards) reach og:image through _plugins/og_cards.rb.
+          grep -q 'property="og:image" content="https://dominicdapice.com/assets/img/og/hello-universe.jpg"' \
+            _site/blog/2026/07/hello-universe/index.html \
+            || { echo "og:image does not use the generated share card"; exit 1; }
 
       # Internal links only (offline): every href/src inside _site must resolve.
       # External links are checked weekly by links-weekly.yml, so a third-party
