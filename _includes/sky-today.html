@@ -2,7 +2,8 @@
 {%- assign sky_latest = site.apod | sort: "date" | last -%}
 <div class="sky-today reveal">
   {% if sky_latest.image %}
-  <a class="sky-today-media" href="{{ sky_latest.url }}" tabindex="-1" aria-hidden="true"><img src="{{ sky_latest.image }}" alt=""{% if sky_latest.image_width %} width="{{ sky_latest.image_width }}"{% endif %}{% if sky_latest.image_height %} height="{{ sky_latest.image_height }}"{% endif %} loading="lazy" decoding="async"></a>
+  <a class="sky-today-media" href="{{ sky_latest.url }}" tabindex="-1" aria-hidden="true">{%- assign thumb = sky_latest.image | replace: "/assets/img/apod/", "/assets/img/apod/thumbs/" -%}
+        <img src="{{ thumb }}" alt=""{% if sky_latest.image_width %} width="{{ sky_latest.image_width }}"{% endif %}{% if sky_latest.image_height %} height="{{ sky_latest.image_height }}"{% endif %} loading="lazy" decoding="async"></a>
   {% endif %}
   <span class="sky-today-body">
     <span class="sky-today-label">Sky of the day · NASA APOD</span>

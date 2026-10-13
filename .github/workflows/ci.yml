@@ -32,13 +32,14 @@ jobs:
 
       - name: Validate site source and data
         run: |
-          python -m pip install "PyYAML==6.0.3" "pytest>=8.0.0"
+          python -m pip install "PyYAML==6.0.3" "pytest>=8.0.0" "Pillow>=10"
           python -m pytest \
             tests/test_now_page.py \
             tests/test_now_freshness.py \
             tests/test_now_workflow.py \
             tests/test_resume_page.py \
             tests/test_no_employer_mention.py \
+            tests/test_sky_thumbnails.py \
             tests/test_site_data.py \
             tests/test_final_hardening_contracts.py -q
           python tools/site-checks/validate_site_data.py
@@ -59,10 +60,12 @@ jobs:
       - name: Build site
         run: bundle exec jekyll build
 
-      - name: Set up Node.js for search tests
+      - name: Set up Node.js for search tests and browser checks
         uses: actions/setup-node@v6
         with:
           node-version: "lts/*"
+          cache: npm
+          cache-dependency-path: tools/site-checks/browser/package-lock.json
 
       - name: Test local blog search
         run: node --test tools/site-checks/js/*.test.js
@@ -92,6 +95,66 @@ jobs:
               || { echo "redirect_from declared but no redirect page emitted"; exit 1; }
           fi
           python tools/site-checks/check_blog_discovery.py
+
+      # Internal links only (offline): every href/src inside _site must resolve.
+      # External links are checked weekly by links-weekly.yml, so a third-party
+      # outage never blocks a pull request.
+      - name: Check internal links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress --root-dir ${{ github.workspace }}/_site '_site/**/*.html'
+          fail: true
+
+      - name: Install browser checks
+        working-directory: tools/site-checks/browser
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      # WCAG 2.2 A/AA with axe-core on every sitemap page plus the 404 page,
+      # desktop and mobile. Serious and critical violations fail the build.
+      - name: Accessibility (axe)
+        working-directory: tools/site-checks/browser
+        run: node axe-check.mjs
+
+      # Median of 3 runs on representative pages; thresholds in lighthouserc.json.
+      - name: Lighthouse
+        working-directory: tools/site-checks/browser
+        run: npx lhci autorun --config=lighthouserc.json
+
+      - name: Keep Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # Scans the whole git history for committed tokens and keys with the
+      # MIT-licensed gitleaks binary (pinned version, checksum verified).
+      # Reviewed false positives live in .gitleaksignore.
+      - name: gitleaks
+        env:
+          GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          set -euo pipefail
+          archive="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -fsSLo "$RUNNER_TEMP/$archive" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archive}"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/$archive" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" git --redact --no-banner --exit-code 1 .
 
   cosmic-daily:
     name: Cosmic Daily tests

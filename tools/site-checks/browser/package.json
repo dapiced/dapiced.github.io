@@ -1,0 +1,14 @@
+{
+  "name": "dominicdapice-browser-checks",
+  "private": true,
+  "description": "Accessibility (axe) and Lighthouse checks run in CI against the built _site.",
+  "scripts": {
+    "axe": "node axe-check.mjs",
+    "lighthouse": "lhci autorun --config=lighthouserc.json"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1",
+    "axe-core": "4.14.0",
+    "playwright": "1.56.1"
+  }
+}

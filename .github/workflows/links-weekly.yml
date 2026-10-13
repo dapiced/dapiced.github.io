@@ -1,0 +1,95 @@
+name: External links
+
+# Weekly check of every external link on the built site. Pull requests only
+# check internal links (ci.yml, offline), so a third-party outage never blocks
+# a change; this job catches links that rot over time and opens a single
+# "Broken external links" issue (never a duplicate) with lychee's report.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 13 * * 1"
+
+permissions: {}
+
+jobs:
+  check:
+    name: Check external links
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      broken: ${{ steps.lychee.outputs.exit_code != '0' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll build
+
+      # LinkedIn answers 999 to every bot, and the site's own pages are covered
+      # by the offline check in ci.yml. 403/429 mean "blocked a robot", not "gone".
+      - name: Check links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --root-dir ${{ github.workspace }}/_site
+            --exclude 'linkedin\.com'
+            --exclude '^https?://(www\.)?dominicdapice\.com'
+            --max-concurrency 8
+            --timeout 20
+            --max-retries 3
+            --accept '200..=299,403,429'
+            '_site/**/*.html'
+          output: lychee/report.md
+          fail: false
+
+      - name: Keep the report
+        if: steps.lychee.outputs.exit_code != '0'
+        uses: actions/upload-artifact@v7
+        with:
+          name: lychee-report
+          path: lychee/report.md
+          retention-days: 30
+
+  notify:
+    name: Open broken links issue
+    needs: check
+    if: needs.check.outputs.broken == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open one issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          title="Broken external links"
+          open_titles="$(gh api --paginate \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/issues?state=open&per_page=100" \
+            --jq '.[] | select(.pull_request == null) | .title')"
+          if printf '%s\n' "$open_titles" | grep -Fx "$title" >/dev/null; then
+            echo "An open \"$title\" issue already exists; no new issue created."
+            exit 0
+          fi
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$(cat <<EOF
+          The weekly external link check found links that no longer answer.
+
+          The full lychee report is attached to the run as the \`lychee-report\` artifact:
+          ${RUN_URL}
+
+          Fix or remove each link, then close this issue; the next weekly run reopens
+          one only if something is still broken.
+          EOF
+          )"

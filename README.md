@@ -116,6 +116,8 @@ the generated navigation, skills, timeline, and off-duty cards still match those
   entry without a credit remains open for manual review; video days are skipped (the run
   summary says why), and a real failure opens an issue. Run it by hand from the Actions tab with
   a `date` to fill a gap.
+  Each entry also gets a 640 px grid thumbnail in `assets/img/apod/thumbs/` (used by
+  `/sky/` and the homepage card); `python -m cosmic_daily thumbnails` backfills missing ones.
   Details in [`tools/cosmic-daily/README.md`](tools/cosmic-daily/README.md).
 - **Pages deployment** (`pages.yml`) builds the site with the Gemfile and publishes it on every
   push to `main`. The legacy GitHub Pages builder is pinned to Jekyll 3.x and ignores the
@@ -132,6 +134,15 @@ the generated navigation, skills, timeline, and off-duty cards still match those
   stable `Refresh /now/ page` issue and does not comment on an existing issue. Run it
   manually from the Actions tab when you want an immediate check; update the page only after
   reviewing its durable public facts.
+- **Quality gates** (in `ci.yml`, on every pull request): internal links with
+  [lychee](https://lychee.cli.rs/) (offline), accessibility with axe-core (WCAG 2.2 A/AA,
+  every sitemap page plus the 404, desktop and mobile; serious and critical issues fail),
+  Lighthouse (median of 3 runs, thresholds in `tools/site-checks/browser/lighthouserc.json`)
+  and a gitleaks scan of the whole history (reviewed false positives in `.gitleaksignore`).
+  Run them locally after `bundle exec jekyll build`:
+  `cd tools/site-checks/browser && npm ci && npx playwright install chromium && node axe-check.mjs && npx lhci autorun --config=lighthouserc.json`.
+- **External links** (`links-weekly.yml`, Mondays): checks every outbound link and opens a
+  single "Broken external links" issue when some stop answering.
 - **Dependabot** (`dependabot.yml`) opens weekly grouped PRs for the GitHub Actions, the
   Gemfile and the Cosmic Daily Python dependencies.
 - **IndexNow** (`indexnow.yml`) submits every URL of the live sitemap to Bing once the Pages

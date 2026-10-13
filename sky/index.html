@@ -22,7 +22,8 @@ description: >-
     <li class="sky-item">
       <a class="sky-card" href="{{ entry.url }}">
         {% if entry.image %}
-        <img src="{{ entry.image }}" alt="{{ entry.title | escape }}"{% if entry.image_width %} width="{{ entry.image_width }}"{% endif %}{% if entry.image_height %} height="{{ entry.image_height }}"{% endif %} loading="lazy" decoding="async">
+        {%- assign thumb = entry.image | replace: "/assets/img/apod/", "/assets/img/apod/thumbs/" -%}
+        <img src="{{ thumb }}" alt="{{ entry.title | escape }}"{% if entry.image_width %} width="{{ entry.image_width }}"{% endif %}{% if entry.image_height %} height="{{ entry.image_height }}"{% endif %} loading="lazy" decoding="async">
         {% endif %}
         <span class="sky-card-body">
           <time datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%B %-d, %Y" }}</time>

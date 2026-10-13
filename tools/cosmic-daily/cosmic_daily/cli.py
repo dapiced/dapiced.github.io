@@ -14,7 +14,7 @@ from PIL import Image, UnidentifiedImageError
 
 from .apod_page import ApodUnavailableError
 from .article_generator import generate_article, slugify_title
-from .image_processor import process_apod_image_with_fallback
+from .image_processor import process_apod_image_with_fallback, write_thumbnail
 from .nasa_client import APODRecord, fetch_apod
 from .repository import RepositoryContext
 from .rights_policy import evaluate_media_rights
@@ -155,8 +155,10 @@ def generate(date_value: str | None = None) -> int:
     filename = f"{apod.date}-{slug}"
     post_path = repo.apod_dir / f"{filename}.md"
     image_path = repo.assets_apod_dir / f"{filename}.webp"
-    if post_path.exists() or image_path.exists():
-        print(f"Destination already exists: {post_path if post_path.exists() else image_path}")
+    thumbnail_path = repo.assets_apod_thumbs_dir / f"{filename}.webp"
+    existing = [path for path in (post_path, image_path, thumbnail_path) if path.exists()]
+    if existing:
+        print(f"Destination already exists: {existing[0]}")
         return EXIT_ERROR
 
     with tempfile.TemporaryDirectory(prefix="cosmic-daily-") as temp_dir:
@@ -169,6 +171,7 @@ def generate(date_value: str | None = None) -> int:
                 staging_image_dir,
                 filename,
             )
+            staged_thumbnail = write_thumbnail(staged_image, staging_image_dir / "thumbs")
         except Exception as exc:
             print(f"Image processing failed: {exc}")
             return EXIT_ERROR
@@ -189,8 +192,10 @@ def generate(date_value: str | None = None) -> int:
             return EXIT_ERROR
 
         repo.ensure_directory(repo.assets_apod_dir)
+        repo.ensure_directory(repo.assets_apod_thumbs_dir)
         repo.ensure_directory(repo.apod_dir)
         shutil.move(str(staged_image), image_path)
+        shutil.move(str(staged_thumbnail), thumbnail_path)
         shutil.move(str(staged_post), post_path)
 
     _emit_github_output(
@@ -332,9 +337,22 @@ def _parse_and_validate_post(content: str) -> tuple[dict, str]:
     return metadata, body
 
 
+def thumbnails() -> int:
+    """Create the missing /sky/ grid thumbnails for every published APOD image."""
+    repo = RepositoryContext()
+    created = 0
+    for image in sorted(repo.assets_apod_dir.glob("*.webp")):
+        if (repo.assets_apod_thumbs_dir / image.name).exists():
+            continue
+        write_thumbnail(image, repo.assets_apod_thumbs_dir)
+        created += 1
+    print(f"Thumbnails created: {created}")
+    return EXIT_SUCCESS
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate APOD entries for the Jekyll /sky/ collection.")
-    parser.add_argument("command", nargs="?", choices=["preview", "generate", "check"], default="preview")
+    parser.add_argument("command", nargs="?", choices=["preview", "generate", "check", "thumbnails"], default="preview")
     parser.add_argument("--date", help="APOD date in ISO format (YYYY-MM-DD)")
     parser.add_argument("--post-path", help="Path to post to validate")
     args = parser.parse_args(argv)
@@ -343,4 +361,6 @@ def main(argv: list[str] | None = None) -> int:
         return preview(args.date)
     if args.command == "generate":
         return generate(args.date)
+    if args.command == "thumbnails":
+        return thumbnails()
     return check(args.post_path)

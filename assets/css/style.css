@@ -979,6 +979,8 @@ a.beyond-card:hover {
   max-width: 100%;
   overflow-x: auto;
 }
+.post-content table:focus-visible,
+.post-content pre:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
 .post-content th,
 .post-content td {
   padding: 0.45rem 0.95rem;

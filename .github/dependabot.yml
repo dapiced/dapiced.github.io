@@ -24,3 +24,11 @@ updates:
     groups:
       cosmic-daily:
         patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: "/tools/site-checks/browser"
+    schedule:
+      interval: weekly
+    groups:
+      browser-checks:
+        patterns: ["*"]
