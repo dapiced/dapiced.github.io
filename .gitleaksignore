@@ -1,0 +1,8 @@
+# Findings reviewed and accepted. One fingerprint per line, see
+# https://github.com/gitleaks/gitleaks#gitleaksignore
+#
+# IndexNow key: public by design. Search engines fetch it from
+# https://dominicdapice.com/3678563103b4f11c9ed1cb8d806c655d.txt to verify the
+# site, so it is not a secret (an early version of indexnow.yml inlined it).
+0c7f37a974202e654a4c6d97f7c89d08fe51faff:.github/workflows/indexnow.yml:generic-api-key:30
+.github/workflows/indexnow.yml:generic-api-key:38

@@ -16,6 +16,10 @@ WEBP_QUALITY_MIN = 40
 WEBP_QUALITY_STEP = 5
 RESIZE_SCALE_FACTOR = 0.9
 MIN_IMAGE_SIDE = 320
+# Grid thumbnail for /sky/ and the homepage "Sky of the day" card: the cards
+# are at most ~360 CSS px wide, so 640 px covers 1.75x screens.
+THUMBNAIL_WIDTH = 640
+THUMBNAIL_QUALITY = 75
 
 
 def _validate_download_url(raw_url: str) -> str:
@@ -121,6 +125,31 @@ def process_apod_image(image_url: str, target_directory: str | Path, output_name
         raise ValueError("Image file format is not recognized or not supported.") from exc
 
     return webp_path.resolve(), size
+
+
+def write_thumbnail(source: str | Path, target_directory: str | Path) -> Path:
+    """Write a WebP thumbnail of ``source`` (same file name) into ``target_directory``.
+
+    The thumbnail is at most THUMBNAIL_WIDTH px wide; a narrower source keeps its
+    size and is only re-encoded. Existing thumbnails are never overwritten.
+    """
+    source_path = Path(source)
+    target = Path(target_directory) / f"{source_path.stem}.webp"
+    if target.exists():
+        raise FileExistsError(f"Refusing to overwrite existing thumbnail: {target}")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with Image.open(source_path) as image:
+        image = ImageOps.exif_transpose(image)
+        if image.mode not in ("RGB", "RGBA"):
+            image = image.convert("RGB")
+        width, height = image.size
+        if width > THUMBNAIL_WIDTH:
+            image = image.resize(
+                (THUMBNAIL_WIDTH, max(1, round(height * THUMBNAIL_WIDTH / width))),
+                Image.LANCZOS,
+            )
+        image.save(target, format="WEBP", quality=THUMBNAIL_QUALITY, method=6)
+    return target.resolve()
 
 
 def process_apod_image_with_fallback(

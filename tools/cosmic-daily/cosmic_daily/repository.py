@@ -12,6 +12,7 @@ class RepositoryContext:
         # Legacy location: APOD entries lived in _posts before the /sky/ collection.
         self.posts_dir = self.root / "_posts"
         self.assets_apod_dir = self.root / "assets" / "img" / "apod"
+        self.assets_apod_thumbs_dir = self.assets_apod_dir / "thumbs"
 
     @staticmethod
     def _resolve_root(repo_root: str | Path | None = None) -> Path:

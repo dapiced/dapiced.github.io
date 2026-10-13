@@ -332,3 +332,29 @@ def test_parse_rejects_incomplete_or_ambiguous_front_matter(mutate, expected_err
 def test_parse_rejects_inconsistent_rights_status_and_credit(content):
     with pytest.raises(ValueError, match="rights status"):
         cli._parse_and_validate_post(content(_valid_generated_content()))
+
+
+def test_generate_writes_grid_thumbnail(monkeypatch, repo):
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _record())
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", _fake_process)
+
+    assert cli.generate("2026-09-13") == cli.EXIT_SUCCESS
+    thumbnail = repo.root / "assets" / "img" / "apod" / "thumbs" / "2026-09-13-example-title.webp"
+    with Image.open(thumbnail) as image:
+        assert image.size == (640, 427)
+
+
+def test_thumbnails_backfills_only_missing_files(repo, capsys):
+    images = repo.root / "assets" / "img" / "apod"
+    images.mkdir(parents=True)
+    for name in ("a", "b"):
+        Image.new("RGB", (1600, 900), "navy").save(images / f"{name}.webp", format="WEBP")
+    (images / "thumbs").mkdir()
+    Image.new("RGB", (10, 10), "red").save(images / "thumbs" / "a.webp", format="WEBP")
+
+    assert cli.thumbnails() == cli.EXIT_SUCCESS
+    assert "Thumbnails created: 1" in capsys.readouterr().out
+    with Image.open(images / "thumbs" / "a.webp") as kept:
+        assert kept.size == (10, 10)
+    with Image.open(images / "thumbs" / "b.webp") as created:
+        assert created.size == (640, 360)

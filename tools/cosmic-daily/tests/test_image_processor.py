@@ -190,3 +190,23 @@ def test_fallback_raises_last_error_when_every_url_fails(monkeypatch, tmp_path):
 def test_fallback_rejects_empty_candidate_list(tmp_path):
     with pytest.raises(ValueError, match="No image URL"):
         process_apod_image_with_fallback([None, ""], tmp_path, "empty")
+
+
+def test_write_thumbnail_downscales_wide_images_only(tmp_path):
+    wide = tmp_path / "wide.webp"
+    narrow = tmp_path / "narrow.webp"
+    Image.new("RGB", (1600, 1000), "black").save(wide, format="WEBP")
+    Image.new("RGB", (500, 700), "black").save(narrow, format="WEBP")
+
+    with Image.open(image_processor.write_thumbnail(wide, tmp_path / "thumbs")) as image:
+        assert image.size == (640, 400)
+    with Image.open(image_processor.write_thumbnail(narrow, tmp_path / "thumbs")) as image:
+        assert image.size == (500, 700)
+
+
+def test_write_thumbnail_never_overwrites(tmp_path):
+    source = tmp_path / "x.webp"
+    Image.new("RGB", (800, 800), "black").save(source, format="WEBP")
+    image_processor.write_thumbnail(source, tmp_path / "thumbs")
+    with pytest.raises(FileExistsError):
+        image_processor.write_thumbnail(source, tmp_path / "thumbs")
