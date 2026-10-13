@@ -16,6 +16,7 @@ GOLD_SELECTORS = {
     ".gold-tip .tip-name",
     ".footer-dedication a",
     ".footer-dedication a:hover",
+    ".palette-output.palette-vincenzo",  # `ping vincenzo` in the command palette
 }
 
 

@@ -33,6 +33,12 @@ Post content in Markdown…
   section is omitted when no authored post shares a tag.
 - Search authored posts at `/blog/search/`; the local index is generated at
   `/blog/search.json`. Tag archives remain available without JavaScript.
+- The command palette (Ctrl K, ⌘K or `/` on any page) searches pages, posts, portfolio
+  entries and Sky pictures through `/search-index.json`, and offers navigation, theme,
+  language and `ping vincenzo`.
+- Social share cards: after adding a post or changing its title, date or photo, run
+  `python tools/og-cards/og_cards.py` and commit `assets/img/og/` (see
+  [`tools/og-cards/README.md`](tools/og-cards/README.md); CI fails on a stale card).
 - Photos: resize to ~1600 px max and convert to WebP before committing; always set
   `width`/`height` + `loading="lazy"` (the first image of a post can stay eager).
 - Bilingual posts: publish two files (one per language) and cross-link them with
@@ -70,6 +76,8 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
   committed PDF.
 - `blog/index.html` - post listing (all English posts remain in HTML for SEO and readers without JavaScript; JavaScript initially shows eight and provides a button to reveal the rest)
 - `blog/search/` and `blog/search.json` - local search over authored post titles, excerpts and tags
+- `search-index.json` + `assets/js/command-palette.js` - site-wide command palette,
+  checked end to end by `tools/site-checks/browser/palette-check.mjs`
 - `404.html` - custom not-found page
 - `_posts/` - blog posts (Markdown)
 - `_apod/` - daily NASA APOD entries (collection published under `/sky/`, own feed at `/feed/apod.xml`)

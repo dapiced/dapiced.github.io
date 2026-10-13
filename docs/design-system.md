@@ -48,3 +48,14 @@ then `pyftsubset … --flavor=woff2` (Latin + French punctuation).
   ignored by browsers that do not support it.
 - `prefers-reduced-motion: reduce` turns off transitions, the reveal animation, the
   twinkling and the shooting stars; a click on Vincenzo's star still plays its signal.
+
+## Command palette
+
+- Opens with Ctrl K, ⌘K or `/` (not while typing in a field), or the search button of
+  the header, which shows the shortcut of the reader's platform.
+- Native `<dialog>` with the ARIA combobox pattern: the input owns a listbox, arrows
+  and Home/End move `aria-activedescendant`, Enter opens, Escape closes and gives
+  focus back. axe runs on the open dialog in CI.
+- Results in the reader's language come first on equal rank; the other language is
+  marked `· FR` or `· EN`.
+- `ping vincenzo` answers in gold, the only gold of the palette.

@@ -80,6 +80,12 @@
         {%- if page.translation_url %}
         <a class="lang-switch" href="{{ page.translation_url }}" hreflang="{{ other_lang }}" lang="{{ other_lang }}" aria-label="{{ other_lang | upcase }}, {{ chrome_t.lang_switch }}">{{ other_lang | upcase }}</a>
         {%- endif %}
+        <button class="palette-open" type="button" data-shortcut="Ctrl K" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K /" aria-label="{{ chrome_t.palette_open }}"
+          data-title="{{ chrome_t.palette_title }}" data-placeholder="{{ chrome_t.palette_placeholder }}" data-results="{{ chrome_t.palette_results }}"
+          data-hint="{{ chrome_t.palette_hint }}" data-empty="{{ chrome_t.palette_empty }}" data-error="{{ chrome_t.palette_error }}"
+          data-kind-go="{{ chrome_t.palette_kind_go }}" data-kind-action="{{ chrome_t.palette_kind_action }}" data-kind-page="{{ chrome_t.palette_kind_page }}"
+          data-kind-post="{{ chrome_t.palette_kind_post }}" data-kind-portfolio="{{ chrome_t.palette_kind_portfolio }}" data-kind-sky="{{ chrome_t.palette_kind_sky }}"
+          data-ping-reply="{{ chrome_t.palette_ping_reply }}"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         <button class="theme-toggle" type="button" aria-label="{{ chrome_t.theme_to_light }}" data-label-to-light="{{ chrome_t.theme_to_light }}" data-label-to-dark="{{ chrome_t.theme_to_dark }}"><span class="icon-night" aria-hidden="true">☾</span><span class="icon-dawn" aria-hidden="true">☀</span></button>
         <button class="nav-toggle" aria-label="{{ chrome_t.menu_toggle }}" aria-expanded="false" aria-controls="nav-links"><span aria-hidden="true">☰</span></button>
       </div>
@@ -116,14 +122,15 @@
     <p class="footer-copy">© <span id="year">2026</span> Dominic D'Apice · Montréal, Canada · {{ chrome_t.orion_arm }}</p>
   </footer>
 
-  {% if page.blog_search %}
   <script src="{{ '/assets/js/blog-search-core.js' | asset_digest }}" defer></script>
+  {% if page.blog_search %}
   <script src="{{ '/assets/js/blog-search.js' | asset_digest }}" defer></script>
   {% endif %}
   {% if page.blog_index %}
   <script src="{{ '/assets/js/blog-index.js' | asset_digest }}" defer></script>
   {% endif %}
   <script src="{{ '/assets/js/main.js' | asset_digest }}" defer></script>
+  <script src="{{ '/assets/js/command-palette.js' | asset_digest }}" defer></script>
   <script data-goatcounter="https://dapiced.goatcounter.com/count" async src="{{ '/assets/vendor/goatcounter-v5/count.js' | asset_digest }}"></script>
 </body>
 </html>

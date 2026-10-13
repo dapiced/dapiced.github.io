@@ -282,6 +282,87 @@ a:hover { color: var(--lightblue); text-decoration: underline; }
 [data-theme="light"] .theme-toggle .icon-dawn { display: inline; }
 [data-theme="light"] .theme-toggle .icon-night { display: none; }
 
+/* command palette (assets/js/command-palette.js) */
+.palette-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.25rem;
+  min-width: 2.25rem;
+  justify-content: center;
+  padding: 0 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.palette-open:hover { border-color: var(--cyan); color: var(--cyan); }
+/* The shortcut is decoration: generated content with empty alt text keeps the
+   accessible name equal to the aria-label. */
+.palette-open::after {
+  content: attr(data-shortcut) / "";
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+@media (max-width: 640px) { .palette-open::after { content: none; } }
+
+.palette {
+  width: min(40rem, calc(100vw - 2rem));
+  max-height: min(34rem, calc(100vh - 6rem));
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 24px 64px rgb(var(--rgb-shadow) / 0.5);
+}
+.palette::backdrop { background: rgb(var(--rgb-bg) / 0.72); backdrop-filter: blur(3px); }
+.palette-box { display: flex; flex-direction: column; max-height: inherit; }
+.palette-field {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.palette-prompt { font-family: var(--mono); color: var(--cyan); }
+.palette-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--heading);
+  font: 1rem var(--mono);
+}
+.palette-input:focus { outline: none; }
+.palette-field:focus-within { box-shadow: inset 0 -2px 0 var(--cyan); }
+.palette-input::placeholder { color: var(--muted); }
+.palette-list { list-style: none; margin: 0; padding: 0.4rem; overflow-y: auto; }
+.palette-option {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.palette-option[aria-selected="true"] { background: var(--panel-2); box-shadow: inset 3px 0 0 var(--cyan); }
+.palette-label { color: var(--heading); }
+.palette-kind { flex-shrink: 0; font: 0.72rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.palette-empty { padding: 0.9rem 0.75rem; color: var(--muted); }
+.palette-output:empty { display: none; }
+.palette-output { margin: 0; padding: 0.7rem 1rem; border-top: 1px solid var(--border); font: 0.85rem var(--mono); }
+.palette-output.palette-vincenzo { color: var(--gold); }
+.palette-hint { margin: 0; padding: 0.55rem 1rem; border-top: 1px solid var(--border); font: 0.72rem var(--mono); color: var(--muted); }
+@media (max-width: 640px) { .palette-hint { display: none; } }
+
 .nav-toggle {
   display: none;
   background: none;

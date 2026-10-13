@@ -420,56 +420,59 @@
      Real celestial mechanics: sidereal time -> hour angle -> alt/az
      for RA 00h49m55.1s, DEC +41°11'56.1" seen from Montréal.     */
   var starStatus = document.getElementById("star-status");
-  if (starStatus) {
-    var D2R = Math.PI / 180;
-    var updateStar = function () {
-      var RA = 0.83197;               // hours
-      var DEC = 41.1989 * D2R;
-      var LAT = 45.5019 * D2R;        // Montréal
-      var LON = -73.5674;             // degrees east
-      var d = Date.now() / 86400000 + 2440587.5 - 2451545.0;
-      var gmst = ((18.697374558 + 24.06570982441908 * d) % 24 + 24) % 24;
-      var lst = (gmst + LON / 15 + 24) % 24;
-      var ha = (((lst - RA) * 15 + 540) % 360) - 180;
-      var haR = ha * D2R;
-      var alt = Math.asin(
-        Math.sin(LAT) * Math.sin(DEC) +
-        Math.cos(LAT) * Math.cos(DEC) * Math.cos(haR)
-      ) / D2R;
-      var az = Math.atan2(
-        -Math.sin(haR) * Math.cos(DEC),
-        Math.sin(DEC) * Math.cos(LAT) - Math.cos(DEC) * Math.cos(haR) * Math.sin(LAT)
-      ) / D2R;
-      az = (az + 360) % 360;
-      var french = document.documentElement.lang === "fr";
-      var index = Math.round(az / 45) % 8;
-      var msg;
-      if (french) {
-        var dirFr = ["nord", "nord-est", "est", "sud-est", "sud", "sud-ouest", "ouest", "nord-ouest"][index];
-        var toward = /^[aeiou]/.test(dirFr) ? "vers l’" + dirFr : "vers le " + dirFr;
-        if (alt > 5) {
-          msg = "✦ En ce moment, l’étoile de Vincenzo brille à " + Math.round(alt) +
-                "° au-dessus de l’horizon de Montréal, " + toward + ". Levez les yeux.";
-        } else if (alt > 0) {
-          msg = "✦ En ce moment, l’étoile de Vincenzo frôle l’horizon de Montréal, " + toward + ".";
-        } else {
-          msg = "✦ L’étoile de Vincenzo est brièvement sous l’horizon. Elle revient dans quelques heures : " +
-                "elle ne quitte presque jamais le ciel de Montréal.";
-        }
+  var D2R = Math.PI / 180;
+  /* Also used by the command palette (`ping vincenzo`). */
+  var describeStar = function () {
+    var RA = 0.83197;               // hours
+    var DEC = 41.1989 * D2R;
+    var LAT = 45.5019 * D2R;        // Montréal
+    var LON = -73.5674;             // degrees east
+    var d = Date.now() / 86400000 + 2440587.5 - 2451545.0;
+    var gmst = ((18.697374558 + 24.06570982441908 * d) % 24 + 24) % 24;
+    var lst = (gmst + LON / 15 + 24) % 24;
+    var ha = (((lst - RA) * 15 + 540) % 360) - 180;
+    var haR = ha * D2R;
+    var alt = Math.asin(
+      Math.sin(LAT) * Math.sin(DEC) +
+      Math.cos(LAT) * Math.cos(DEC) * Math.cos(haR)
+    ) / D2R;
+    var az = Math.atan2(
+      -Math.sin(haR) * Math.cos(DEC),
+      Math.sin(DEC) * Math.cos(LAT) - Math.cos(DEC) * Math.cos(haR) * Math.sin(LAT)
+    ) / D2R;
+    az = (az + 360) % 360;
+    var french = document.documentElement.lang === "fr";
+    var index = Math.round(az / 45) % 8;
+    var msg;
+    if (french) {
+      var dirFr = ["nord", "nord-est", "est", "sud-est", "sud", "sud-ouest", "ouest", "nord-ouest"][index];
+      var toward = /^[aeiou]/.test(dirFr) ? "vers l’" + dirFr : "vers le " + dirFr;
+      if (alt > 5) {
+        msg = "✦ En ce moment, l’étoile de Vincenzo brille à " + Math.round(alt) +
+              "° au-dessus de l’horizon de Montréal, " + toward + ". Levez les yeux.";
+      } else if (alt > 0) {
+        msg = "✦ En ce moment, l’étoile de Vincenzo frôle l’horizon de Montréal, " + toward + ".";
       } else {
-        var dir = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"][index];
-        if (alt > 5) {
-          msg = "✦ Right now, Vincenzo’s star shines " + Math.round(alt) +
-                "° above Montréal’s horizon, to the " + dir + " - look up.";
-        } else if (alt > 0) {
-          msg = "✦ Right now, Vincenzo’s star is skimming Montréal’s horizon to the " + dir + ".";
-        } else {
-          msg = "✦ Vincenzo’s star is briefly below the horizon - it returns within hours. " +
-                "It almost never leaves Montréal’s sky.";
-        }
+        msg = "✦ L’étoile de Vincenzo est brièvement sous l’horizon. Elle revient dans quelques heures : " +
+              "elle ne quitte presque jamais le ciel de Montréal.";
       }
-      starStatus.textContent = msg;
-    };
+    } else {
+      var dir = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"][index];
+      if (alt > 5) {
+        msg = "✦ Right now, Vincenzo’s star shines " + Math.round(alt) +
+              "° above Montréal’s horizon, to the " + dir + " - look up.";
+      } else if (alt > 0) {
+        msg = "✦ Right now, Vincenzo’s star is skimming Montréal’s horizon to the " + dir + ".";
+      } else {
+        msg = "✦ Vincenzo’s star is briefly below the horizon - it returns within hours. " +
+              "It almost never leaves Montréal’s sky.";
+      }
+    }
+    return msg;
+  };
+  window.vincenzoStarStatus = describeStar;
+  if (starStatus) {
+    var updateStar = function () { starStatus.textContent = describeStar(); };
     updateStar();
     setInterval(updateStar, 60000);
   }
