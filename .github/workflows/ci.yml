@@ -40,6 +40,7 @@ jobs:
             tests/test_resume_page.py \
             tests/test_no_employer_mention.py \
             tests/test_sky_thumbnails.py \
+            tests/test_design_system.py \
             tests/test_site_data.py \
             tests/test_final_hardening_contracts.py -q
           python tools/site-checks/validate_site_data.py

@@ -168,6 +168,12 @@ the generated navigation, skills, timeline, and off-duty cards still match those
   for instant URL submission to Bing.
 - Google verification is a meta tag in `_layouts/default.html`.
 
+## Design system
+
+Night and Dawn themes, colour tokens, self-hosted fonts and motion rules are documented
+in [`docs/design-system.md`](docs/design-system.md) and enforced by
+`tests/test_design_system.py`.
+
 ## Editorial rules
 
 - The author's current employer is never named on the site or in the repository;

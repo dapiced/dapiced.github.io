@@ -17,6 +17,11 @@
     var gold = { x: 0, y: 0 };
     var goldHover = false;
 
+    /* Night / Dawn: at dawn the stars and shooting stars fade out and only
+       Vincenzo's star remains. `night` eases toward 1 (Night) or 0 (Dawn). */
+    function isDawn() { return document.documentElement.getAttribute("data-theme") === "light"; }
+    var night = isDawn() ? 0 : 1;
+
     /* Once per visit, his star twinkles "PAPA" in Morse (.--. .- .--. .-),
        an echo of the signal sent across space and time in Interstellar.
        Clicking or tapping the star sends the signal again.
@@ -71,16 +76,19 @@
 
     function drawGold(pulse, haloScale) {
       var radius = 16 * (haloScale || 1);
+      /* blend from night gold to a deeper dawn gold that reads on a light sky */
+      var core = night > 0.5 ? "255,233,168" : "176,118,8";
+      var glow = night > 0.5 ? "227,179,65" : "184,134,11";
       var halo = ctx.createRadialGradient(gold.x, gold.y, 0, gold.x, gold.y, radius);
-      halo.addColorStop(0, "rgba(255,233,168," + Math.min(1, 0.7 * pulse) + ")");
-      halo.addColorStop(0.4, "rgba(227,179,65," + Math.min(1, 0.28 * pulse) + ")");
-      halo.addColorStop(1, "rgba(227,179,65,0)");
+      halo.addColorStop(0, "rgba(" + core + "," + Math.min(1, 0.7 * pulse) + ")");
+      halo.addColorStop(0.4, "rgba(" + glow + "," + Math.min(1, 0.28 * pulse) + ")");
+      halo.addColorStop(1, "rgba(" + glow + ",0)");
       ctx.globalAlpha = 1;
       ctx.fillStyle = halo;
       ctx.beginPath();
       ctx.arc(gold.x, gold.y, radius, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = "#ffe9a8";
+      ctx.fillStyle = night > 0.5 ? "#ffe9a8" : "#a86f00";
       ctx.beginPath();
       ctx.arc(gold.x, gold.y, 1.7 + 0.6 * pulse, 0, Math.PI * 2);
       ctx.fill();
@@ -126,6 +134,9 @@
       if (!meteor && t - lastFrame < FRAME_MS - 1) return;
       var steps = lastFrame ? Math.min((t - lastFrame) / STEP_MS, 4) : 1;
       lastFrame = t;
+      /* ~1.2 s fade between Night and Dawn */
+      var target = isDawn() ? 0 : 1;
+      night += Math.max(-0.028 * steps, Math.min(0.028 * steps, target - night));
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       var sec = t / 1000;
 
@@ -133,7 +144,8 @@
         var s = stars[i];
         /* under reduced motion only the golden star moves (click replay) */
         var alpha = reduceMotion ? s.base : s.base + s.amp * Math.sin(sec * s.speed + s.phase);
-        ctx.globalAlpha = Math.max(0.05, Math.min(1, alpha));
+        ctx.globalAlpha = Math.max(0.05, Math.min(1, alpha)) * night;
+        if (night <= 0.01) break;
         ctx.fillStyle = "#dbe9ff";
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
@@ -157,7 +169,7 @@
         var grad = ctx.createLinearGradient(m.x - m.vx * 10, m.y - m.vy * 10, m.x, m.y);
         grad.addColorStop(0, "rgba(230,241,255,0)");
         grad.addColorStop(1, "rgba(230,241,255," + (0.85 * m.life) + ")");
-        ctx.globalAlpha = 1;
+        ctx.globalAlpha = night;
         ctx.strokeStyle = grad;
         ctx.lineWidth = 1.6;
         ctx.beginPath();
@@ -168,7 +180,7 @@
         m.y += m.vy * steps;
         m.life -= 0.012 * steps;
         if (m.life <= 0 || m.x > canvas.width + 150) meteor = null;
-      } else if (!reduceMotion && Math.random() < 0.0025 * steps) {   // ~one every 7 s
+      } else if (!reduceMotion && night > 0.5 && Math.random() < 0.0025 * steps) {   // ~one every 7 s
         spawnMeteor();
       }
 
@@ -185,8 +197,9 @@
     }
 
     function drawStatic() {
+      night = isDawn() ? 0 : 1;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (var i = 0; i < stars.length; i++) {
+      for (var i = 0; night > 0 && i < stars.length; i++) {
         var s = stars[i];
         ctx.globalAlpha = s.base;
         ctx.fillStyle = "#dbe9ff";
@@ -240,6 +253,9 @@
       }
     }, { passive: true });
 
+    /* redraw the still sky when the theme changes under reduced motion */
+    document.addEventListener("themechange", function () { if (reduceMotion && rafId === null) drawStatic(); });
+
     if (reduceMotion) {
       drawStatic();
     } else {
@@ -254,6 +270,40 @@
         }, MORSE_DELAY_MS);
       }
     }
+  }
+
+  /* ---------- Night / Dawn switch ----------
+     theme-init.js already applied the saved or system theme before paint. */
+  var themeToggle = document.querySelector(".theme-toggle");
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  function applyTheme(theme, save) {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (themeMeta) themeMeta.setAttribute("content", theme === "light" ? "#f6f4ef" : "#04060f");
+    if (themeToggle) {
+      themeToggle.setAttribute("aria-label", themeToggle.getAttribute(
+        theme === "light" ? "data-label-to-dark" : "data-label-to-light"));
+    }
+    if (save) {
+      try { localStorage.setItem("theme", theme); } catch (e) { /* storage blocked */ }
+    }
+    document.dispatchEvent(new CustomEvent("themechange", { detail: theme }));
+  }
+  applyTheme(document.documentElement.getAttribute("data-theme") || "dark", false);
+  if (themeToggle) {
+    themeToggle.addEventListener("click", function () {
+      var dawn = document.documentElement.getAttribute("data-theme") === "light";
+      applyTheme(dawn ? "dark" : "light", true);
+    });
+  }
+  /* follow the system while the visitor has not chosen explicitly */
+  if (window.matchMedia) {
+    var systemLight = window.matchMedia("(prefers-color-scheme: light)");
+    var follow = function (e) {
+      var saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (err) { /* ignore */ }
+      if (saved !== "light" && saved !== "dark") applyTheme(e.matches ? "light" : "dark", false);
+    };
+    if (systemLight.addEventListener) systemLight.addEventListener("change", follow);
   }
 
   /* ---------- typed roles ---------- */
