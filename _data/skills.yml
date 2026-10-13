@@ -1,10 +1,12 @@
 - domain: "Cloud & Data"
+  domain_fr: "Infonuagique et données"
   tags:
     - Azure
     - Databricks
     - VMware
     - Azure DevOps
 - domain: "IaC & Automation"
+  domain_fr: "IaC et automatisation"
   tags:
     - Ansible
     - Terraform
@@ -13,12 +15,14 @@
     - PowerShell
     - Bash
 - domain: Languages
+  domain_fr: "Langages"
   tags:
     - Python
     - R
     - JavaScript
     - Perl
 - domain: Systems
+  domain_fr: "Systèmes"
   tags:
     - Red Hat
     - SUSE
@@ -26,12 +30,14 @@
     - IBM AIX
     - Red Hat Satellite
 - domain: Databases
+  domain_fr: "Bases de données"
   tags:
     - PostgreSQL
     - MSSQL
     - MySQL
     - Oracle
 - domain: "ML & Data"
+  domain_fr: "ML et données"
   tags:
     - MLOps
     - DataOps

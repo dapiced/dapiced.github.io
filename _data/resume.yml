@@ -1,0 +1,39 @@
+# Resume strings, keyed by page.lang (_includes/resume.html renders
+# /resume/ and /fr/cv/). Contact stays LinkedIn only.
+en:
+  location: "Montréal, Canada"
+  summary: >-
+    I design, deploy, and operate platforms that support AI workloads, data
+    pipelines, and mission-critical systems. More than 25 years in IT shaped
+    a practical approach: automate repeatable work, build reliable
+    infrastructure, and keep operations aligned with business needs.
+  actions_label: "Resume actions"
+  contact: "Contact on LinkedIn"
+  print: "Print / save as PDF"
+  experience: "Experience"
+  skills: "Technical capabilities"
+  skills_of: "Skills:"
+  profiles: "Profiles and contact"
+  profiles_text: >-
+    For professional inquiries and collaboration, contact me on LinkedIn.
+    You can also review my public work and data science activity through
+    these profiles.
+fr:
+  location: "Montréal, Canada"
+  summary: >-
+    Je conçois, déploie et exploite des plateformes qui soutiennent des charges
+    d'IA, des pipelines de données et des systèmes critiques. Plus de 25 ans en
+    TI ont forgé une approche pratique : automatiser le travail répétitif, bâtir
+    une infrastructure fiable et garder les opérations alignées sur les besoins
+    d'affaires.
+  actions_label: "Actions du CV"
+  contact: "Me joindre sur LinkedIn"
+  print: "Imprimer / enregistrer en PDF"
+  experience: "Expérience"
+  skills: "Compétences techniques"
+  skills_of: "Compétences :"
+  profiles: "Profils et contact"
+  profiles_text: >-
+    Pour toute demande professionnelle ou collaboration, joignez-moi sur
+    LinkedIn. Vous pouvez aussi consulter mon travail public et mes activités
+    en science des données sur ces profils.

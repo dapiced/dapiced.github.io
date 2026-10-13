@@ -1,0 +1,197 @@
+{%- comment -%}
+  Homepage body for / (en) and /fr/ (fr). Strings: _data/home.yml.
+  Data: timeline, skills and resources carry optional *_fr fields.
+{%- endcomment -%}
+{%- assign lang = page.lang | default: site.lang -%}
+{%- assign h = site.data.home[lang] | default: site.data.home.en -%}
+{%- assign fr = false -%}{%- if lang == "fr" -%}{%- assign fr = true -%}{%- endif -%}
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <img class="hero-portrait" src="/assets/img/dominic-portrait-320.webp"
+       srcset="/assets/img/dominic-portrait-160.webp 160w, /assets/img/dominic-portrait-320.webp 320w, /assets/img/dominic-portrait-480.webp 480w"
+       sizes="(max-width: 600px) 110px, 150px"
+       alt="Dominic D'Apice" width="320" height="320" loading="eager" fetchpriority="high">
+  <p class="eyebrow">{{ h.eyebrow }}</p>
+  <h1>DOMINIC D'APICE</h1>
+  <p class="hero-roles">
+    <span class="sr-only">{{ h.roles_sr }}</span>
+    <span id="typed-roles" aria-hidden="true" data-roles="{{ h.roles | jsonify | escape }}">{{ h.roles.first }}</span><span class="hero-cursor" aria-hidden="true">▌</span>
+  </p>
+  <p class="hero-terminal">
+    <span class="u">dominic@azure</span>:~$ <span class="c">ansible-playbook</span> <span class="f">deploy_the_future.yml</span>
+  </p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="{% if fr %}/fr/realisations/{% else %}/portfolio/{% endif %}">{{ h.cta_portfolio }}</a>
+    <a class="btn btn-ghost" href="{{ h.blog_href }}">{{ h.cta_blog }}</a>
+    <a class="btn btn-labml" href="https://app.dominicdapice.com/" target="_blank" rel="noopener">{{ h.cta_labml }}</a>
+    <a class="btn btn-sky" href="/sky/"{% if fr %} hreflang="en"{% endif %}>{{ h.cta_sky }}</a>
+    <a class="btn btn-ghost" href="https://github.com/dapiced" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+  <p class="hero-coords"><a href="{{ h.coords_href }}" target="_blank" rel="noopener" title="{{ h.coords_title }}">{{ h.coords }}</a></p>
+</section>
+
+<!-- ================= PATHS ================= -->
+{%- if fr -%}
+  {%- assign latest_post = site.posts | where: "lang", "fr" | first -%}
+{%- else -%}
+  {%- assign latest_post = site.posts | where_exp: "post", "post.lang != 'fr'" | first -%}
+{%- endif %}
+<section class="section paths" id="paths" aria-labelledby="paths-title">
+  <h2 class="section-title" id="paths-title">{{ h.paths_title }}</h2>
+  <div class="beyond-grid paths-grid">
+    <a class="path-card" href="{{ latest_post.url }}">
+      <span class="path-who">{{ h.path_linkedin_who }}</span>
+      <h3>{{ h.path_linkedin_title }}</h3>
+      <p>{{ latest_post.title | escape }}</p>
+      <span class="path-more">{{ h.path_linkedin_more }}</span>
+    </a>
+    <a class="path-card" href="#profile">
+      <span class="path-who">{{ h.path_recruiter_who }}</span>
+      <h3>{{ h.path_recruiter_title }}</h3>
+      <p>{{ h.path_recruiter_text }}</p>
+      <span class="path-more">{{ h.path_recruiter_more }}</span>
+    </a>
+    <a class="path-card" href="{% if fr %}/fr/realisations/{% else %}/portfolio/{% endif %}">
+      <span class="path-who">{{ h.path_engineer_who }}</span>
+      <h3>{{ h.path_engineer_title }}</h3>
+      <p>{{ h.path_engineer_text }}</p>
+      <span class="path-more">{{ h.path_engineer_more }}</span>
+    </a>
+    <a class="path-card" href="/sky/"{% if fr %} hreflang="en"{% endif %}>
+      <span class="path-who">{{ h.path_sky_who }}</span>
+      <h3>{{ h.path_sky_title }}</h3>
+      <p>{{ h.path_sky_text }}</p>
+      <span class="path-more">{{ h.path_sky_more }}</span>
+    </a>
+  </div>
+</section>
+
+<!-- ================= PROFILE (60 seconds) ================= -->
+<section class="section" id="profile" aria-labelledby="profile-title">
+  <p class="eyebrow">{{ h.profile_eyebrow }}</p>
+  <h2 class="section-title" id="profile-title">{{ h.profile_title }}</h2>
+  <dl class="profile-facts">
+    {%- for fact in h.profile_facts %}
+    <div><dt>{{ fact[0] }}</dt><dd>{{ fact[1] }}</dd></div>
+    {%- endfor %}
+  </dl>
+  <p class="profile-actions">
+    <a class="btn btn-primary" href="{% if fr %}/fr/cv/{% else %}/resume/{% endif %}">{{ h.profile_resume }}</a>
+    <a class="btn btn-ghost" href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </p>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="section" id="about">
+  <p class="eyebrow">{{ h.about_eyebrow }}</p>
+  <h2 class="section-title">{{ h.about_title }}</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      {%- for paragraph in h.about_html %}
+      <p>{{ paragraph }}</p>
+      {%- endfor %}
+      <p><a class="about-more" href="{% if fr %}/fr/a-propos/{% else %}/about/{% endif %}">{{ h.about_more }}</a></p>
+    </div>
+    <div class="about-side reveal">
+      <div class="stat-chips">
+        {%- for stat in h.stats %}
+        <div class="chip"><span class="big">{{ stat[0] }}</span><span class="small">{{ stat[1] }}</span></div>
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section class="section" id="projects">
+  <p class="eyebrow">{{ h.projects_eyebrow }}</p>
+  <h2 class="section-title">{{ h.projects_title }}</h2>
+  <div class="projects-grid" id="projects-grid">
+    {%- for repo in site.data.repos.repositories %}
+    <a class="project-card" href="{{ repo.url | escape }}" target="_blank" rel="noopener"{% if fr %} hreflang="en"{% endif %}>
+      <span class="project-name">{{ repo.name | escape }}</span>
+      <span class="project-desc"{% if fr %} lang="en"{% endif %}>{{ repo.description | escape }}</span>
+      <span class="project-meta">{% if repo.language %}<span><span class="lang-dot" style="background:{{ repo.language_color | escape }}"></span>{{ repo.language | escape }}</span>{% endif %}<span>&#9733; {{ repo.stars }}</span>{% if repo.forks > 0 %}<span>&#10219; {{ repo.forks }}</span>{% endif %}</span>
+    </a>
+    {%- endfor %}
+  </div>
+  <p class="projects-note">{{ h.projects_note }}</p>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section class="section" id="skills">
+  <p class="eyebrow">{{ h.skills_eyebrow }}</p>
+  <h2 class="section-title">{{ h.skills_title }}</h2>
+  <div class="skills-groups reveal">
+    {% for group in site.data.skills %}
+    <div class="skill-row">
+      <span class="skill-domain">{% if fr and group.domain_fr %}{{ group.domain_fr | escape }}{% else %}{{ group.domain | escape }}{% endif %}</span>
+      <span class="skill-tags">{% for tag in group.tags %}<span class="tag">{{ tag | escape }}</span>{% endfor %}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ================= TIMELINE ================= -->
+<section class="section" id="timeline">
+  <p class="eyebrow">{{ h.timeline_eyebrow }}</p>
+  <h2 class="section-title">{{ h.timeline_title }}</h2>
+  <div class="timeline reveal">
+    {% for item in site.data.timeline %}
+    <div class="tl-item">
+      <span class="tl-year">{% if fr and item.year_fr %}{{ item.year_fr | escape }}{% else %}{{ item.year | escape }}{% endif %}</span>
+      <p class="tl-role">{% if fr and item.role_fr %}{{ item.role_fr | escape }}{% else %}{{ item.role | escape }}{% endif %}</p>
+      <p class="tl-desc">{% if fr and item.description_fr %}{{ item.description_fr | escape }}{% else %}{{ item.description | escape }}{% endif %}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ================= BEYOND ================= -->
+<section class="section" id="beyond">
+  <p class="eyebrow">{{ h.beyond_eyebrow }}</p>
+  <h2 class="section-title">{{ h.beyond_title }}</h2>
+  <div class="offduty-intro">
+    <img class="astro-photo reveal" src="/assets/img/dominic-astronaut.webp" alt="{{ h.astro_alt }}" width="1000" height="1000" loading="lazy">
+    <blockquote class="quote reveal">
+      {{ h.quote }}
+    </blockquote>
+  </div>
+  <div class="beyond-grid">
+    {% for resource in site.data.resources %}
+    <a class="beyond-card reveal" href="{{ resource.href | escape }}"{% if fr %} hreflang="en"{% endif %}>
+      <span class="icon">{{ resource.icon | escape }}</span>
+      <h3>{% if fr and resource.title_fr %}{{ resource.title_fr | escape }}{% else %}{{ resource.title | escape }}{% endif %}</h3>
+      <p>{% if fr and resource.description_fr %}{{ resource.description_fr | escape }}{% else %}{{ resource.description | escape }}{% endif %}</p>
+      <span class="beyond-more">{% if fr and resource.more_fr %}{{ resource.more_fr | escape }}{% else %}{{ resource.more | escape }}{% endif %}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% include sky-today.html %}
+</section>
+
+<!-- ================= BLOG PREVIEW ================= -->
+<section class="section" id="blog">
+  <p class="eyebrow">{{ h.blog_eyebrow }}</p>
+  <h2 class="section-title">{{ h.blog_title }}</h2>
+  <ul class="post-list">
+    {%- if fr -%}
+      {%- comment -%} French readers: French posts, then English ones without a translation. {%- endcomment -%}
+      {%- assign fr_posts = site.posts | where: "lang", "fr" -%}
+      {%- assign en_only = site.posts | where_exp: "post", "post.lang != 'fr' and post.translation_url == nil" -%}
+      {%- assign latest = fr_posts | concat: en_only -%}
+    {%- else -%}
+      {%- assign latest = site.posts | where_exp: "post", "post.lang != 'fr'" -%}
+    {%- endif %}
+    {% for post in latest limit: 3 %}
+    {%- assign post_lang = post.lang | default: "en" %}
+    <li class="post-item reveal">
+      <a class="post-link" href="{{ post.url }}"{% if post_lang != lang %} hreflang="{{ post_lang }}" lang="{{ post_lang }}"{% endif %}>{{ post.title }}</a>
+      <p class="post-meta"><time datetime="{{ post.date | date_to_xmlschema }}">{% include localized-date.html date=post.date lang=lang %}</time>{% if post_lang != lang %} · {{ post_lang | upcase }}{% endif %}<span class="list-views" data-path="{{ post.url }}" hidden> · 👁 <span class="list-views-n"></span> {{ site.data.i18n[lang].visitors }}</span></p>
+      <p class="excerpt"{% if post_lang != lang %} lang="{{ post_lang }}"{% endif %}>{{ post.excerpt | strip_html | truncate: 180 }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  <a class="all-posts-link" href="{{ h.blog_href }}">{{ h.blog_all }}</a>
+</section>

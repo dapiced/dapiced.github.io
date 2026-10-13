@@ -310,13 +310,10 @@
   /* ---------- typed roles ---------- */
   var rolesEl = document.getElementById("typed-roles");
   if (rolesEl) {
-    var roles = [
-      "Developer - Azure Infrastructure AI",
-      "25+ years automating complex systems",
-      "MLOps · DataOps · Infrastructure as Code",
-      "Kaggle competitor · Data Science student",
-      "Stargazer - of night skies and repositories"
-    ];
+    /* Roles come from the page (data-roles, _data/home.yml) in its language. */
+    var roles;
+    try { roles = JSON.parse(rolesEl.getAttribute("data-roles") || "[]"); } catch (e) { roles = []; }
+    if (!roles.length) roles = [rolesEl.textContent];
     var ri = 0, ci = 0, deleting = false;
 
     function typeTick() {

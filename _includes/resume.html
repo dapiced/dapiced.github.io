@@ -1,0 +1,69 @@
+{%- comment -%}
+  Resume body for /resume/ (en) and /fr/cv/ (fr). Strings: _data/resume.yml;
+  timeline and skills carry optional *_fr fields.
+{%- endcomment -%}
+{%- assign lang = page.lang | default: site.lang -%}
+{%- assign r = site.data.resume[lang] | default: site.data.resume.en -%}
+{%- assign fr = false -%}{%- if lang == "fr" -%}{%- assign fr = true -%}{%- endif -%}
+<!--
+THESIS: A direct working record for people evaluating experience, not a marketing landing page.
+OWN-WORLD: The site's deep-space palette, precise borders, system type, and restrained blue-violet accents.
+STORY: Understand Dominic's current work, scan the full career and technical range, then contact him on LinkedIn.
+FIRST VIEWPORT: Name and current role lead, a concise summary follows, and contact plus print actions remain immediately visible.
+FORM: A single document surface in the established site language, chosen over a separate layout or generated artifact.
+-->
+<article class="resume-page">
+  <header class="resume-header">
+    <p class="resume-location">{{ r.location }}</p>
+    <h1>Dominic D'Apice</h1>
+    <p class="resume-role">{% if fr and site.data.timeline.first.role_fr %}{{ site.data.timeline.first.role_fr | escape }}{% else %}{{ site.data.timeline.first.role | escape }}{% endif %}</p>
+    <p class="resume-summary">{{ r.summary }}</p>
+    <div class="resume-actions" aria-label="{{ r.actions_label }}">
+      <a class="btn btn-primary resume-contact-link" href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">{{ r.contact }}</a>
+      <button type="button" class="btn btn-ghost" data-print-resume>{{ r.print }}</button>
+    </div>
+  </header>
+
+  <section class="resume-section" aria-labelledby="resume-experience-title">
+    <h2 id="resume-experience-title">{{ r.experience }}</h2>
+    <ol class="resume-experience-list">
+      {% for item in site.data.timeline %}
+      <li class="resume-experience-item">
+        <p class="resume-experience-year">{% if fr and item.year_fr %}{{ item.year_fr | escape }}{% else %}{{ item.year | escape }}{% endif %}</p>
+        <div>
+          <h3>{% if fr and item.role_fr %}{{ item.role_fr | escape }}{% else %}{{ item.role | escape }}{% endif %}</h3>
+          <p>{% if fr and item.description_fr %}{{ item.description_fr | escape }}{% else %}{{ item.description | escape }}{% endif %}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="resume-section" aria-labelledby="resume-skills-title">
+    <h2 id="resume-skills-title">{{ r.skills }}</h2>
+    <ul class="resume-skill-groups">
+      {% for group in site.data.skills %}
+      <li class="resume-skill-group">
+        {%- if fr and group.domain_fr %}{% assign domain = group.domain_fr %}{% else %}{% assign domain = group.domain %}{% endif %}
+        <h3>{{ domain | escape }}</h3>
+        <ul class="resume-skill-tags" aria-label="{{ r.skills_of }} {{ domain | escape }}">
+          {% for tag in group.tags %}
+          <li class="tag">{{ tag | escape }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="resume-section resume-profiles" aria-labelledby="resume-profiles-title">
+    <h2 id="resume-profiles-title">{{ r.profiles }}</h2>
+    <p>{{ r.profiles_text }}</p>
+    <ul class="resume-profile-links">
+      <li><a class="resume-profile-link" href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a class="resume-profile-link" href="https://github.com/dapiced" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a class="resume-profile-link" href="https://www.kaggle.com/dominicdapice" target="_blank" rel="noopener">Kaggle</a></li>
+      <li><a class="resume-profile-link" href="https://huggingface.co/dapiced" target="_blank" rel="noopener">Hugging Face</a></li>
+    </ul>
+  </section>
+</article>

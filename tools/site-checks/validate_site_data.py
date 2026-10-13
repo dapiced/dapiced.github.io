@@ -15,11 +15,11 @@ SCHEMAS = {
     },
     "skills": {
         "required": {"domain": str, "tags": list},
-        "optional": {},
+        "optional": {"domain_fr": str},
     },
     "timeline": {
         "required": {"year": str, "role": str, "description": str},
-        "optional": {},
+        "optional": {"year_fr": str, "role_fr": str, "description_fr": str},
     },
     "resources": {
         "required": {
@@ -29,134 +29,198 @@ SCHEMAS = {
             "href": str,
             "more": str,
         },
-        "optional": {},
+        "optional": {"title_fr": str, "description_fr": str, "more_fr": str},
     },
 }
 
 APPROVED_SITE_DATA = {
     "navigation": [
-        {"label": "About", "label_fr": "À propos", "href": "/about/", "href_fr": "/fr/a-propos/"},
-        {"label": "Portfolio", "label_fr": "Portfolio", "href": "/portfolio/"},
-        {"label": "Blog", "label_fr": "Blogue", "href": "/blog/"},
-        {"label": "Resume", "label_fr": "CV", "href": "/resume/"},
-        {"label": "Now", "label_fr": "Maintenant", "href": "/now/"},
+        {
+            "label": "About",
+            "label_fr": "À propos",
+            "href": "/about/",
+            "href_fr": "/fr/a-propos/"
+        },
+        {
+            "label": "Portfolio",
+            "label_fr": "Réalisations",
+            "href": "/portfolio/",
+            "href_fr": "/fr/realisations/"
+        },
+        {
+            "label": "Blog",
+            "label_fr": "Blogue",
+            "href": "/blog/",
+            "href_fr": "/fr/blogue/"
+        },
+        {
+            "label": "Resume",
+            "label_fr": "CV",
+            "href": "/resume/",
+            "href_fr": "/fr/cv/"
+        },
+        {
+            "label": "Now",
+            "label_fr": "Maintenant",
+            "href": "/now/"
+        },
         {
             "label": "My LabML",
             "label_fr": "Mon LabML",
             "href": "https://app.dominicdapice.com/",
             "class": "nav-labml",
             "target": "_blank",
-            "rel": "noopener",
+            "rel": "noopener"
         },
-        {"label": "Sky of the day", "label_fr": "Ciel du jour", "href": "/sky/", "class": "nav-sky"},
+        {
+            "label": "Sky of the day",
+            "label_fr": "Ciel du jour",
+            "href": "/sky/",
+            "class": "nav-sky"
+        }
     ],
     "skills": [
         {
             "domain": "Cloud & Data",
-            "tags": ["Azure", "Databricks", "VMware", "Azure DevOps"],
+            "domain_fr": "Infonuagique et données",
+            "tags": [
+                "Azure",
+                "Databricks",
+                "VMware",
+                "Azure DevOps"
+            ]
         },
         {
             "domain": "IaC & Automation",
+            "domain_fr": "IaC et automatisation",
             "tags": [
                 "Ansible",
                 "Terraform",
                 "Packer",
                 "GitHub Actions",
                 "PowerShell",
-                "Bash",
-            ],
+                "Bash"
+            ]
         },
-        {"domain": "Languages", "tags": ["Python", "R", "JavaScript", "Perl"]},
+        {
+            "domain": "Languages",
+            "domain_fr": "Langages",
+            "tags": [
+                "Python",
+                "R",
+                "JavaScript",
+                "Perl"
+            ]
+        },
         {
             "domain": "Systems",
-            "tags": ["Red Hat", "SUSE", "Windows", "IBM AIX", "Red Hat Satellite"],
+            "domain_fr": "Systèmes",
+            "tags": [
+                "Red Hat",
+                "SUSE",
+                "Windows",
+                "IBM AIX",
+                "Red Hat Satellite"
+            ]
         },
         {
             "domain": "Databases",
-            "tags": ["PostgreSQL", "MSSQL", "MySQL", "Oracle"],
+            "domain_fr": "Bases de données",
+            "tags": [
+                "PostgreSQL",
+                "MSSQL",
+                "MySQL",
+                "Oracle"
+            ]
         },
         {
             "domain": "ML & Data",
-            "tags": ["MLOps", "DataOps", "Machine Learning", "Kaggle"],
-        },
+            "domain_fr": "ML et données",
+            "tags": [
+                "MLOps",
+                "DataOps",
+                "Machine Learning",
+                "Kaggle"
+            ]
+        }
     ],
     "timeline": [
         {
             "year": "2026 - NOW",
+            "year_fr": "2026 - AUJOURD'HUI",
             "role": "Developer - Azure Infrastructure AI",
-            "description": (
-                "Azure for AI · Databricks platform · MLOps / DataOps · IaC · CI/CD"
-            ),
+            "description": "Azure for AI · Databricks platform · MLOps / DataOps · IaC · CI/CD",
+            "role_fr": "Développeur - infrastructure Azure pour l'IA",
+            "description_fr": "Azure pour l'IA · plateforme Databricks · MLOps / DataOps · IaC · CI/CD"
         },
         {
             "year": "2018 - 2025",
             "role": "Cloud / Linux Administrator & IaC Developer",
-            "description": (
-                "Self-service cloud for business clients · "
-                "IaC in NERC-regulated environments"
-            ),
+            "description": "Self-service cloud for business clients · IaC in NERC-regulated environments",
+            "role_fr": "Administrateur infonuagique et Linux, développeur IaC",
+            "description_fr": "Infonuagique libre-service pour les clients d'affaires · IaC en environnements réglementés NERC"
         },
         {
             "year": "2015 - 2018",
             "role": "IT Standardization Linux System Administrator",
-            "description": (
-                "Fleet of 1000+ servers · patching and standardization at scale"
-            ),
+            "description": "Fleet of 1000+ servers · patching and standardization at scale",
+            "role_fr": "Administrateur de systèmes Linux, standardisation des TI",
+            "description_fr": "Parc de plus de 1 000 serveurs · mises à jour et standardisation à grande échelle"
         },
         {
             "year": "2011 - 2015",
             "role": "IT Linux System Administrator",
-            "description": (
-                "Physical & virtual server deployments · Linux appliances"
-            ),
+            "description": "Physical & virtual server deployments · Linux appliances",
+            "role_fr": "Administrateur de systèmes Linux",
+            "description_fr": "Déploiement de serveurs physiques et virtuels · appareils Linux"
         },
         {
             "year": "2001 - 2011",
             "role": "IT Linux System Administrator",
-            "description": (
-                "Installation and configuration of servers and Linux appliances"
-            ),
+            "description": "Installation and configuration of servers and Linux appliances",
+            "role_fr": "Administrateur de systèmes Linux",
+            "description_fr": "Installation et configuration de serveurs et d'appareils Linux"
         },
         {
             "year": "1998 - 2001",
             "role": "IT Technician & System Administrator",
-            "description": (
-                "Internal IT and client support - where it all started"
-            ),
-        },
+            "description": "Internal IT and client support - where it all started",
+            "role_fr": "Technicien informatique et administrateur de systèmes",
+            "description_fr": "Soutien informatique interne et aux clients : là où tout a commencé"
+        }
     ],
     "resources": [
         {
             "icon": "🌌",
             "title": "Astronomy",
-            "description": (
-                "Exploring celestial objects and following the latest discoveries - "
-                "from JWST deep fields to backyard skies."
-            ),
+            "description": "Exploring celestial objects and following the latest discoveries - from JWST deep fields to backyard skies.",
             "href": "/blog/astronomy/",
             "more": "Read articles →",
+            "title_fr": "Astronomie",
+            "description_fr": "Explorer les objets célestes et suivre les dernières découvertes, des champs profonds de JWST au ciel de la cour arrière.",
+            "more_fr": "Lire les articles (EN) →"
         },
         {
             "icon": "🧠",
             "title": "Artificial Intelligence",
-            "description": (
-                "Studying ML advances and how they translate into real-world impact - "
-                "then testing myself on Kaggle."
-            ),
+            "description": "Studying ML advances and how they translate into real-world impact - then testing myself on Kaggle.",
             "href": "/blog/ai/",
             "more": "Read articles →",
+            "title_fr": "Intelligence artificielle",
+            "description_fr": "Étudier les avancées du ML et leur effet dans le monde réel, puis me mettre à l'épreuve sur Kaggle.",
+            "more_fr": "Lire les articles (EN) →"
         },
         {
             "icon": "⚛️",
             "title": "Physics",
-            "description": (
-                "Fascinated by the fundamental laws that describe our universe - "
-                "the original distributed system."
-            ),
+            "description": "Fascinated by the fundamental laws that describe our universe - the original distributed system.",
             "href": "/blog/physics/",
             "more": "Read articles →",
-        },
-    ],
+            "title_fr": "Physique",
+            "description_fr": "Fasciné par les lois fondamentales qui décrivent notre univers, le premier système distribué.",
+            "more_fr": "Lire les articles (EN) →"
+        }
+    ]
 }
 
 

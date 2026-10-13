@@ -3,14 +3,17 @@
   href: "/about/"
   href_fr: "/fr/a-propos/"
 - label: Portfolio
-  label_fr: Portfolio
+  label_fr: Réalisations
   href: "/portfolio/"
+  href_fr: "/fr/realisations/"
 - label: Blog
   label_fr: Blogue
   href: "/blog/"
+  href_fr: "/fr/blogue/"
 - label: Resume
   label_fr: CV
   href: "/resume/"
+  href_fr: "/fr/cv/"
 - label: Now
   label_fr: Maintenant
   href: "/now/"

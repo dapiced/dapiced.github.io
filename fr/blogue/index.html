@@ -1,0 +1,47 @@
+---
+layout: default
+blog_index: true
+title: Blogue - notes de terrain Azure, Databricks et MLOps
+description: >-
+  Notes de terrain tirées de plus de 25 ans d'infrastructure : Azure, Databricks,
+  Ansible, MLOps, DataOps, et un regard occasionnel sur le ciel de nuit.
+lang: fr
+translation_url: /blog/
+keywords:
+  - blogue Azure
+  - Databricks
+  - MLOps
+  - DataOps
+  - Ansible
+  - Terraform
+  - apprentissage automatique
+  - astronomie
+  - Dominic D'Apice
+---
+{%- comment -%}
+  French blog index: French posts first, then English posts that have no
+  French version (marked EN). Topic pages are English for now.
+{%- endcomment -%}
+<section class="section">
+  <p class="eyebrow">JOURNAL DE MISSION</p>
+  <h1 class="section-title">Blogue - notes de terrain en infrastructure et données</h1>
+  <p style="color: var(--muted); max-width: 640px;">
+    Des notes de terrain tirées de la salle des machines : infrastructure, opérations
+    Azure et Databricks, Ansible à grande échelle, migrations d'Azure DevOps vers
+    GitHub Actions, MLOps et DataOps, avec quelques détours par l'astronomie, la
+    physique et le ciel de nuit. La plupart des billets sont en anglais ; ceux qui
+    existent en français apparaissent en premier.
+  </p>
+  <p><a href="/blog/search/" hreflang="en">Rechercher dans les billets</a> (ou Ctrl K, partout sur le site)</p>
+
+  {%- assign fr_posts = site.posts | where: "lang", "fr" -%}
+  {%- assign en_only = site.posts | where_exp: "post", "post.lang != 'fr' and post.translation_url == nil" -%}
+  {%- assign posts = fr_posts | concat: en_only %}
+  {%- assign blog_t = site.data.i18n.fr %}
+  <p class="eyebrow" style="margin-top: 3rem;">TOUS LES BILLETS</p>
+  <ul class="post-list" id="all-posts" data-initial="8" data-show-more-template="{{ blog_t.show_more | escape }}" data-hidden-count="{{ posts.size | minus: 8 | at_least: 0 }}" style="margin-top: 1rem;">
+    {% for post in posts %}
+      {% include post-item.html post=post %}
+    {% endfor %}
+  </ul>
+</section>

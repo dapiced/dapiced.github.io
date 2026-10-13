@@ -7,13 +7,21 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RESUME_PATH = ROOT / "resume" / "index.html"
+# /resume/ and /fr/cv/ share one template.
+RESUME_PATH = ROOT / "_includes" / "resume.html"
 LINKEDIN_URL = "https://www.linkedin.com/in/dapiced/"
 
 
 def read_resume_template() -> str:
-    assert RESUME_PATH.is_file(), "resume/index.html must define the /resume/ page"
-    return RESUME_PATH.read_text(encoding="utf-8")
+    page = ROOT / "resume" / "index.html"
+    assert page.is_file(), "resume/index.html must define the /resume/ page"
+    assert RESUME_PATH.is_file(), "_includes/resume.html must hold the resume body"
+    # Page front matter, shared body, then its strings (_data/resume.yml): the
+    # contracts below hold whichever file carries each part.
+    return "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (page, RESUME_PATH, ROOT / "_data" / "resume.yml")
+    )
 
 
 def load_yaml(name: str):
@@ -28,7 +36,7 @@ def test_resume_template_renders_shared_timeline_and_skills():
     assert "{{ item.role | escape }}" in template
     assert "{{ item.description | escape }}" in template
     assert "{% for group in site.data.skills %}" in template
-    assert "{{ group.domain | escape }}" in template
+    assert "group.domain" in template and "{{ domain | escape }}" in template
     assert "{% for tag in group.tags %}" in template
     assert "{{ tag | escape }}" in template
 

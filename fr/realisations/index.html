@@ -1,0 +1,42 @@
+---
+layout: default
+title: Réalisations - études de cas en IA, données et infrastructure
+description: >-
+  Études de cas détaillées : hackathons en sécurité de l'IA, apprentissage
+  automatique sous contraintes réelles, pipelines MLOps. Les histoires derrière
+  le code.
+lang: fr
+translation_url: /portfolio/
+keywords:
+  - réalisations
+  - études de cas
+  - sécurité de l'IA
+  - hackathon Mila
+  - apprentissage automatique
+  - MLOps
+  - Dominic D'Apice
+---
+
+<section class="section">
+  <p class="eyebrow">DOSSIERS DE MISSION</p>
+  <h1 class="section-title">Réalisations</h1>
+  <p style="color: var(--muted); max-width: 640px;">
+    Des études de cas racontées au complet : le problème, l'architecture, les
+    expériences qui ont échoué et les chiffres qui ont tenu. Pour les dépôts bruts,
+    voyez les <a href="/fr/#projects">projets GitHub</a> sur la page d'accueil.
+  </p>
+  <ul class="post-list" style="margin-top: 2rem;">
+    {% assign entries = site.portfolio | where: "lang", "fr" | sort: "date" | reverse %}
+    {% for entry in entries %}
+    <li class="post-item">
+      <a class="post-link" href="{{ entry.url }}">{{ entry.title }}</a>
+      <p class="post-meta">
+        <time datetime="{{ entry.date | date_to_xmlschema }}">{% include localized-date.html date=entry.date lang="fr" %}</time>
+        {% if entry.tags and entry.tags.size > 0 %} · {% for tag in entry.tags %}#{{ tag }} {% endfor %}{% endif %}
+        {% if entry.translation_url %} · <a href="{{ entry.translation_url }}" hreflang="en" lang="en">English version 🇬🇧</a>{% endif %}
+      </p>
+      <p class="excerpt">{{ entry.description }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
