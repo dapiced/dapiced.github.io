@@ -5,8 +5,9 @@ name: Preview
 # (GitHub Pages, unchanged). Each PR gets https://pr-<number>.<project>.pages.dev
 # and a single comment on the PR with that link, updated on every push.
 #
-# Inactive until the repository variable CLOUDFLARE_ACCOUNT_ID and the secret
-# CLOUDFLARE_PAGES_TOKEN exist (environment "preview"); see
+# Inactive until the variable CLOUDFLARE_ACCOUNT_ID and the secret
+# CLOUDFLARE_PAGES_TOKEN exist (repository or environment "preview"); the
+# first step says in the log which one is missing. See
 # docs/infra/cloudflare-preview.md. Pull requests from forks and Dependabot
 # never receive the secret, so they are skipped.
 
@@ -24,7 +25,6 @@ jobs:
   deploy:
     name: Deploy preview
     if: >-
-      vars.CLOUDFLARE_ACCOUNT_ID != '' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
@@ -36,21 +36,44 @@ jobs:
       PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'dominicdapice-preview' }}
       BRANCH: pr-${{ github.event.pull_request.number }}
     steps:
+      # Evaluated inside the job, so a variable or secret defined on the
+      # repository or on the "preview" environment is seen either way.
+      - name: Check preview configuration
+        id: config
+        env:
+          HAS_ACCOUNT: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN != '' }}
+        run: |
+          missing=""
+          [ "$HAS_ACCOUNT" = "true" ] || missing="$missing variable CLOUDFLARE_ACCOUNT_ID,"
+          [ "$HAS_TOKEN" = "true" ] || missing="$missing secret CLOUDFLARE_PAGES_TOKEN,"
+          if [ -n "$missing" ]; then
+            echo "::notice title=Preview disabled::Missing${missing%,}. See docs/infra/cloudflare-preview.md."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Preview configuration found."
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout repository
+        if: steps.config.outputs.enabled == 'true'
         uses: actions/checkout@v7
 
       - name: Set up Ruby
+        if: steps.config.outputs.enabled == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4"
           bundler-cache: true
 
       - name: Build site
+        if: steps.config.outputs.enabled == 'true'
         run: bundle exec jekyll build
 
       # Previews must never be indexed (duplicate content) and never be
       # framed; Cloudflare Pages reads _headers from the deployed folder.
       - name: Mark the preview as noindex
+        if: steps.config.outputs.enabled == 'true'
         run: |
           cat > _site/_headers <<'HEADERS'
           /*
@@ -61,11 +84,13 @@ jobs:
           sed -i 's/^          //' _site/_headers
 
       - name: Set up Node.js
+        if: steps.config.outputs.enabled == 'true'
         uses: actions/setup-node@v7
         with:
           node-version: "lts/*"
 
       - name: Deploy to Cloudflare Pages
+        if: steps.config.outputs.enabled == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
@@ -77,6 +102,7 @@ jobs:
             --commit-dirty=true
 
       - name: Comment the preview link
+        if: steps.config.outputs.enabled == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}

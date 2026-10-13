@@ -8,8 +8,9 @@ reste sur GitHub Pages et ne change pas.
 Analogie Azure : un *deployment slot* de staging sur App Service, détruit à la fin.
 
 Le workflow `.github/workflows/preview.yml` est **inactif** tant que les étapes
-ci-dessous ne sont pas faites : il ne s'exécute que si la variable
-`CLOUDFLARE_ACCOUNT_ID` existe.
+ci-dessous ne sont pas faites : sa première étape vérifie la variable
+`CLOUDFLARE_ACCOUNT_ID` et le secret `CLOUDFLARE_PAGES_TOKEN`, et indique dans le
+journal ce qui manque.
 
 ## Ce que tu fais (environ 10 minutes, une seule fois)
 
@@ -102,7 +103,7 @@ fichier) se régénère immédiatement avec **Roll**.
 
 | Symptôme | Cause probable | Correction |
 |---|---|---|
-| Le job **Deploy preview** est « skipped » | `CLOUDFLARE_ACCOUNT_ID` absente des variables **Actions** du dépôt (par exemple créée sous *Secrets and variables → Agents*, ou comme variable de l'environnement `preview`, que la condition du job ne voit pas) | **Settings → Secrets and variables → Actions → Variables → New repository variable** ; l'adresse doit finir par `/settings/variables/actions`. Pousser ensuite un commit sur la PR : une relance réutilise le contexte d'origine. |
+| Le job **Deploy preview** se termine en quelques secondes avec la notice « Preview disabled » | La notice nomme ce qui manque : variable `CLOUDFLARE_ACCOUNT_ID` (souvent créée par erreur sous *Secrets and variables → Agents*) et/ou secret `CLOUDFLARE_PAGES_TOKEN` | Variable : **Settings → Secrets and variables → Actions → Variables** (l'adresse finit par `/settings/variables/actions`) ou variable de l'environnement `preview`. Secret : environnement `preview`. Pousser ensuite un commit sur la PR. |
 | « Authentication error » au déploiement | Jeton expiré, révoqué ou mal collé | Voir « Renouveler le jeton ». |
 | « Project not found » | Projet `dominicdapice-preview` absent, ou autre nom | Créer le projet (étape 1) ou définir la variable `CLOUDFLARE_PAGES_PROJECT`. |
 | Pas de commentaire sur la PR | Le déploiement a échoué avant | Lire le journal du job **Deploy preview**. |
