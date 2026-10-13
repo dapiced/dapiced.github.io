@@ -5,8 +5,9 @@ name: Preview
 # (GitHub Pages, unchanged). Each PR gets https://pr-<number>.<project>.pages.dev
 # and a single comment on the PR with that link, updated on every push.
 #
-# Inactive until the repository variable CLOUDFLARE_ACCOUNT_ID and the secret
-# CLOUDFLARE_PAGES_TOKEN exist (environment "preview"); see
+# Inactive until the variable CLOUDFLARE_ACCOUNT_ID and the secret
+# CLOUDFLARE_PAGES_TOKEN exist (repository or environment "preview"); the
+# first step says in the log which one is missing. See
 # docs/infra/cloudflare-preview.md. Pull requests from forks and Dependabot
 # never receive the secret, so they are skipped.
 
@@ -24,7 +25,6 @@ jobs:
   deploy:
     name: Deploy preview
     if: >-
-      vars.CLOUDFLARE_ACCOUNT_ID != '' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
@@ -36,21 +36,44 @@ jobs:
       PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'dominicdapice-preview' }}
       BRANCH: pr-${{ github.event.pull_request.number }}
     steps:
+      # Evaluated inside the job, so a variable or secret defined on the
+      # repository or on the "preview" environment is seen either way.
+      - name: Check preview configuration
+        id: config
+        env:
+          HAS_ACCOUNT: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN != '' }}
+        run: |
+          missing=""
+          [ "$HAS_ACCOUNT" = "true" ] || missing="$missing variable CLOUDFLARE_ACCOUNT_ID,"
+          [ "$HAS_TOKEN" = "true" ] || missing="$missing secret CLOUDFLARE_PAGES_TOKEN,"
+          if [ -n "$missing" ]; then
+            echo "::notice title=Preview disabled::Missing${missing%,}. See docs/infra/cloudflare-preview.md."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Preview configuration found."
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout repository
+        if: steps.config.outputs.enabled == 'true'
         uses: actions/checkout@v7
 
       - name: Set up Ruby
+        if: steps.config.outputs.enabled == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4"
           bundler-cache: true
 
       - name: Build site
+        if: steps.config.outputs.enabled == 'true'
         run: bundle exec jekyll build
 
       # Previews must never be indexed (duplicate content) and never be
       # framed; Cloudflare Pages reads _headers from the deployed folder.
       - name: Mark the preview as noindex
+        if: steps.config.outputs.enabled == 'true'
         run: |
           cat > _site/_headers <<'HEADERS'
           /*
@@ -61,11 +84,81 @@ jobs:
           sed -i 's/^          //' _site/_headers
 
       - name: Set up Node.js
+        if: steps.config.outputs.enabled == 'true'
         uses: actions/setup-node@v7
         with:
           node-version: "lts/*"
 
+      # Fails early with a readable reason (never printing the token) when
+      # the secret is wrong: invalid, expired, or pasted with extra spaces.
+      - name: Verify Cloudflare token
+        if: steps.config.outputs.enabled == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          trimmed="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+          echo "Token length: ${#CLOUDFLARE_API_TOKEN} characters (${#trimmed} without whitespace)."
+          if [ "${#trimmed}" -ne "${#CLOUDFLARE_API_TOKEN}" ]; then
+            echo "::error title=Token has whitespace::The secret contains spaces or line breaks; paste the token again without them."
+            exit 1
+          fi
+          verify() {
+            curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$1" \
+              | python3 -c 'import json,sys; d=json.load(sys.stdin); r=d.get("result") or {}; print(d.get("success"), r.get("status","-"), r.get("expires_on","-"), ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))'
+          }
+          user="$(verify https://api.cloudflare.com/client/v4/user/tokens/verify)"
+          account="$(verify "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/tokens/verify")"
+          echo "User token check:    success status expires errors = $user"
+          echo "Account token check: success status expires errors = $account"
+          case "$user $account" in
+            *"True active"*) echo "Token is active." ;;
+            *) echo "::error title=Cloudflare token rejected::Neither check accepts the token (see the two lines above). Roll it in Cloudflare and update the secret CLOUDFLARE_PAGES_TOKEN of the preview environment."; exit 1 ;;
+          esac
+          # Same calls wrangler makes: can this token see Pages on this account?
+          pages() {
+            curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$1" \
+              | python3 -c 'import json,sys; d=json.load(sys.stdin); r=d.get("result"); names=[p.get("name") for p in r] if isinstance(r,list) else ([r.get("name")] if isinstance(r,dict) else []); print(d.get("success"), names, ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))'
+          }
+          base="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects"
+          list="$(pages "$base")"
+          project="$(pages "$base/$PROJECT")"
+          echo "Pages projects on the account: success names errors = $list"
+          echo "Pages project $PROJECT:       success names errors = $project"
+          # Accounts this token is scoped to (IDs are not secret). If the configured
+          # ID is not among them, CLOUDFLARE_ACCOUNT_ID holds another value (often the Zone ID).
+          accounts="$(curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/accounts?per_page=50" \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("success"), [a.get("id")+" ("+a.get("name","")+")" for a in (d.get("result") or [])], ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))')"
+          echo "Accounts visible to the token: success ids errors = $accounts"
+          echo "Configured CLOUDFLARE_ACCOUNT_ID: $CLOUDFLARE_ACCOUNT_ID"
+          case "$accounts" in
+            *"$CLOUDFLARE_ACCOUNT_ID"*) ;;
+            True*) echo "::warning title=Account ID mismatch::CLOUDFLARE_ACCOUNT_ID is not one of the accounts the token can see (list above). Check that it is the Account ID, not the Zone ID." ;;
+          esac
+          case "$list" in
+            True*) ;;
+            *) echo "::error title=Pages API refused::The token is active but has no Account · Cloudflare Pages · Edit permission on this account (codes above). Create a custom token with that permission and update the secret CLOUDFLARE_PAGES_TOKEN of the preview environment."; exit 1 ;;
+          esac
+          case "$project" in
+            True*) echo "Token can reach the Pages project." ;;
+            *)
+              # First run: the token works but the project does not exist yet. Create it
+              # (Direct Upload, no Git connection) so nobody has to click through the dashboard.
+              echo "Project $PROJECT not found; creating it."
+              created="$(curl -sS -X POST -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" \
+                --data "{\"name\":\"$PROJECT\",\"production_branch\":\"main\"}" "$base" \
+                | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("success"), ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))')"
+              echo "Create project: success errors = $created"
+              case "$created" in
+                True*) echo "Project $PROJECT created." ;;
+                *) echo "::error title=Project creation failed::Could not create the Pages project $PROJECT (codes above)."; exit 1 ;;
+              esac
+              ;;
+          esac
+
       - name: Deploy to Cloudflare Pages
+        if: steps.config.outputs.enabled == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
@@ -77,6 +170,7 @@ jobs:
             --commit-dirty=true
 
       - name: Comment the preview link
+        if: steps.config.outputs.enabled == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
