@@ -84,7 +84,9 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
 - `404.html` - custom not-found page
 - `_posts/` - blog posts (Markdown)
 - `_apod/` - daily NASA APOD entries (collection published under `/sky/`, own feed at `/feed/apod.xml`)
-- `sky/index.html` - image grid of the APOD entries
+- `sky/index.html` (+ `fr/ciel/`) - "Montréal tonight" sky map (`assets/js/sky-map.js`,
+  catalogue built by `tools/sky-map/build_catalog.py` from d3-celestial, BSD-3-Clause)
+  and the image grid of the APOD entries
 - `_portfolio/` - case studies (Markdown, `layout: portfolio`)
 - `_layouts/` - page shells (`default.html` with Person JSON-LD and hreflang alternates,
   `post.html` / `portfolio.html` for articles)

@@ -1077,6 +1077,19 @@ a.path-card:hover {
 .about-page .lead { font-size: 1.12rem; color: var(--heading); }
 .about-values { max-width: 780px; margin: var(--space-4) 0 var(--space-6); }
 
+/* ---------- sky map, "Montréal tonight" (assets/js/sky-map.js) ---------- */
+
+.sky-map { margin: var(--space-6) 0 var(--space-7); max-width: 640px; }
+.sky-map-eyebrow { font: 0.72rem var(--mono); letter-spacing: 0.08em; color: var(--violet); }
+.sky-map-title { margin: var(--space-1) 0 var(--space-2); color: var(--heading); font-size: 1.35rem; }
+.sky-map-intro { margin: 0 0 var(--space-4); color: var(--muted); }
+.sky-map-canvas { display: block; width: 100%; aspect-ratio: 1; height: auto; }
+.sky-map-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.sky-map-controls label { font: 0.85rem var(--mono); color: var(--text); }
+.sky-map-time { flex: 1; min-width: 180px; min-height: 24px; accent-color: var(--cyan); }
+.sky-map-status { min-height: 1.5em; margin: var(--space-3) 0 0; color: var(--gold); }
+.sky-map-credit { margin: var(--space-2) 0 0; font-size: 0.78rem; color: var(--muted); }
+
 /* ---------- sky (NASA APOD collection) ---------- */
 
 .sky-today {
