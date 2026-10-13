@@ -97,3 +97,12 @@ sa création, en octobre 2026). Quand il expire, le job **Preview / Deploy previ
 
 Règle : un jeton qui a été affiché ailleurs que dans ces deux écrans (capture, message,
 fichier) se régénère immédiatement avec **Roll**.
+
+## Dépannage
+
+| Symptôme | Cause probable | Correction |
+|---|---|---|
+| Le job **Deploy preview** est « skipped » | `CLOUDFLARE_ACCOUNT_ID` absente des variables **Actions** du dépôt (par exemple créée sous *Secrets and variables → Agents*, ou comme variable de l'environnement `preview`, que la condition du job ne voit pas) | **Settings → Secrets and variables → Actions → Variables → New repository variable** ; l'adresse doit finir par `/settings/variables/actions`. Pousser ensuite un commit sur la PR : une relance réutilise le contexte d'origine. |
+| « Authentication error » au déploiement | Jeton expiré, révoqué ou mal collé | Voir « Renouveler le jeton ». |
+| « Project not found » | Projet `dominicdapice-preview` absent, ou autre nom | Créer le projet (étape 1) ou définir la variable `CLOUDFLARE_PAGES_PROJECT`. |
+| Pas de commentaire sur la PR | Le déploiement a échoué avant | Lire le journal du job **Deploy preview**. |
