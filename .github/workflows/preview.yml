@@ -116,6 +116,20 @@ jobs:
             *"True active"*) echo "Token is active." ;;
             *) echo "::error title=Cloudflare token rejected::Neither check accepts the token (see the two lines above). Roll it in Cloudflare and update the secret CLOUDFLARE_PAGES_TOKEN of the preview environment."; exit 1 ;;
           esac
+          # Same calls wrangler makes: can this token see Pages on this account?
+          pages() {
+            curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$1" \
+              | python3 -c 'import json,sys; d=json.load(sys.stdin); r=d.get("result"); names=[p.get("name") for p in r] if isinstance(r,list) else ([r.get("name")] if isinstance(r,dict) else []); print(d.get("success"), names, ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))'
+          }
+          base="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects"
+          list="$(pages "$base")"
+          project="$(pages "$base/$PROJECT")"
+          echo "Pages projects on the account: success names errors = $list"
+          echo "Pages project $PROJECT:       success names errors = $project"
+          case "$project" in
+            True*) echo "Token can reach the Pages project." ;;
+            *) echo "::error title=Pages project not reachable::The token is active but Cloudflare refuses the Pages API for this account or project (codes above)."; exit 1 ;;
+          esac
 
       - name: Deploy to Cloudflare Pages
         if: steps.config.outputs.enabled == 'true'
