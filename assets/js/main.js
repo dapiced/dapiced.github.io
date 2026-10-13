@@ -19,6 +19,9 @@
 
     /* Once per visit, his star twinkles "PAPA" in Morse (.--. .- .--. .-),
        an echo of the signal sent across space and time in Interstellar.
+       Clicking or tapping the star sends the signal again.
+       During the signal the star burns brighter with a wider halo ("on")
+       and almost goes out between symbols ("off"), so it reads clearly.
        Timing follows the standard: dot = 1 unit, dash = 3, gap inside a
        letter = 1, gap between letters = 3. */
     var MORSE_UNIT_MS = 240;
@@ -36,12 +39,15 @@
       return steps;
     })();
     var morseStart = null;          // timestamp (ms) when the sequence began
+    var MORSE_ON = 2.2;             // brightness while a dot/dash is lit
+    var MORSE_OFF = 0.12;           // brightness in the gaps
+    var MORSE_HALO = 2.2;           // halo radius multiplier while lit
 
     function morsePulse(t) {
       if (morseStart === null) return null;
       var units = (t - morseStart) / MORSE_UNIT_MS;
       for (var i = 0; i < morse.length; i++) {
-        if (units < morse[i][1]) return morse[i][0] ? 1.35 : 0.3;
+        if (units < morse[i][1]) return morse[i][0] ? MORSE_ON : MORSE_OFF;
         units -= morse[i][1];
       }
       morseStart = null;            // sequence finished: back to normal twinkle
@@ -63,15 +69,16 @@
       gold.y = canvas.height * 0.22;
     }
 
-    function drawGold(pulse) {
-      var halo = ctx.createRadialGradient(gold.x, gold.y, 0, gold.x, gold.y, 16);
-      halo.addColorStop(0, "rgba(255,233,168," + 0.7 * pulse + ")");
-      halo.addColorStop(0.4, "rgba(227,179,65," + 0.28 * pulse + ")");
+    function drawGold(pulse, haloScale) {
+      var radius = 16 * (haloScale || 1);
+      var halo = ctx.createRadialGradient(gold.x, gold.y, 0, gold.x, gold.y, radius);
+      halo.addColorStop(0, "rgba(255,233,168," + Math.min(1, 0.7 * pulse) + ")");
+      halo.addColorStop(0.4, "rgba(227,179,65," + Math.min(1, 0.28 * pulse) + ")");
       halo.addColorStop(1, "rgba(227,179,65,0)");
       ctx.globalAlpha = 1;
       ctx.fillStyle = halo;
       ctx.beginPath();
-      ctx.arc(gold.x, gold.y, 16, 0, Math.PI * 2);
+      ctx.arc(gold.x, gold.y, radius, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = "#ffe9a8";
       ctx.beginPath();
@@ -124,7 +131,8 @@
 
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
-        var alpha = s.base + s.amp * Math.sin(sec * s.speed + s.phase);
+        /* under reduced motion only the golden star moves (click replay) */
+        var alpha = reduceMotion ? s.base : s.base + s.amp * Math.sin(sec * s.speed + s.phase);
         ctx.globalAlpha = Math.max(0.05, Math.min(1, alpha));
         ctx.fillStyle = "#dbe9ff";
         ctx.beginPath();
@@ -133,7 +141,16 @@
       }
 
       var signal = morsePulse(t);
-      drawGold(signal !== null ? signal : (goldHover ? 1.0 : 0.7) + 0.3 * Math.sin(sec * 1.1));
+      if (signal !== null) {
+        drawGold(signal, signal === MORSE_ON ? MORSE_HALO : 1);
+      } else if (reduceMotion) {
+        /* a replay requested under reduced motion is over: back to still */
+        stop();
+        drawStatic();
+        return;
+      } else {
+        drawGold((goldHover ? 1.0 : 0.7) + 0.3 * Math.sin(sec * 1.1));
+      }
 
       if (meteor) {
         var m = meteor;
@@ -151,7 +168,7 @@
         m.y += m.vy * steps;
         m.life -= 0.012 * steps;
         if (m.life <= 0 || m.x > canvas.width + 150) meteor = null;
-      } else if (Math.random() < 0.0025 * steps) {   // ~one every 7 s
+      } else if (!reduceMotion && Math.random() < 0.0025 * steps) {   // ~one every 7 s
         spawnMeteor();
       }
 
@@ -189,7 +206,8 @@
       if (reduceMotion) drawStatic();
     });
 
-    /* hovering (or tapping) near his star reveals his name */
+    /* hovering (or tapping) near his star reveals his name;
+       clicking (or tapping) it sends "PAPA" again */
     var tip = document.createElement("div");
     tip.className = "gold-tip";
     tip.setAttribute("aria-hidden", "true");
@@ -203,6 +221,7 @@
       if (near !== goldHover) {
         goldHover = near;
         tip.classList.toggle("visible", near);
+        document.body.classList.toggle("gold-near", near);
         if (reduceMotion) drawStatic();
       }
       if (near) {
@@ -211,7 +230,15 @@
       }
     }
     window.addEventListener("pointermove", revealNear, { passive: true });
-    window.addEventListener("pointerdown", revealNear, { passive: true });
+    window.addEventListener("pointerdown", function (e) {
+      revealNear(e);
+      /* a click is an explicit request, so it plays even under reduced
+         motion (only for the 7 s of the signal); one signal at a time */
+      if (goldHover && morseStart === null && !document.hidden) {
+        morseStart = performance.now();
+        if (reduceMotion) start();
+      }
+    }, { passive: true });
 
     if (reduceMotion) {
       drawStatic();
