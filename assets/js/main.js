@@ -481,6 +481,13 @@
     if (motto) motto.classList.add("vincenzo-day");
   }
 
+  /* ---------- offline: service worker (sw.js) ---------- */
+  if ("serviceWorker" in navigator && window.isSecureContext) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("/sw.js").catch(function () { /* the site works without it */ });
+    });
+  }
+
   /* ---------- footer year ---------- */
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());

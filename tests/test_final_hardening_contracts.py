@@ -12,11 +12,12 @@ def test_default_layout_declares_dark_theme_and_manifest():
     assert '<link rel="manifest" href="/manifest.webmanifest">' in layout
 
 
-def test_manifest_uses_branded_icons_without_service_worker():
+def test_manifest_uses_branded_icons_and_installs():
     manifest = json.loads((ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
     assert manifest["name"] == "Dominic D'Apice"
-    # Installable PWA (standalone + service worker) is planned for a later phase.
-    assert manifest["display"] == "browser"
+    # Installable PWA: minimal-ui keeps the browser's back button; the
+    # service worker is /sw.js (registered by main.js), not a manifest key.
+    assert manifest["display"] == "minimal-ui"
     assert manifest["start_url"] == "/"
     assert manifest["theme_color"] == "#04060f"
     assert manifest["background_color"] == "#04060f"
