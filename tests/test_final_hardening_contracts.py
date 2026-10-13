@@ -97,3 +97,14 @@ def test_repository_internals_are_not_published():
     exclude = config.split("\nexclude:\n", 1)[1]
     for entry in ("tests/", "docs/", "pytest.ini"):
         assert f"  - {entry}\n" in exclude, entry
+
+
+def test_goatcounter_script_is_self_hosted():
+    # Served from this site: no third-party script host on regular pages, so the
+    # Content-Security-Policy no longer needs https://gc.zgo.at.
+    layout = (ROOT / "_layouts" / "default.html").read_text(encoding="utf-8")
+    assert "gc.zgo.at" not in layout
+    assert "'/assets/vendor/goatcounter-v5/count.js' | asset_digest" in layout
+    assert 'data-goatcounter="https://dapiced.goatcounter.com/count"' in layout
+    vendored = (ROOT / "assets" / "vendor" / "goatcounter-v5" / "count.js").read_text(encoding="utf-8")
+    assert "released under the ISC license" in vendored
