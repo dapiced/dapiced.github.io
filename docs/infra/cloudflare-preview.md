@@ -27,14 +27,17 @@ hexadécimaux). Ce n'est pas un secret, mais il identifie ton compte.
 
 ### 3. Créer un jeton API à permission unique
 
-Icône de profil → **My Profile** → **API Tokens** → **Create Token** →
-**Create Custom Token**.
+Un **jeton de compte** (Account API Token), pas un jeton utilisateur : un jeton
+créé dans *My Profile → API Tokens*, même avec la bonne permission, a été refusé
+par l'API Pages (`10000 Authentication error`) sur ce compte.
+
+Compte → **Manage account** → **Account API tokens** → **Create Token** →
+**Start from scratch (Custom)**.
 
 | Champ | Valeur |
 |---|---|
-| Token name | `github-actions-pages-preview` |
+| Token name | `github-actions-pages-preview-account` |
 | Permissions | **Account** · **Cloudflare Pages** · **Edit** (et rien d'autre ; le premier menu doit être *Account*, pas *User* ni *Zone*) |
-| Account Resources | Include · ton compte |
 | Client IP Address Filtering | vide (les runners GitHub changent d'IP) |
 | TTL | une date d'expiration, par exemple dans 1 an (à noter pour le renouveler) |
 
@@ -68,7 +71,7 @@ s'exécute, puis un commentaire « **Preview:** https://pr-…pages.dev » appar
 ## Sécurité
 
 - **Jeton minimal :** permission *Cloudflare Pages · Edit* seulement, avec date d'expiration,
-  révocable en un clic dans **API Tokens**.
+  révocable en un clic dans **Account API tokens**.
 - **Secret confiné :** il est stocké dans l'environnement `preview`, jamais dans le dépôt. Les PR
   venant de forks et celles de Dependabot ne le reçoivent pas et sont ignorées.
 - **Aucun risque SEO :** les aperçus envoient `X-Robots-Tag: noindex, nofollow`, pas de
@@ -83,11 +86,11 @@ Les anciens aperçus restent consultables dans **Workers & Pages** →
 
 ## Renouveler le jeton
 
-Le jeton `github-actions-pages-preview` a une date d'expiration (environ un an après
-sa création, en octobre 2026). Quand il expire, le job **Preview / Deploy preview**
+Le jeton `github-actions-pages-preview-account` a une date d'expiration (environ un an après
+sa création, en octobre 2027). Quand il expire, le job **Preview / Deploy preview**
 échoue avec une erreur d'authentification Cloudflare ; la production n'est pas touchée.
 
-1. Cloudflare → **My Profile** → **API Tokens** → ligne `github-actions-pages-preview`
+1. Cloudflare → **Manage account** → **Account API tokens** → ligne `github-actions-pages-preview-account`
    → **⋯** → **Roll** (ou **Edit** pour prolonger la date d'expiration).
 2. GitHub → **Settings** → **Environments** → `preview` → secret
    `CLOUDFLARE_PAGES_TOKEN` → ✏️ → coller le nouveau jeton.
@@ -101,6 +104,6 @@ fichier) se régénère immédiatement avec **Roll**.
 |---|---|---|
 | Le job **Deploy preview** se termine en quelques secondes avec la notice « Preview disabled » | La notice nomme ce qui manque : variable `CLOUDFLARE_ACCOUNT_ID` (souvent créée par erreur sous *Secrets and variables → Agents*, ou avec une faute de frappe dans le nom, par exemple `CLOUDFARE_…` sans le L) et/ou secret `CLOUDFLARE_PAGES_TOKEN` | Variable : **Settings → Secrets and variables → Actions → Variables** (l'adresse finit par `/settings/variables/actions`) ou variable de l'environnement `preview`. Secret : environnement `preview`. Pousser ensuite un commit sur la PR. |
 | « Authentication error » au déploiement | Jeton expiré, révoqué ou mal collé | Voir « Renouveler le jeton ». |
-| « Pages API refused », `10000 Authentication error`, ou `9109 Invalid access token` pour la liste des comptes | Le jeton est actif mais n'a aucune permission de niveau compte (permission *User* ou *Zone*, ou mauvais jeton collé) | Créer un nouveau jeton personnalisé **Account · Cloudflare Pages · Edit** (étape 3) et remplacer le secret. Le résumé avant création doit afficher `<compte> - Cloudflare Pages:Edit`. |
+| « Pages API refused », `10000 Authentication error`, ou `9109 Invalid access token` pour la liste des comptes | Le jeton est actif mais n'a aucune permission de niveau compte (permission *User* ou *Zone*, ou mauvais jeton collé) | Créer un jeton de compte (**Account API tokens**) avec **Cloudflare Pages · Edit** (étape 3) et remplacer le secret. Le résumé avant création doit afficher `<compte> - Cloudflare Pages:Edit`. |
 | « Project creation failed » | Nom déjà pris sur `pages.dev` ou quota atteint | Définir la variable `CLOUDFLARE_PAGES_PROJECT` avec un autre nom. |
 | Pas de commentaire sur la PR | Le déploiement a échoué avant | Lire le journal du job **Deploy preview**. |
