@@ -344,11 +344,18 @@ def test_repo_data_refresh_grants_no_default_permissions(repo_data):
     assert repo_data["permissions"] == {}
 
 
-def test_repo_data_refresh_job_can_only_commit_and_open_prs(repo_data):
+def test_repo_data_refresh_job_can_only_commit_open_prs_and_dispatch_ci(repo_data):
     assert repo_data["jobs"]["refresh"]["permissions"] == {
         "contents": "write",
         "pull-requests": "write",
+        "actions": "write",
     }
+
+
+def test_repo_data_refresh_runs_ci_on_its_pull_request(repo_data):
+    # Required status checks on main: a GITHUB_TOKEN PR fires no workflow.
+    commands = run_commands(repo_data["jobs"]["refresh"])
+    assert "gh workflow run ci.yml --ref chore/repo-data" in commands
 
 
 def test_repo_data_refresh_runs_the_generator(repo_data):
