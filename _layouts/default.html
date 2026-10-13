@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#04060f">
+  <script src="{{ '/assets/js/theme-init.js' | asset_digest }}"></script>
+  <link rel="preload" href="/assets/fonts/ibm-plex-sans-latin-400.woff2" as="font" type="font/woff2" crossorigin>
   <meta name="google-site-verification" content="xRBmKZ2Bo5NPBP8hoDyEF5khW3MNRqa9hSbtATuFgR0">
   {% assign kw = page.keywords | default: page.topics | default: page.tags | default: site.keywords %}
   {% if kw %}<meta name="keywords" content="{{ kw | join: ', ' }}">{% endif %}
@@ -73,7 +75,10 @@
   <header class="nav">
     <nav class="nav-inner" aria-label="Main navigation">
       <a class="brand" href="/"><span class="brand-planet" aria-hidden="true"></span>dominic@azure<span class="brand-cursor" aria-hidden="true">▌</span></a>
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><span aria-hidden="true">☰</span></button>
+      <div class="nav-actions">
+        <button class="theme-toggle" type="button" aria-label="Switch to dawn theme" data-label-to-light="Switch to dawn theme" data-label-to-dark="Switch to night theme"><span class="icon-night" aria-hidden="true">☾</span><span class="icon-dawn" aria-hidden="true">☀</span></button>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><span aria-hidden="true">☰</span></button>
+      </div>
       <ul class="nav-links" id="nav-links">
         {% for item in site.data.navigation %}
         <li><a{% if item.class %} class="{{ item.class | escape }}"{% endif %} href="{{ item.href | escape }}"{% if item.target %} target="{{ item.target | escape }}"{% endif %}{% if item.rel %} rel="{{ item.rel | escape }}"{% endif %}>{{ item.label | escape }}</a></li>
