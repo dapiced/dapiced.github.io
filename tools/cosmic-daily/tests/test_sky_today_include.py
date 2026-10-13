@@ -40,10 +40,13 @@ def test_sky_today_has_no_nested_links():
 
 
 def test_archive_cta_links_to_sky_index():
+    # The label is localized (_data/i18n.yml sky_today_more).
     anchors = _parse().anchors
-    archive = [a for a in anchors if "Browse the sky archive" in a["text"]]
+    archive = [a for a in anchors if "sky_today_more" in a["text"]]
     assert len(archive) == 1
     assert archive[0]["href"] == "/sky/"
+    i18n = (INCLUDE.parents[1] / "_data" / "i18n.yml").read_text(encoding="utf-8")
+    assert 'sky_today_more: "Browse the sky archive →"' in i18n
 
 
 def test_latest_entry_link_is_separate_from_archive_cta():

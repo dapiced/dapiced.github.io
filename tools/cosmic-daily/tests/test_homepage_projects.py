@@ -12,7 +12,8 @@ import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-INDEX = REPO_ROOT / "index.html"
+# / and /fr/ share the homepage body (index.html and fr/index.html include it).
+INDEX = REPO_ROOT / "_includes" / "home.html"
 MAIN_JS = REPO_ROOT / "assets" / "js" / "main.js"
 DATA_FILE = REPO_ROOT / "_data" / "repos.json"
 
