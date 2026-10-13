@@ -144,6 +144,10 @@ the generated navigation, skills, timeline, and off-duty cards still match those
   and a gitleaks scan of the whole history (reviewed false positives in `.gitleaksignore`).
   Run them locally after `bundle exec jekyll build`:
   `cd tools/site-checks/browser && npm ci && npx playwright install chromium && node axe-check.mjs && npx lhci autorun --config=lighthouserc.json`.
+- **Preview** (`preview.yml`): every pull request is built and published to a separate
+  Cloudflare Pages project (`https://pr-<n>.dominicdapice-preview.pages.dev`, noindex) and
+  the PR gets a comment with the link. Production stays on GitHub Pages. Setup and token
+  scope: [`docs/infra/cloudflare-preview.md`](docs/infra/cloudflare-preview.md).
 - **External links** (`links-weekly.yml`, Mondays): checks every outbound link and opens a
   single "Broken external links" issue when some stop answering.
 - **Dependabot** (`dependabot.yml`) opens weekly grouped PRs for the GitHub Actions, the

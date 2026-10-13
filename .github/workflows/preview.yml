@@ -1,0 +1,98 @@
+name: Preview
+
+# Builds every pull request and publishes it to a separate Cloudflare Pages
+# project, so a change can be seen online before it reaches production
+# (GitHub Pages, unchanged). Each PR gets https://pr-<number>.<project>.pages.dev
+# and a single comment on the PR with that link, updated on every push.
+#
+# Inactive until the repository variable CLOUDFLARE_ACCOUNT_ID and the secret
+# CLOUDFLARE_PAGES_TOKEN exist (environment "preview"); see
+# docs/infra/cloudflare-preview.md. Pull requests from forks and Dependabot
+# never receive the secret, so they are skipped.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions: {}
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy preview
+    if: >-
+      vars.CLOUDFLARE_ACCOUNT_ID != '' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    environment: preview
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'dominicdapice-preview' }}
+      BRANCH: pr-${{ github.event.pull_request.number }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll build
+
+      # Previews must never be indexed (duplicate content) and never be
+      # framed; Cloudflare Pages reads _headers from the deployed folder.
+      - name: Mark the preview as noindex
+        run: |
+          cat > _site/_headers <<'HEADERS'
+          /*
+            X-Robots-Tag: noindex, nofollow
+            X-Frame-Options: DENY
+            Referrer-Policy: no-referrer
+          HEADERS
+          sed -i 's/^          //' _site/_headers
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4.146.0 pages deploy _site \
+            --project-name "$PROJECT" \
+            --branch "$BRANCH" \
+            --commit-hash "${{ github.event.pull_request.head.sha }}" \
+            --commit-dirty=true
+
+      - name: Comment the preview link
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          url="https://${BRANCH}.${PROJECT}.pages.dev"
+          marker="<!-- preview-link -->"
+          body="${marker}
+          **Preview:** ${url} (commit \`${SHA:0:7}\`, not indexed)"
+          body="$(printf '%s\n' "$body" | sed 's/^          //')"
+          existing="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"${marker}\")) | .id" | head -n1)"
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${existing}" -f body="$body" >/dev/null
+          else
+            gh api "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" -f body="$body" >/dev/null
+          fi
+          echo "Preview: ${url}"

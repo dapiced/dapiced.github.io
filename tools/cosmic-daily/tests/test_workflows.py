@@ -7,6 +7,7 @@ point is to pin the triggers, permissions and essential steps, not wording.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -136,18 +137,18 @@ def test_ci_builds_the_site(ci):
     site = ci["jobs"]["site"]
     assert uses_action(site, "ruby/setup-ruby@")
     assert "bundle exec jekyll build" in run_commands(site)
-    assert uses_action(site, "actions/setup-python@v7")
+    assert uses_action(site, "actions/setup-python@v")
     setup = next(
-        s for s in steps_of(site) if str(s.get("uses", "")).startswith("actions/setup-python@v7")
+        s for s in steps_of(site) if str(s.get("uses", "")).startswith("actions/setup-python@v")
     )
     assert setup["with"]["python-version"] == "3.11"
     assert "tools/site-checks/check_blog_discovery.py" in run_commands(site)
     assert run_commands(site).index("bundle exec jekyll build") < run_commands(site).index(
         "check_blog_discovery.py"
     )
-    assert uses_action(site, "actions/setup-node@v6")
+    assert uses_action(site, "actions/setup-node@v")
     node_setup = next(
-        s for s in steps_of(site) if str(s.get("uses", "")).startswith("actions/setup-node@v6")
+        s for s in steps_of(site) if str(s.get("uses", "")).startswith("actions/setup-node@v")
     )
     assert node_setup["with"]["node-version"] == "lts/*"
     assert "node --test tools/site-checks/js/*.test.js" in run_commands(site)
@@ -271,11 +272,15 @@ def test_failure_report_opens_or_comments_a_single_issue(cosmic):
 def test_cosmic_daily_actions_stay_pinned(cosmic):
     job = cosmic["jobs"]["cosmic-daily"]
     used = {str(step["uses"]) for step in steps_of(job) if step.get("uses")}
-    assert used == {
-        "actions/checkout@v7",
-        "actions/setup-python@v7",
-        "peter-evans/create-pull-request@v8",
+    # Each action is pinned to a major version tag (never a branch); Dependabot
+    # bumps the major, so the test checks the shape, not the number.
+    assert {ref.split("@")[0] for ref in used} == {
+        "actions/checkout",
+        "actions/setup-python",
+        "peter-evans/create-pull-request",
     }
+    for ref in used:
+        assert re.fullmatch(r"[\w.-]+/[\w.-]+@v\d+", ref), ref
 
 
 def _step(cosmic, name):
@@ -353,7 +358,7 @@ def test_repo_data_refresh_runs_the_generator(repo_data):
 
 def test_repo_data_refresh_opens_a_pull_request_instead_of_pushing_to_main(repo_data):
     job = repo_data["jobs"]["refresh"]
-    assert uses_action(job, "peter-evans/create-pull-request@v8")
+    assert uses_action(job, "peter-evans/create-pull-request@v")
     commands = run_commands(job)
     assert "git push" not in commands
 

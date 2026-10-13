@@ -1,0 +1,85 @@
+# Cloudflare Pages : préproduction par pull request
+
+Chaque PR est construite puis publiée sur un projet Cloudflare Pages **séparé**,
+avec une adresse du type `https://pr-125.dominicdapice-preview.pages.dev`. Un
+commentaire sur la PR donne le lien et se met à jour à chaque push. La production
+reste sur GitHub Pages et ne change pas.
+
+Analogie Azure : un *deployment slot* de staging sur App Service, détruit à la fin.
+
+Le workflow `.github/workflows/preview.yml` est **inactif** tant que les étapes
+ci-dessous ne sont pas faites : il ne s'exécute que si la variable
+`CLOUDFLARE_ACCOUNT_ID` existe.
+
+## Ce que tu fais (environ 10 minutes, une seule fois)
+
+### 1. Créer le projet Pages vide
+
+Tableau de bord Cloudflare → **Workers & Pages** → **Create** → onglet **Pages** →
+**Upload assets** (Direct Upload).
+
+- Project name : `dominicdapice-preview`
+- Dépose n'importe quel petit fichier (par exemple un `index.html` contenant
+  « preview ») puis **Deploy**. Ce premier dépôt sert seulement à créer le projet.
+- Ne connecte **pas** le dépôt GitHub : c'est GitHub Actions qui construit le site.
+
+### 2. Relever l'Account ID
+
+**Workers & Pages** → colonne de droite, **Account ID** (32 caractères
+hexadécimaux). Ce n'est pas un secret, mais il identifie ton compte.
+
+### 3. Créer un jeton API à permission unique
+
+Icône de profil → **My Profile** → **API Tokens** → **Create Token** →
+**Create Custom Token**.
+
+| Champ | Valeur |
+|---|---|
+| Token name | `github-actions-pages-preview` |
+| Permissions | **Account** · **Cloudflare Pages** · **Edit** (et rien d'autre) |
+| Account Resources | Include · ton compte |
+| Client IP Address Filtering | vide (les runners GitHub changent d'IP) |
+| TTL | une date d'expiration, par exemple dans 1 an (à noter pour le renouveler) |
+
+**Continue to summary** → **Create Token**, puis copie le jeton : il n'est
+affiché qu'une fois. Ne le colle nulle part ailleurs que dans GitHub (étape 4).
+
+Ce jeton ne peut **que** déployer des projets Pages : il n'a aucun accès au DNS,
+aux règles de sécurité, au cache ni au domaine `dominicdapice.com`.
+
+### 4. Le ranger dans GitHub
+
+Dépôt `dapiced/dapiced.github.io` → **Settings** :
+
+1. **Environments** → **New environment** → nom : `preview` → **Configure environment**
+   → **Environment secrets** → **Add environment secret** :
+   - Name : `CLOUDFLARE_PAGES_TOKEN`
+   - Value : le jeton de l'étape 3
+2. **Secrets and variables** → **Actions** → onglet **Variables** →
+   **New repository variable** :
+   - Name : `CLOUDFLARE_ACCOUNT_ID`
+   - Value : l'Account ID de l'étape 2
+
+Ne mets pas de « Required reviewers » sur l'environnement `preview`, sinon chaque
+aperçu attendrait une approbation manuelle.
+
+### 5. Vérifier
+
+Ouvre ou mets à jour n'importe quelle PR : le job **Preview / Deploy preview**
+s'exécute, puis un commentaire « **Preview:** https://pr-…pages.dev » apparaît.
+
+## Sécurité
+
+- **Jeton minimal :** permission *Cloudflare Pages · Edit* seulement, avec date d'expiration,
+  révocable en un clic dans **API Tokens**.
+- **Secret confiné :** il est stocké dans l'environnement `preview`, jamais dans le dépôt. Les PR
+  venant de forks et celles de Dependabot ne le reçoivent pas et sont ignorées.
+- **Aucun risque SEO :** les aperçus envoient `X-Robots-Tag: noindex, nofollow`, pas de
+  contenu dupliqué indexé.
+- **Coût :** 0 $. Le build se fait dans GitHub Actions ; Cloudflare ne fait
+  qu'héberger les fichiers.
+
+## Ménage (optionnel)
+
+Les anciens aperçus restent consultables dans **Workers & Pages** →
+`dominicdapice-preview` → **Deployments**, où ils peuvent être supprimés.
