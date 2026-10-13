@@ -83,3 +83,17 @@ s'exécute, puis un commentaire « **Preview:** https://pr-…pages.dev » appar
 
 Les anciens aperçus restent consultables dans **Workers & Pages** →
 `dominicdapice-preview` → **Deployments**, où ils peuvent être supprimés.
+
+## Renouveler le jeton
+
+Le jeton `github-actions-pages-preview` a une date d'expiration (environ un an après
+sa création, en octobre 2026). Quand il expire, le job **Preview / Deploy preview**
+échoue avec une erreur d'authentification Cloudflare ; la production n'est pas touchée.
+
+1. Cloudflare → **My Profile** → **API Tokens** → ligne `github-actions-pages-preview`
+   → **⋯** → **Roll** (ou **Edit** pour prolonger la date d'expiration).
+2. GitHub → **Settings** → **Environments** → `preview` → secret
+   `CLOUDFLARE_PAGES_TOKEN` → ✏️ → coller le nouveau jeton.
+
+Règle : un jeton qui a été affiché ailleurs que dans ces deux écrans (capture, message,
+fichier) se régénère immédiatement avec **Roll**.
