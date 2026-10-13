@@ -3,6 +3,7 @@
 #
 # IndexNow key: public by design. Search engines fetch it from
 # https://dominicdapice.com/3678563103b4f11c9ed1cb8d806c655d.txt to verify the
-# site, so it is not a secret (an early version of indexnow.yml inlined it).
+# site, so it is not a secret (early versions of indexnow.yml inlined it, July and September 2026).
+4c5c734a8df87fc66a707f52e8a3cd315fc5a0a9:.github/workflows/indexnow.yml:generic-api-key:30
 0c7f37a974202e654a4c6d97f7c89d08fe51faff:.github/workflows/indexnow.yml:generic-api-key:30
 .github/workflows/indexnow.yml:generic-api-key:38
