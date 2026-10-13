@@ -126,6 +126,16 @@ jobs:
           project="$(pages "$base/$PROJECT")"
           echo "Pages projects on the account: success names errors = $list"
           echo "Pages project $PROJECT:       success names errors = $project"
+          # Accounts this token is scoped to (IDs are not secret). If the configured
+          # ID is not among them, CLOUDFLARE_ACCOUNT_ID holds another value (often the Zone ID).
+          accounts="$(curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/accounts?per_page=50" \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("success"), [a.get("id")+" ("+a.get("name","")+")" for a in (d.get("result") or [])], ";".join(str(e.get("code"))+" "+e.get("message","") for e in d.get("errors",[])))')"
+          echo "Accounts visible to the token: success ids errors = $accounts"
+          echo "Configured CLOUDFLARE_ACCOUNT_ID: $CLOUDFLARE_ACCOUNT_ID"
+          case "$accounts" in
+            *"$CLOUDFLARE_ACCOUNT_ID"*) ;;
+            True*) echo "::warning title=Account ID mismatch::CLOUDFLARE_ACCOUNT_ID is not one of the accounts the token can see (list above). Check that it is the Account ID, not the Zone ID." ;;
+          esac
           case "$project" in
             True*) echo "Token can reach the Pages project." ;;
             *) echo "::error title=Pages project not reachable::The token is active but Cloudflare refuses the Pages API for this account or project (codes above)."; exit 1 ;;
