@@ -104,14 +104,20 @@
       };
     }
 
-    /* ~30 fps is plenty for twinkling and halves the CPU/battery cost */
+    /* ~30 fps is plenty for twinkling and halves the CPU/battery cost;
+       a shooting star switches to the screen's full rate so it stays smooth.
+       Meteor motion is scaled by elapsed time (STEP_MS = one 60 Hz frame),
+       so it crosses the sky at the same speed on any refresh rate. */
     var FRAME_MS = 1000 / 30;
+    var STEP_MS = 1000 / 60;
     var lastFrame = 0;
     var rafId = null;
 
     function draw(t) {
       rafId = requestAnimationFrame(draw);
-      if (t - lastFrame < FRAME_MS) return;
+      // 1 ms of slack: a 60 Hz frame two ticks later is 33.33 ms, not 33.34
+      if (!meteor && t - lastFrame < FRAME_MS - 1) return;
+      var steps = lastFrame ? Math.min((t - lastFrame) / STEP_MS, 4) : 1;
       lastFrame = t;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       var sec = t / 1000;
@@ -141,11 +147,11 @@
         ctx.moveTo(m.x - m.vx * 10, m.y - m.vy * 10);
         ctx.lineTo(m.x, m.y);
         ctx.stroke();
-        m.x += m.vx;
-        m.y += m.vy;
-        m.life -= 0.012;
+        m.x += m.vx * steps;
+        m.y += m.vy * steps;
+        m.life -= 0.012 * steps;
         if (m.life <= 0 || m.x > canvas.width + 150) meteor = null;
-      } else if (Math.random() < 0.005) {   // per frame, at 30 fps
+      } else if (Math.random() < 0.0025 * steps) {   // ~one every 7 s
         spawnMeteor();
       }
 
