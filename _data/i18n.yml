@@ -1,6 +1,18 @@
-# Interface strings for article pages, keyed by page.lang (falls back to en).
-# Navigation and footer stay in English on purpose: they point at English pages.
+# Interface strings keyed by page.lang (falls back to en): the page chrome
+# (navigation, footer, buttons) and the article pages.
 en:
+  # page chrome
+  nav_label: "Main navigation"
+  menu_toggle: "Toggle menu"
+  theme_to_light: "Switch to dawn theme"
+  theme_to_dark: "Switch to night theme"
+  lang_switch: "Lire en français"
+  footer_more: "More pages"
+  footer_projects: "Projects"
+  footer_resources: "Resources"
+  footer_contact: "Contact on LinkedIn ↗"
+  dedication: "✦ In this sky shines a star named Vincenzo D'Apice"
+  orion_arm: "Orion Arm"
   giscus_lang: en
   skip_link: "Skip to content"
   eyebrow_blog: "← MISSION LOG"
@@ -32,6 +44,18 @@ en:
   show_more: "Show all posts ({n} more)"
 
 fr:
+  # page chrome
+  nav_label: "Navigation principale"
+  menu_toggle: "Ouvrir ou fermer le menu"
+  theme_to_light: "Passer au thème Aube"
+  theme_to_dark: "Passer au thème Nuit"
+  lang_switch: "Read in English"
+  footer_more: "Autres pages"
+  footer_projects: "Projets"
+  footer_resources: "Ressources"
+  footer_contact: "Me joindre sur LinkedIn ↗"
+  dedication: "✦ Dans ce ciel brille une étoile nommée Vincenzo D'Apice"
+  orion_arm: "Bras d'Orion"
   giscus_lang: fr
   skip_link: "Aller au contenu"
   eyebrow_blog: "← JOURNAL DE MISSION"

@@ -59,7 +59,7 @@
         "name": "Dominic D'Apice",
         "alternateName": ["dominicdapice.com", "dapiced"],
         "description": {{ site.description | jsonify }},
-        "inLanguage": "en",
+        "inLanguage": ["en", "fr"],
         "publisher": { "@id": "{{ site.url }}/#person" }
       }
     ]
@@ -69,19 +69,23 @@
 <body{% if page.body_class %} class="{{ page.body_class | escape }}"{% endif %}>
   {%- assign chrome_lang = page.lang | default: site.lang %}
   {%- assign chrome_t = site.data.i18n[chrome_lang] | default: site.data.i18n.en %}
+  {%- if chrome_lang == "fr" %}{% assign other_lang = "en" %}{% else %}{% assign other_lang = "fr" %}{% endif %}
   <a class="skip-link" href="#main">{{ chrome_t.skip_link }}</a>
   <canvas id="starfield" aria-hidden="true"></canvas>
 
   <header class="nav">
-    <nav class="nav-inner" aria-label="Main navigation">
+    <nav class="nav-inner" aria-label="{{ chrome_t.nav_label }}">
       <a class="brand" href="/"><span class="brand-planet" aria-hidden="true"></span>dominic@azure<span class="brand-cursor" aria-hidden="true">▌</span></a>
       <div class="nav-actions">
-        <button class="theme-toggle" type="button" aria-label="Switch to dawn theme" data-label-to-light="Switch to dawn theme" data-label-to-dark="Switch to night theme"><span class="icon-night" aria-hidden="true">☾</span><span class="icon-dawn" aria-hidden="true">☀</span></button>
-        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><span aria-hidden="true">☰</span></button>
+        {%- if page.translation_url %}
+        <a class="lang-switch" href="{{ page.translation_url }}" hreflang="{{ other_lang }}" lang="{{ other_lang }}" aria-label="{{ other_lang | upcase }}, {{ chrome_t.lang_switch }}">{{ other_lang | upcase }}</a>
+        {%- endif %}
+        <button class="theme-toggle" type="button" aria-label="{{ chrome_t.theme_to_light }}" data-label-to-light="{{ chrome_t.theme_to_light }}" data-label-to-dark="{{ chrome_t.theme_to_dark }}"><span class="icon-night" aria-hidden="true">☾</span><span class="icon-dawn" aria-hidden="true">☀</span></button>
+        <button class="nav-toggle" aria-label="{{ chrome_t.menu_toggle }}" aria-expanded="false" aria-controls="nav-links"><span aria-hidden="true">☰</span></button>
       </div>
       <ul class="nav-links" id="nav-links">
         {% for item in site.data.navigation %}
-        <li><a{% if item.class %} class="{{ item.class | escape }}"{% endif %} href="{{ item.href | escape }}"{% if item.target %} target="{{ item.target | escape }}"{% endif %}{% if item.rel %} rel="{{ item.rel | escape }}"{% endif %}>{{ item.label | escape }}</a></li>
+        <li><a{% if item.class %} class="{{ item.class | escape }}"{% endif %} href="{{ item.href | escape }}"{% if item.target %} target="{{ item.target | escape }}"{% endif %}{% if item.rel %} rel="{{ item.rel | escape }}"{% endif %}>{% if chrome_lang == "fr" and item.label_fr %}{{ item.label_fr | escape }}{% else %}{{ item.label | escape }}{% endif %}</a></li>
         {% endfor %}
       </ul>
     </nav>
@@ -102,14 +106,14 @@
       <li><a href="https://huggingface.co/dapiced" target="_blank" rel="noopener">Hugging Face</a></li>
       <li><a href="/feed.xml">RSS</a></li>
     </ul>
-    <ul class="footer-links footer-explore" aria-label="More pages">
-      <li><a href="/#projects">Projects</a></li>
-      <li><a href="/resources/">Resources</a></li>
-      <li><a href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">Contact on LinkedIn ↗</a></li>
+    <ul class="footer-links footer-explore" aria-label="{{ chrome_t.footer_more }}">
+      <li><a href="/#projects">{{ chrome_t.footer_projects }}</a></li>
+      <li><a href="/resources/">{{ chrome_t.footer_resources }}</a></li>
+      <li><a href="https://www.linkedin.com/in/dapiced/" target="_blank" rel="noopener">{{ chrome_t.footer_contact }}</a></li>
     </ul>
-    <p class="footer-dedication"><a href="/blog/2026/07/a-star-for-my-father/">✦ In this sky shines a star named Vincenzo D'Apice</a></p>
+    <p class="footer-dedication"><a href="/blog/2026/07/a-star-for-my-father/"{% if chrome_lang == "fr" %} hreflang="en"{% endif %}>{{ chrome_t.dedication }}</a></p>
     <p class="footer-star-status" id="star-status"></p>
-    <p class="footer-copy">© <span id="year">2026</span> Dominic D'Apice · Montréal, Canada · Orion Arm</p>
+    <p class="footer-copy">© <span id="year">2026</span> Dominic D'Apice · Montréal, Canada · {{ chrome_t.orion_arm }}</p>
   </footer>
 
   {% if page.blog_search %}

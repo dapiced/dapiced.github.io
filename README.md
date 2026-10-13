@@ -79,9 +79,12 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
   `post.html` / `portfolio.html` for articles)
 - `_includes/` - shared fragments: `article-meta.html` (date, reading time, tags, translation
   link), `comments.html` (giscus), `mermaid.html`, `localized-date.html`, `topic-posts.html`
-- `_data/i18n.yml` - interface strings for article pages in `en` and `fr`, picked by `page.lang`
-  (dates, "min read", comments heading, giscus language, back links)
-- `_data/navigation.yml` - ordered header links (`label`, `href`, and optional `class`,
+- `_data/i18n.yml` - interface strings in `en` and `fr`, picked by `page.lang`: the page chrome
+  (navigation label, footer, theme and language buttons) and the article pages (dates,
+  "min read", comments heading, giscus language, back links). French pages get the
+  French chrome, a header switch to their `translation_url`, and `og:locale` `fr_CA`
+  (`_plugins/page_locale.rb`); `tools/site-checks/check_i18n_generated.py` verifies it
+- `_data/navigation.yml` - ordered header links (`label`, `label_fr`, `href`, and optional `class`,
   `target`, `rel`). Kept short on purpose (seven entries); secondary pages such as
   Projects, Resources and Contact live in the footer
 - `_data/skills.yml` - ordered homepage skill groups (`domain` and an ordered `tags` list)
