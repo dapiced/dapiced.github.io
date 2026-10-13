@@ -1,6 +1,7 @@
 - label: About
   label_fr: À propos
-  href: "/#about"
+  href: "/about/"
+  href_fr: "/fr/a-propos/"
 - label: Portfolio
   label_fr: Portfolio
   href: "/portfolio/"

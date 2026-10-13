@@ -299,9 +299,10 @@ def validate_rendered_homepage(root: Path | str) -> dict[str, int]:
     validator = _load_validator(root_path)
     expected = validator.load_site_data(root_path)
     rendered = parse_rendered_homepage(homepage.read_text(encoding="utf-8"))
-    # The homepage is English: navigation shows `label`, not `label_fr`.
+    # The homepage is English: navigation shows `label` and `href`, not the
+    # French `label_fr` / `href_fr`.
     expected["navigation"] = [
-        {key: value for key, value in item.items() if key != "label_fr"}
+        {key: value for key, value in item.items() if key not in ("label_fr", "href_fr")}
         for item in expected["navigation"]
     ]
     for name, expected_items in expected.items():

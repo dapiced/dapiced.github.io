@@ -11,7 +11,7 @@ import yaml
 SCHEMAS = {
     "navigation": {
         "required": {"label": str, "href": str},
-        "optional": {"label_fr": str, "class": str, "target": str, "rel": str},
+        "optional": {"label_fr": str, "href_fr": str, "class": str, "target": str, "rel": str},
     },
     "skills": {
         "required": {"domain": str, "tags": list},
@@ -35,7 +35,7 @@ SCHEMAS = {
 
 APPROVED_SITE_DATA = {
     "navigation": [
-        {"label": "About", "label_fr": "À propos", "href": "/#about"},
+        {"label": "About", "label_fr": "À propos", "href": "/about/", "href_fr": "/fr/a-propos/"},
         {"label": "Portfolio", "label_fr": "Portfolio", "href": "/portfolio/"},
         {"label": "Blog", "label_fr": "Blogue", "href": "/blog/"},
         {"label": "Resume", "label_fr": "CV", "href": "/resume/"},
