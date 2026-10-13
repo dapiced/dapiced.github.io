@@ -1,0 +1,27 @@
+---
+layout: default
+title: Signal lost - offline
+description: "You are offline. The pages you already read on this site are still available."
+lang: en
+translation_url: /fr/hors-ligne/
+sitemap: false
+---
+{%- comment -%}
+  Served by the service worker (sw.js) when the network is gone and the
+  requested page was never read. assets/js/offline.js lists the pages kept.
+{%- endcomment -%}
+<section class="section offline-page" data-offline-empty="You have not read any page here yet. Come back once the signal returns.">
+  <p class="eyebrow">SIGNAL LOST · NO CARRIER</p>
+  <h1 class="section-title">You are offline</h1>
+  <p class="hero-terminal">
+    <span class="u">dominic@azure</span>:~$ <span class="c">ping</span> <span class="f">dominicdapice.com</span> → <strong>Network is unreachable</strong>
+  </p>
+  <p class="offline-lead">
+    Voyager has been out of reach for hours at a time for 49 years, and it keeps working.
+    This site does the same: every page you have read here stays available without a network.
+  </p>
+  <h2 class="offline-title">Pages available offline</h2>
+  <ul class="post-list offline-list" id="offline-list"></ul>
+  <p><a class="btn btn-ghost" href="/">Try the homepage again</a></p>
+</section>
+<script src="{{ '/assets/js/offline.js' | asset_digest }}" defer></script>

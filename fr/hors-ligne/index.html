@@ -1,0 +1,26 @@
+---
+layout: default
+title: Perte de signal - hors ligne
+description: "Vous êtes hors ligne. Les pages déjà lues sur ce site restent disponibles."
+lang: fr
+translation_url: /offline/
+sitemap: false
+---
+{%- comment -%}
+  Version française de offline/index.html (servie par sw.js hors ligne).
+{%- endcomment -%}
+<section class="section offline-page" data-offline-empty="Vous n'avez encore lu aucune page ici. Revenez quand le signal sera rétabli.">
+  <p class="eyebrow">PERTE DE SIGNAL · AUCUNE PORTEUSE</p>
+  <h1 class="section-title">Vous êtes hors ligne</h1>
+  <p class="hero-terminal">
+    <span class="u">dominic@azure</span>:~$ <span class="c">ping</span> <span class="f">dominicdapice.com</span> → <strong>Network is unreachable</strong>
+  </p>
+  <p class="offline-lead">
+    Voyager est hors de portée pendant des heures depuis 49 ans, et il continue de fonctionner.
+    Ce site fait pareil : chaque page que vous avez lue ici reste disponible sans réseau.
+  </p>
+  <h2 class="offline-title">Pages disponibles hors ligne</h2>
+  <ul class="post-list offline-list" id="offline-list"></ul>
+  <p><a class="btn btn-ghost" href="/fr/">Réessayer l'accueil</a></p>
+</section>
+<script src="{{ '/assets/js/offline.js' | asset_digest }}" defer></script>

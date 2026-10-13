@@ -1065,6 +1065,13 @@ a.path-card:hover {
 .profile-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0; }
 .about-more { font-family: var(--mono); font-size: 0.85rem; }
 
+/* ---------- offline page (sw.js) ---------- */
+
+.offline-lead { max-width: 620px; color: var(--muted); }
+.offline-title { margin-top: var(--space-6); font-size: 1.1rem; color: var(--heading); }
+.offline-list { margin: var(--space-3) 0 var(--space-6); }
+.notfound-fr { margin-top: var(--space-7); padding-top: var(--space-6); border-top: 1px solid var(--border); }
+
 /* ---------- about page ---------- */
 
 .about-page .lead { font-size: 1.12rem; color: var(--heading); }

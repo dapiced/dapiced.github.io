@@ -44,6 +44,7 @@ jobs:
             tests/test_og_cards.py \
             tests/test_about_page.py \
             tests/test_french_section.py \
+            tests/test_pwa.py \
             tests/test_site_data.py \
             tests/test_final_hardening_contracts.py -q
           python tools/site-checks/validate_site_data.py
@@ -130,6 +131,11 @@ jobs:
       - name: Command palette
         working-directory: tools/site-checks/browser
         run: node palette-check.mjs
+
+      # Offline support end to end: worker control, cached pages, "Signal lost".
+      - name: Offline support
+        working-directory: tools/site-checks/browser
+        run: node pwa-check.mjs
 
       # Median of 3 runs on representative pages; thresholds in lighthouserc.json.
       - name: Lighthouse

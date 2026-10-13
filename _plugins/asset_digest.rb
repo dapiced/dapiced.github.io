@@ -23,6 +23,11 @@ module AssetDigest
 
     "#{path}?v=#{Digest::SHA256.file(source).hexdigest[0, DIGEST_LENGTH]}"
   end
+
+  # Short digest of a string, e.g. the service worker's shell list (sw.js).
+  def text_digest(input)
+    Digest::SHA256.hexdigest(input.to_s)[0, DIGEST_LENGTH]
+  end
 end
 
 Liquid::Template.register_filter(AssetDigest)

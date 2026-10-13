@@ -76,6 +76,9 @@ The plugin emits a redirect page at the old URL (kept out of `sitemap.xml`); upd
   committed PDF.
 - `blog/index.html` - post listing (all English posts remain in HTML for SEO and readers without JavaScript; JavaScript initially shows eight and provides a button to reveal the rest)
 - `blog/search/` and `blog/search.json` - local search over authored post titles, excerpts and tags
+- `sw.js` (service worker) + `offline/` and `fr/hors-ligne/` - offline support: pages
+  already read stay available, unread ones fall back to "Signal lost"; checked by
+  `tools/site-checks/browser/pwa-check.mjs`
 - `search-index.json` + `assets/js/command-palette.js` - site-wide command palette,
   checked end to end by `tools/site-checks/browser/palette-check.mjs`
 - `404.html` - custom not-found page
