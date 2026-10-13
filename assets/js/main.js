@@ -393,7 +393,7 @@
         var n = d.count_unique || d.count;
         if (n && n !== "0") onCount(n);
       })
-      .catch(function () { /* no data yet - badge stays hidden */ });
+      .catch(function () { /* no data yet - badge stays invisible */ });
   }
 
   /* on a post page: count under the title */
@@ -401,7 +401,7 @@
   if (pv) {
     fetchCount(location.pathname, function (n) {
       document.getElementById("post-views-n").textContent = n;
-      pv.hidden = false;
+      pv.classList.remove("views-pending");
     });
   }
 
@@ -409,7 +409,7 @@
   document.querySelectorAll(".list-views").forEach(function (el) {
     fetchCount(el.getAttribute("data-path"), function (n) {
       el.querySelector(".list-views-n").textContent = n;
-      el.hidden = false;
+      el.classList.remove("views-pending");
     });
   });
 

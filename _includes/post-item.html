@@ -8,7 +8,7 @@
 <li class="post-item" id="post-{{ include.post.slug }}">
   <a class="post-link" href="{{ include.post.url }}"{% if item_lang != item_page_lang %} hreflang="{{ item_lang }}" lang="{{ item_lang }}"{% endif %}>{{ include.post.title }}</a>
   <p class="post-meta">
-    <time datetime="{{ include.post.date | date_to_xmlschema }}">{% include localized-date.html date=include.post.date lang=item_page_lang %}</time>{% if item_lang != item_page_lang %} · <span class="post-lang">{{ item_lang | upcase }}</span>{% endif %}<span class="list-views" data-path="{{ include.post.url }}" hidden> · 👁 <span class="list-views-n"></span> {{ item_t.visitors }}</span>
+    <time datetime="{{ include.post.date | date_to_xmlschema }}">{% include localized-date.html date=include.post.date lang=item_page_lang %}</time>{% if item_lang != item_page_lang %} · <span class="post-lang">{{ item_lang | upcase }}</span>{% endif %}<span class="list-views views-pending" data-path="{{ include.post.url }}"> · 👁 <span class="list-views-n views-n"></span> {{ item_t.visitors }}</span>
     {% if include.post.tags and include.post.tags.size > 0 %} · {% for tag in include.post.tags %}<a class="tag" href="/blog/tag/{{ tag | slugify }}/">#{{ tag }}</a> {% endfor %}{% endif %}
     {% if include.post.translation_url %} · {% if item_lang == "fr" %}<a href="{{ include.post.translation_url }}" hreflang="en" lang="en">English version 🇬🇧</a>{% else %}<a href="{{ include.post.translation_url }}" hreflang="fr" lang="fr">version française 🇫🇷</a>{% endif %}{% endif %}
   </p>

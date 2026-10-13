@@ -188,7 +188,7 @@
     {%- assign post_lang = post.lang | default: "en" %}
     <li class="post-item reveal">
       <a class="post-link" href="{{ post.url }}"{% if post_lang != lang %} hreflang="{{ post_lang }}" lang="{{ post_lang }}"{% endif %}>{{ post.title }}</a>
-      <p class="post-meta"><time datetime="{{ post.date | date_to_xmlschema }}">{% include localized-date.html date=post.date lang=lang %}</time>{% if post_lang != lang %} · {{ post_lang | upcase }}{% endif %}<span class="list-views" data-path="{{ post.url }}" hidden> · 👁 <span class="list-views-n"></span> {{ site.data.i18n[lang].visitors }}</span></p>
+      <p class="post-meta"><time datetime="{{ post.date | date_to_xmlschema }}">{% include localized-date.html date=post.date lang=lang %}</time>{% if post_lang != lang %} · {{ post_lang | upcase }}{% endif %}<span class="list-views views-pending" data-path="{{ post.url }}"> · 👁 <span class="list-views-n views-n"></span> {{ site.data.i18n[lang].visitors }}</span></p>
       <p class="excerpt"{% if post_lang != lang %} lang="{{ post_lang }}"{% endif %}>{{ post.excerpt | strip_html | truncate: 180 }}</p>
     </li>
     {% endfor %}

@@ -125,6 +125,12 @@ the generated navigation, skills, timeline, and off-duty cards still match those
 
 ## Automation
 
+- `production-health.yml` (weekly, Monday): checks the live site through Cloudflare
+  (security headers, HTTPS redirect, service worker, search index, sky catalogue,
+  share images; `tools/site-checks/check_production.py`) and runs Lighthouse on six
+  real pages with GoatCounter and giscus loaded. A failure opens one
+  "Production health" issue.
+
 - **Cosmic Daily** (`cosmic-daily.yml`, daily at 12:00 UTC) fetches NASA's Astronomy Picture of
   the Day, converts the image to WebP, writes an entry in the `_apod/` collection (published under `/sky/`, kept out of the blog
   and its feed), opens a PR,

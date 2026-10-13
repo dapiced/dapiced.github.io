@@ -1,0 +1,115 @@
+name: Production health
+
+# Weekly check of the live site as visitors get it through Cloudflare: the
+# security headers and HTTPS redirect set at the edge, the files the features
+# depend on (service worker, search index, sky catalogue, share images), and
+# Lighthouse on six real pages with GoatCounter and giscus loaded, which the
+# pull request checks block. Any failure opens a single "Production health"
+# issue (never a duplicate) with the report.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 12 * * 1"
+
+permissions: {}
+
+jobs:
+  check:
+    name: Check the live site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      failed: ${{ steps.verdict.outputs.failed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Edge, files and share images
+        id: edge
+        continue-on-error: true
+        run: python tools/site-checks/check_production.py | tee -a "$GITHUB_STEP_SUMMARY" > production-report.md
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+          cache: npm
+          cache-dependency-path: tools/site-checks/browser/package-lock.json
+
+      - name: Install Lighthouse
+        working-directory: tools/site-checks/browser
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Lighthouse on production
+        id: lighthouse
+        continue-on-error: true
+        working-directory: tools/site-checks/browser
+        run: npx lhci autorun --config=lighthouserc-production.json
+
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: production-health
+          path: |
+            production-report.md
+            .lighthouseci/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Verdict
+        id: verdict
+        env:
+          EDGE: ${{ steps.edge.outcome }}
+          LIGHTHOUSE: ${{ steps.lighthouse.outcome }}
+        run: |
+          if [ "$EDGE" = "success" ] && [ "$LIGHTHOUSE" = "success" ]; then
+            echo "failed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Production health: edge=$EDGE lighthouse=$LIGHTHOUSE"
+          fi
+
+  notify:
+    name: Open production health issue
+    needs: check
+    if: needs.check.outputs.failed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open one issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          title="Production health"
+          open_titles="$(gh api --paginate \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/issues?state=open&per_page=100" \
+            --jq '.[] | select(.pull_request == null) | .title')"
+          if printf '%s\n' "$open_titles" | grep -Fx "$title" >/dev/null; then
+            echo "An open \"$title\" issue already exists; no new issue created."
+            exit 0
+          fi
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$(cat <<EOF
+          The weekly check of the live site found a problem.
+
+          The report (edge headers, files, share images) and the Lighthouse runs are
+          attached to the run as the \`production-health\` artifact:
+          ${RUN_URL}
+
+          Fix it in a pull request, then close this issue; next Monday's run opens a
+          new one only if something is still wrong.
+          EOF
+          )"
