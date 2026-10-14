@@ -14,7 +14,7 @@ Le fichier importable est [`ruleset-main.json`](ruleset-main.json).
 | Pull request obligatoire | Plus de push direct sur `main`. Aucune approbation exigée : tu es seul mainteneur. |
 | Vérifications requises | `Jekyll build`, `Cosmic Daily tests` et `Secret scan` (job du workflow CI) doivent être vertes. |
 | Pas de suppression, pas de force-push | L'historique de `main` ne peut pas être réécrit. |
-| Contournement | Réservé au rôle Admin, et seulement au moment de fusionner une PR (case « bypass » à cocher volontairement). Une soupape pour une urgence, pas une habitude. |
+| Contournement | Rôle Admin (soupape d'urgence, case « bypass » à cocher volontairement) et application GitHub Actions (fusion automatique de Cosmic Daily, voir plus bas). Dans les deux cas, seulement au moment de fusionner une PR : aucun push direct sur `main`. |
 
 `Deploy preview` n'est **pas** requis : une panne de Cloudflare ne doit pas
 bloquer une correction du site. CodeQL n'est pas requis non plus pour l'instant :
@@ -22,10 +22,36 @@ il ne s'exécute pas sur les PR ouvertes par les automatisations.
 
 ## Les automatisations restent compatibles
 
-- **Cosmic Daily** lance lui-même la CI sur sa PR puis la fusionne : les trois
-  vérifications sont présentes au moment de la fusion.
+- **Cosmic Daily** lance lui-même la CI sur sa PR, attend son résultat
+  (`gh run watch --exit-status`), puis fusionne avec `gh pr merge --admin`.
+  Pourquoi le contournement : une PR ouverte avec le `GITHUB_TOKEN` ne
+  déclenche pas la CI, et les vérifications lancées par `workflow_dispatch`,
+  bien que vertes sur le même commit, ne sont pas rattachées à la PR. Le
+  bouton de fusion affiche alors « Waiting for status to be reported » pour
+  les trois vérifications requises (constaté sur la PR #137). Le contrôle
+  reste réel : une CI rouge arrête le job avant la fusion.
 - **Repo data** lance aussi la CI sur sa PR (`repo-data.yml`, dernière étape).
+  Tu fusionnes ces PR toi-même : si les vérifications restent « Waiting »,
+  vérifie que le run CI dispatché est vert, puis fusionne avec la case
+  « bypass » de l'Admin.
 - **Dependabot** déclenche la CI normalement sur ses PR.
+
+### Approbation des changements non attribués
+
+GitHub ajoute à la règle « Pull request » un paramètre
+`require_extra_approval_for_unattributed_changes`, activé par défaut quand le
+fichier importé ne le mentionne pas. Il exige alors l'approbation d'une
+personne sur toute PR dont les commits viennent d'un robot
+(`github-actions[bot]`). C'est ce qui a bloqué la fusion automatique de
+Cosmic Daily le 14 octobre 2026 (PR #137), alors que les trois vérifications
+étaient vertes. Le fichier le met maintenant explicitement à `false`, et
+`tests/test_ruleset.py` le vérifie.
+
+Pour corriger une règle déjà importée : supprimer le ruleset
+`main: green checks before merge` puis réimporter `ruleset-main.json`
+(étapes ci-dessous). Vérification :
+`curl -s https://api.github.com/repos/dapiced/dapiced.github.io/rules/branches/main`
+doit afficher `"require_extra_approval_for_unattributed_changes": false`.
 
 ## Activer la règle (2 minutes, une fois)
 
