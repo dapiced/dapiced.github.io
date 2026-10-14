@@ -212,9 +212,9 @@ jobs:
         # run above must both pass before this step is reached (the job stops
         # at the first failed step). Once they do, merge without waiting on a
         # human, then dispatch the Pages deployment: a merge made with the
-        # GITHUB_TOKEN does not fire pages.yml on its own. Under the main
-        # ruleset this merge is refused (docs/infra/github-ruleset.md): the
-        # job then fails and the PR waits for a manual admin merge.
+        # GITHUB_TOKEN does not fire pages.yml on its own. The main ruleset
+        # requires a pull request but no status checks
+        # (docs/infra/github-ruleset.md), so this merge goes through.
         if: ${{ steps.create-pr.outputs.pull-request-number != '' && steps.apod.outputs.result == 'generated' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

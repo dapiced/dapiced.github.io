@@ -1,9 +1,8 @@
-"""docs/infra/ruleset-main.json: the checks it requires are real job names of
-the CI workflow, so renaming a job cannot silently lock main."""
+"""docs/infra/ruleset-main.json: what the main ruleset enforces, and that the
+automations it applies to can still merge their own pull requests."""
 import json
 from pathlib import Path
 
-import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 RULESET = json.loads((ROOT / "docs" / "infra" / "ruleset-main.json").read_text(encoding="utf-8"))
@@ -13,12 +12,11 @@ def rule(kind):
     return next(r for r in RULESET["rules"] if r["type"] == kind)
 
 
-def test_required_checks_are_ci_job_names():
-    ci = yaml.safe_load((ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
-    job_names = {job["name"] for job in ci["jobs"].values()}
-    required = {check["context"] for check in rule("required_status_checks")["parameters"]["required_status_checks"]}
-    assert required == {"Jekyll build", "Cosmic Daily tests", "Secret scan"}
-    assert required <= job_names
+def test_no_required_status_checks():
+    # Checks from a workflow_dispatch CI run are never attached to a PR opened
+    # with the GITHUB_TOKEN, so required checks would block the Cosmic Daily
+    # auto-merge forever (PR #137). Cosmic Daily waits on its own CI instead.
+    assert "required_status_checks" not in {r["type"] for r in RULESET["rules"]}
 
 
 def test_main_takes_pull_requests_only_and_keeps_its_history():
