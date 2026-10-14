@@ -212,16 +212,14 @@ jobs:
         # run above must both pass before this step is reached (the job stops
         # at the first failed step). Once they do, merge without waiting on a
         # human, then dispatch the Pages deployment: a merge made with the
-        # GITHUB_TOKEN does not fire pages.yml on its own. --admin uses the
-        # ruleset's GitHub Actions bypass (docs/infra/github-ruleset.md): the
-        # dispatched CI checks are not attached to a bot PR's merge box, so
-        # the required checks would otherwise wait forever. The CI result is
-        # already enforced by "gh run watch --exit-status" above.
+        # GITHUB_TOKEN does not fire pages.yml on its own. Under the main
+        # ruleset this merge is refused (docs/infra/github-ruleset.md): the
+        # job then fails and the PR waits for a manual admin merge.
         if: ${{ steps.create-pr.outputs.pull-request-number != '' && steps.apod.outputs.result == 'generated' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --squash --delete-branch --admin
+          gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --squash --delete-branch
           gh workflow run pages.yml --ref main
 
       - name: Capture log tail for the failure report
