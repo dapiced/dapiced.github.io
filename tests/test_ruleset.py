@@ -27,6 +27,13 @@ def test_main_takes_pull_requests_only_and_keeps_its_history():
     assert rule("pull_request")["parameters"]["required_approving_review_count"] == 0
 
 
+def test_bot_commits_need_no_human_approval():
+    # GitHub turns this on when the key is absent; it then waits for a human
+    # approval on every PR whose commits come from github-actions[bot], which
+    # blocked the Cosmic Daily auto-merge (PR #137).
+    assert rule("pull_request")["parameters"]["require_extra_approval_for_unattributed_changes"] is False
+
+
 def test_bypass_is_admin_only_and_only_when_merging_a_pr():
     assert RULESET["bypass_actors"] == [{"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "pull_request"}]
 

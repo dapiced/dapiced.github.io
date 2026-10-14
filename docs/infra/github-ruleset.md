@@ -27,6 +27,23 @@ il ne s'exécute pas sur les PR ouvertes par les automatisations.
 - **Repo data** lance aussi la CI sur sa PR (`repo-data.yml`, dernière étape).
 - **Dependabot** déclenche la CI normalement sur ses PR.
 
+### Approbation des changements non attribués
+
+GitHub ajoute à la règle « Pull request » un paramètre
+`require_extra_approval_for_unattributed_changes`, activé par défaut quand le
+fichier importé ne le mentionne pas. Il exige alors l'approbation d'une
+personne sur toute PR dont les commits viennent d'un robot
+(`github-actions[bot]`). C'est ce qui a bloqué la fusion automatique de
+Cosmic Daily le 14 octobre 2026 (PR #137), alors que les trois vérifications
+étaient vertes. Le fichier le met maintenant explicitement à `false`, et
+`tests/test_ruleset.py` le vérifie.
+
+Pour corriger une règle déjà importée : supprimer le ruleset
+`main: green checks before merge` puis réimporter `ruleset-main.json`
+(étapes ci-dessous). Vérification :
+`curl -s https://api.github.com/repos/dapiced/dapiced.github.io/rules/branches/main`
+doit afficher `"require_extra_approval_for_unattributed_changes": false`.
+
 ## Activer la règle (2 minutes, une fois)
 
 1. GitHub → dépôt → **Settings** → **Rules** → **Rulesets**.
