@@ -46,17 +46,22 @@ jobs:
           cat review.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Open one issue per quarter
+        # A second run for the same quarter (a manual re-run, e.g. after adding
+        # the GoatCounter secret) adds the fresh report as a comment: the issue
+        # body, where the author may have answered the questions, is never edited.
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           title="Quarterly review $(cat quarter.txt)"
-          existing="$(gh api --paginate \
+          number="$(gh api --paginate \
             -H "Accept: application/vnd.github+json" \
             "repos/${GITHUB_REPOSITORY}/issues?state=all&per_page=100" \
-            --jq '.[] | select(.pull_request == null) | .title')"
-          if printf '%s\n' "$existing" | grep -Fx "$title" >/dev/null; then
-            echo "\"$title\" already exists; no new issue created."
+            --jq ".[] | select(.pull_request == null and .title == \"$title\") | .number" | sed -n '1p')"
+          if [ -n "$number" ]; then
+            { echo "Revue relancée le $(date -u +%Y-%m-%d) :"; echo; cat review.md; } > comment.md
+            gh issue comment "$number" --repo "$GITHUB_REPOSITORY" --body-file comment.md
+            echo "\"$title\" already exists (#$number); report added as a comment."
             exit 0
           fi
           gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file review.md

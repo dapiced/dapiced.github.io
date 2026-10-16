@@ -88,3 +88,26 @@ def test_goatcounter_token_only_reaches_the_report_step():
     steps = WORKFLOW["jobs"]["review"]["steps"]
     with_secret = [s["name"] for s in steps if "GOATCOUNTER_API_TOKEN" in str(s.get("env", {}))]
     assert with_secret == ["Write the review"]
+
+
+def test_a_rerun_comments_instead_of_editing_the_issue():
+    step = next(s for s in WORKFLOW["jobs"]["review"]["steps"] if s["name"] == "Open one issue per quarter")
+    assert "gh issue comment" in step["run"] and "gh issue create" in step["run"]
+    assert "gh issue edit" not in step["run"]
+
+
+def test_a_failing_goatcounter_endpoint_is_named(monkeypatch):
+    import io
+    import urllib.error
+    monkeypatch.setenv("GOATCOUNTER_TOKEN", "test-token")
+
+    def fake(url, headers):
+        if "/stats/toprefs" in url:
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, io.BytesIO(b'{"error":"not found"}'))
+        if "/stats/total" in url:
+            return {"total": 10}
+        return {"hits": []}
+
+    text = "\n".join(qr.goatcounter_section(qr.Quarter.parse("2026-Q3"), fake))
+    assert "**10 visiteurs**" in text
+    assert '`/api/v0/stats/toprefs` : HTTP 404 {"error":"not found"}' in text

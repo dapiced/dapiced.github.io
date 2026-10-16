@@ -167,12 +167,22 @@ def goatcounter_section(quarter: Quarter, get=http_json) -> list[str]:
     params = urllib.parse.urlencode({"start": f"{quarter.start.isoformat()}T00:00:00Z",
                                      "end": f"{quarter.end.isoformat()}T00:00:00Z"})
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-    try:
-        total = get(f"{GOATCOUNTER}/api/v0/stats/total?{params}", headers)
-        hits = get(f"{GOATCOUNTER}/api/v0/stats/hits?{params}&limit=5", headers)
-        refs = get(f"{GOATCOUNTER}/api/v0/stats/toprefs?{params}&limit=10", headers)
-    except (urllib.error.URLError, ValueError) as error:
-        return lines + [f"- API indisponible ({error})."]
+    endpoints = {"total": f"stats/total?{params}", "hits": f"stats/hits?{params}&limit=5",
+                 "refs": f"stats/toprefs?{params}&limit=10"}
+    data, errors = {}, []
+    for key, path in endpoints.items():  # one failing endpoint does not hide the others
+        try:
+            data[key] = get(f"{GOATCOUNTER}/api/v0/{path}", headers)
+        except urllib.error.HTTPError as error:
+            detail = error.read(300).decode("utf-8", "replace").strip() if error.fp else ""
+            errors.append(f"- `/api/v0/{path.split('?')[0]}` : HTTP {error.code} {detail}".rstrip())
+            data[key] = {}
+        except (urllib.error.URLError, ValueError) as error:
+            errors.append(f"- `/api/v0/{path.split('?')[0]}` : {error}")
+            data[key] = {}
+    if len(errors) == len(endpoints):
+        return lines + ["- API indisponible :"] + errors
+    total, hits, refs = data["total"], data["hits"], data["refs"]
 
     visitors = int(total.get("total", 0) or 0)
     lines.append(f"- **{visitors} visiteurs** sur le trimestre.")
@@ -186,6 +196,8 @@ def goatcounter_section(quarter: Quarter, get=http_json) -> list[str]:
     lines += [f"- {h.get('path', '?')} : {h.get('count', 0)}" for h in (hits.get("hits") or [])] or ["- aucune donnée"]
     lines += ["", "Principales sources :", ""]
     lines += [f"- {r.get('name') or '(direct)'} : {r.get('count', 0)}" for r in referrers] or ["- aucune donnée"]
+    if errors:
+        lines += ["", "Appels en échec :", ""] + errors
     return lines
 
 
