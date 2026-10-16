@@ -56,6 +56,8 @@ The default mode is `preview`.
   13 October 2026), or a video. The credit is
   passed to the rights policy unchanged. If the page is for another date or its title, image or credit cannot be found, the
   day is skipped with `Skipped: APOD entry unavailable (...)` and exit 0, like a video day.
+- The NASA API call is retried up to four times, 10, 20 then 30 seconds apart, on network errors
+  and on transient answers (HTTP 429, 500, 502, 503, 504); any other status fails at once.
 - The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or
   cannot fit the size budget; the command fails only when every candidate fails.
 - PRs and merges made with the default `GITHUB_TOKEN` fire no workflow, so the job dispatches
