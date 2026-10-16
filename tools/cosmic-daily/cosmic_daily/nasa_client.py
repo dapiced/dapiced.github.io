@@ -14,10 +14,13 @@ from .apod_page import fetch_apod_page
 
 APOD_ENDPOINT = "https://api.nasa.gov/planetary/apod"
 # DEMO_KEY is a shared, rate-limited key; requests can be slow under load, so
-# use a generous read timeout and retry a couple of times before giving up.
+# use a generous read timeout and retry a few times before giving up. The API
+# also answers transient 5xx (two HTTP 503 in a row on 16 October 2026) and
+# 429 under load: those are retried too, waiting 10, 20, then 30 seconds.
 REQUEST_TIMEOUT = (10, 45)
-MAX_ATTEMPTS = 3
-RETRY_BACKOFF_SECONDS = 5
+MAX_ATTEMPTS = 4
+RETRY_BACKOFF_SECONDS = 10
+RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 # Since APOD moved to science.nasa.gov, the API scrapes the redirected old page
 # and answers with the site name as title and the site logo as image.
 DEGRADED_TITLES = {"nasa science", "apod - nasa science"}
@@ -75,11 +78,15 @@ def fetch_apod(day: str | date | None = None, api_key: str | None = None) -> APO
                 timeout=REQUEST_TIMEOUT,
                 allow_redirects=False,
             )
-            break
         except requests.RequestException as exc:
             last_error = exc
-            if attempt < MAX_ATTEMPTS:
-                time.sleep(RETRY_BACKOFF_SECONDS * attempt)
+            response = None
+        else:
+            if response.status_code not in RETRYABLE_STATUS:
+                break
+            print(f"NASA API returned HTTP {response.status_code} (attempt {attempt}/{MAX_ATTEMPTS}).")
+        if attempt < MAX_ATTEMPTS:
+            time.sleep(RETRY_BACKOFF_SECONDS * attempt)
     if response is None:
         raise RuntimeError(
             f"Failed to fetch APOD for {target_day} after {MAX_ATTEMPTS} attempts: {last_error}"
