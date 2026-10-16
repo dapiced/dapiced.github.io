@@ -40,13 +40,20 @@ The default mode is `preview`.
 - Old entries were migrated from `_posts/`; their former `/blog/...` URLs redirect through
   `redirect_from`. Duplicate detection still scans both folders.
 - `check` validates front matter and image references for a generated article.
-- Video entries are skipped, not failed: `preview` and `generate` print `Skipped: …` and exit 0,
-  and the workflow records the reason in the run summary. Publishing a video day stays a manual
-  decision.
+- Video entries (owner's choice, 2026-10-16): when the APOD is a video file from the APOD media
+  library (an MP4 on `assets.science.nasa.gov`), the video is downloaded to a temporary folder,
+  one frame from its middle becomes the entry's WebP picture (`cosmic_daily/video_frame.py`,
+  ffmpeg from the `imageio-ffmpeg` wheel), and the entry gets `media_type: video` and
+  `video_url` (NASA's page). On the site the picture carries a "▶ Video" badge and opens the
+  video on NASA's page in a new tab; the video itself is never copied or embedded. The credit
+  follows the image rule. A video shown through an embedded player (YouTube, Vimeo) is still
+  skipped with `Skipped: …` and exit 0.
 - APOD moved to `science.nasa.gov` in autumn 2026, and `api.nasa.gov` now answers some days with
   placeholder data (title `NASA Science`, the NASA logo as image). When that happens the entry is
   read from `https://science.nasa.gov/apod/?date=YYMMDD` instead: title, explanation (without the
-  "Tomorrow's picture" footer), credit line and image from the APOD media library. The credit is
+  "Tomorrow's picture" footer), credit line and image or video from the APOD media library. The
+  hero is a photo, an "original / annotated" image rollover (only the original is used, as on
+  13 October 2026), or a video. The credit is
   passed to the rights policy unchanged. If the page is for another date or its title, image or credit cannot be found, the
   day is skipped with `Skipped: APOD entry unavailable (...)` and exit 0, like a video day.
 - The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or

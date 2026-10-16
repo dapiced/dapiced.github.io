@@ -45,6 +45,8 @@ en:
   show_more: "Show all posts ({n} more)"
   sky_today_label: "Sky of the day · NASA APOD"
   sky_today_more: "Browse the sky archive →"
+  sky_video_badge: "▶ Video"
+  sky_video_hint: "(video on NASA Science, opens in a new tab)"
   # sky map (_includes/sky-map.html)
   sky_map_eyebrow: "LIVE · 45°30′N 73°34′W"
   sky_map_title: "Montréal tonight"
@@ -131,6 +133,8 @@ fr:
     - décembre
   sky_today_label: "Ciel du jour · APOD de la NASA"
   sky_today_more: "Parcourir les archives du ciel (EN) →"
+  sky_video_badge: "▶ Vidéo"
+  sky_video_hint: "(vidéo sur NASA Science, s'ouvre dans un nouvel onglet)"
   # sky map (_includes/sky-map.html)
   sky_map_eyebrow: "EN DIRECT · 45°30′N 73°34′O"
   sky_map_title: "Montréal ce soir"

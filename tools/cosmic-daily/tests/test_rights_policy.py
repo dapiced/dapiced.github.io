@@ -30,8 +30,14 @@ def test_allows_explicit_nasa_public_domain_metadata():
         assert decision.status == "allowed"
 
 
-def test_rejects_video():
-    decision = evaluate_media_rights("video")
+def test_video_follows_the_image_rule():
+    # Owner's choice (2026-10-16): one frame of the video, credited, linking to NASA.
+    assert evaluate_media_rights("video", "Eric Holland").status == "allowed"
+    assert evaluate_media_rights("video").status == "manual_review"
+
+
+def test_rejects_other_media():
+    decision = evaluate_media_rights("other", "Someone")
     assert decision.allowed is False
     assert decision.status == "unsupported_media"
 

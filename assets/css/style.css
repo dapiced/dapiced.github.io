@@ -1158,6 +1158,23 @@ a.path-card:hover {
 .sky-card time { font-size: 0.75rem; color: var(--muted); }
 .sky-card-title { font-size: 0.92rem; color: var(--lightblue); }
 .sky-empty { color: var(--muted); }
+/* Video entries: one frame of the video, linking to NASA's page. */
+.sky-card, .sky-today-media, .apod-video-link { position: relative; }
+.apod-video-link { display: block; }
+.sky-video-badge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 1;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--heading);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
 
 .apod-figure { margin: 1.5rem 0; }
 .apod-figure img { width: 100%; height: auto; border-radius: 10px; }

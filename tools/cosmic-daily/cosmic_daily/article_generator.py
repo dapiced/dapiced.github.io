@@ -52,8 +52,19 @@ def generate_article_markdown(apod: APODRecord) -> str:
     return apod.explanation.strip() + "\n"
 
 
+def video_page_url(apod: APODRecord) -> str:
+    """NASA's page for a video entry: where its picture links to."""
+    if apod.page_url and apod.page_url.startswith("https://science.nasa.gov/"):
+        return apod.page_url
+    return f"https://science.nasa.gov/apod/?date={datetime.fromisoformat(apod.date):%y%m%d}"
+
+
 def generate_article(apod: APODRecord, image_path: str, width: int, height: int) -> tuple[str, str]:
-    """Build a factual APOD collection entry. The optional `note` field is left for a human to add."""
+    """Build a factual APOD collection entry. The optional `note` field is left for a human to add.
+
+    A video entry also gets `media_type: video` and `video_url` (NASA's page);
+    its `image` is a frame of the video (cosmic_daily/video_frame.py).
+    """
     date_value = apod.date
     offset = _local_timezone_offset_for(date_value)
     seo = build_seo_description(apod.title, apod.explanation)
@@ -73,7 +84,8 @@ def generate_article(apod: APODRecord, image_path: str, width: int, height: int)
         f"rights_status: {decision.status}\n"
         f"apod_date: {date_value}\n"
         f'apod_url: "{apod.apod_url}"\n'
-        "generated_by: cosmic-daily\n"
-        "---\n\n"
+        + (f'media_type: video\nvideo_url: "{video_page_url(apod)}"\n' if apod.media_type == "video" else "")
+        + "generated_by: cosmic-daily\n"
+        + "---\n\n"
     )
     return front_matter, front_matter + generate_article_markdown(apod)
