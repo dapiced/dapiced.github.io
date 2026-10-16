@@ -1,26 +1,20 @@
 from __future__ import annotations
 
 import os
-import time
 from dataclasses import dataclass
 from datetime import date
 from typing import Any, Dict, Optional
 from urllib.parse import urlparse
 
-import requests
 
+from . import http
 from .apod_page import fetch_apod_page
 
 
 APOD_ENDPOINT = "https://api.nasa.gov/planetary/apod"
 # DEMO_KEY is a shared, rate-limited key; requests can be slow under load, so
-# use a generous read timeout and retry a few times before giving up. The API
-# also answers transient 5xx (two HTTP 503 in a row on 16 October 2026) and
-# 429 under load: those are retried too, waiting 10, 20, then 30 seconds.
+# use a generous read timeout. Retries are in cosmic_daily/http.py.
 REQUEST_TIMEOUT = (10, 45)
-MAX_ATTEMPTS = 4
-RETRY_BACKOFF_SECONDS = 10
-RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 # Since APOD moved to science.nasa.gov, the API scrapes the redirected old page
 # and answers with the site name as title and the site logo as image.
 DEGRADED_TITLES = {"nasa science", "apod - nasa science"}
@@ -68,29 +62,24 @@ def fetch_apod(day: str | date | None = None, api_key: str | None = None) -> APO
     target_day = day.isoformat() if isinstance(day, date) else (str(day) if day else date.today().isoformat())
     configured_key = api_key or os.getenv("NASA_API_KEY") or "DEMO_KEY"
 
-    response = None
-    last_error: requests.RequestException | None = None
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        try:
-            response = requests.get(
-                APOD_ENDPOINT,
-                params={"api_key": configured_key, "date": target_day},
-                timeout=REQUEST_TIMEOUT,
-                allow_redirects=False,
-            )
-        except requests.RequestException as exc:
-            last_error = exc
-            response = None
-        else:
-            if response.status_code not in RETRYABLE_STATUS:
-                break
-            print(f"NASA API returned HTTP {response.status_code} (attempt {attempt}/{MAX_ATTEMPTS}).")
-        if attempt < MAX_ATTEMPTS:
-            time.sleep(RETRY_BACKOFF_SECONDS * attempt)
-    if response is None:
-        raise RuntimeError(
-            f"Failed to fetch APOD for {target_day} after {MAX_ATTEMPTS} attempts: {last_error}"
-        ) from last_error
+    try:
+        # The key goes in a header (api.data.gov accepts X-Api-Key), never in the
+        # URL: a connection error's text repeats the full URL, and that text can
+        # reach the log tail that the workflow copies into a public issue.
+        response = http.get(
+            APOD_ENDPOINT,
+            label="NASA API",
+            params={"date": target_day},
+            headers={"X-Api-Key": configured_key},
+            timeout=REQUEST_TIMEOUT,
+            allow_redirects=False,
+        )
+    except http.TransientError as exc:
+        # The entry is built from the science.nasa.gov page on most days anyway
+        # (see _is_degraded); an API outage should not block it (16 October 2026).
+        print(f"{exc}; reading the science.nasa.gov page instead.", flush=True)
+        day_value = date.fromisoformat(target_day)
+        return _record_from_page(day_value, build_apod_url(day_value), {})
 
     if response.status_code != 200:
         raise RuntimeError(f"NASA API returned HTTP {response.status_code} for {target_day}")

@@ -171,7 +171,8 @@ def test_fallback_uses_next_url_when_hd_download_times_out(monkeypatch, tmp_path
 
     assert target.exists()
     assert size == (400, 300)
-    assert calls == ["https://example.com/hd.png", "https://example.com/std.png"]
+    # The HD file is retried (cosmic_daily/http.py) before falling back.
+    assert calls == ["https://example.com/hd.png"] * 3 + ["https://example.com/std.png"]
 
 
 def test_fallback_raises_last_error_when_every_url_fails(monkeypatch, tmp_path):
