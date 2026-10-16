@@ -1,0 +1,62 @@
+name: Quarterly review
+
+# On the first day of each quarter, opens a "Quarterly review YYYY-Qn" issue
+# with what the site published, how the scheduled checks did and, when the
+# read-only GOATCOUNTER_API_TOKEN secret exists, visitors and referrers
+# (tools/site-checks/quarterly_review.py, docs/quarterly-review.md).
+
+on:
+  workflow_dispatch:
+    inputs:
+      quarter:
+        description: "Quarter to review, e.g. 2026-Q4 (default: the one that just ended)"
+        required: false
+  schedule:
+    - cron: "23 13 1 1,4,7,10 *"
+
+permissions: {}
+
+jobs:
+  review:
+    name: Open the quarterly review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Write the review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_API_TOKEN }}
+          QUARTER: ${{ inputs.quarter }}
+        run: |
+          set -euo pipefail
+          python -m pip install "PyYAML==6.0.3"
+          python tools/site-checks/quarterly_review.py ${QUARTER:+--quarter "$QUARTER"} > review.md
+          head -n 1 review.md | grep -oE '[0-9]{4}-Q[1-4]' | head -n 1 > quarter.txt
+          cat review.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open one issue per quarter
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          title="Quarterly review $(cat quarter.txt)"
+          existing="$(gh api --paginate \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/issues?state=all&per_page=100" \
+            --jq '.[] | select(.pull_request == null) | .title')"
+          if printf '%s\n' "$existing" | grep -Fx "$title" >/dev/null; then
+            echo "\"$title\" already exists; no new issue created."
+            exit 0
+          fi
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file review.md
