@@ -2,8 +2,8 @@
 
 Le premier jour de chaque trimestre (janvier, avril, juillet, octobre, 13 h 23 UTC),
 `.github/workflows/quarterly-review.yml` ouvre une issue « Quarterly review AAAA-Qn »
-qui fait le point sur le trimestre écoulé. Une seule issue par trimestre, même si on
-relance le workflow.
+qui fait le point sur le trimestre écoulé. Une seule issue par trimestre : une relance
+ajoute le rapport à jour en commentaire, sans toucher au corps de l'issue (vos réponses).
 
 | Section | Source | Ce qu'on y lit |
 |---|---|---|

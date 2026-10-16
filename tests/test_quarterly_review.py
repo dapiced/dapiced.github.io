@@ -88,3 +88,9 @@ def test_goatcounter_token_only_reaches_the_report_step():
     steps = WORKFLOW["jobs"]["review"]["steps"]
     with_secret = [s["name"] for s in steps if "GOATCOUNTER_API_TOKEN" in str(s.get("env", {}))]
     assert with_secret == ["Write the review"]
+
+
+def test_a_rerun_comments_instead_of_editing_the_issue():
+    step = next(s for s in WORKFLOW["jobs"]["review"]["steps"] if s["name"] == "Open one issue per quarter")
+    assert "gh issue comment" in step["run"] and "gh issue create" in step["run"]
+    assert "gh issue edit" not in step["run"]
