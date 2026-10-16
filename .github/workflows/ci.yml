@@ -48,6 +48,7 @@ jobs:
             tests/test_sky_map.py \
             tests/test_production_check.py \
             tests/test_ruleset.py \
+            tests/test_posts.py \
             tests/test_site_data.py \
             tests/test_final_hardening_contracts.py -q
           python tools/site-checks/validate_site_data.py

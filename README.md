@@ -6,7 +6,16 @@ Personal site and blog of **Dominic D'Apice** - Developer, Azure Infrastructure 
 
 ## Writing a new blog post
 
-Add a Markdown file to `_posts/` named `YYYY-MM-DD-slug.md`:
+The quickest way is the generator, which writes the file (or the linked EN/FR pair) with
+a safe date, validated tags and an "In brief" box ready to fill
+([`tools/new-post/README.md`](tools/new-post/README.md)):
+
+```bash
+python tools/new-post/new_post.py --title-en "What I learned about XGBoost" \
+    --title-fr "Ce que j'ai appris sur XGBoost" --tags machine-learning,kaggle
+```
+
+By hand, add a Markdown file to `_posts/` named `YYYY-MM-DD-slug.md`:
 
 ```markdown
 ---
