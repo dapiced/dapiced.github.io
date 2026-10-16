@@ -15,8 +15,8 @@ import tempfile
 from pathlib import Path
 
 import imageio_ffmpeg
-import requests
 
+from . import http
 from .apod_page import is_library_video
 
 
@@ -29,7 +29,9 @@ def download_video(video_url: str, target: Path) -> Path:
     """Stream the video to ``target``; only APOD media library files are accepted."""
     if not is_library_video(video_url):
         raise ValueError(f"Not a video from the APOD media library: {video_url}")
-    with requests.get(video_url, timeout=REQUEST_TIMEOUT, allow_redirects=False, stream=True) as response:
+    # Only opening the stream is retried; a reset mid-download fails the run.
+    with http.get(video_url, label="Video download", timeout=REQUEST_TIMEOUT,
+                  allow_redirects=False, stream=True) as response:
         if response.status_code != 200:
             raise RuntimeError(f"Video download returned HTTP {response.status_code} for {video_url}")
         content_type = response.headers.get("Content-Type", "")

@@ -8,6 +8,8 @@ from urllib.parse import urlparse
 from PIL import Image, ImageOps
 import requests
 
+from . import http
+
 
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_IMAGE_SIDE = 1600
@@ -31,7 +33,7 @@ def _validate_download_url(raw_url: str) -> str:
 
 def _download_bytes(image_url: str) -> bytes:
     _validate_download_url(image_url)
-    response = requests.get(image_url, timeout=20, allow_redirects=False, stream=True)
+    response = http.get(image_url, label="Image download", timeout=20, allow_redirects=False, stream=True)
     if response.status_code != 200:
         raise RuntimeError(f"Image download returned HTTP {response.status_code} for {image_url}")
     content_type = response.headers.get("Content-Type", "")

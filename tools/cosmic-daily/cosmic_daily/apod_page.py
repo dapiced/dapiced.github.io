@@ -25,7 +25,8 @@ from datetime import date, datetime
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 
-import requests
+
+from . import http
 
 
 APOD_PAGE_ENDPOINT = "https://science.nasa.gov/apod/"
@@ -258,17 +259,22 @@ def parse_apod_page(html: str, expected_day: date, page_url: str | None = None) 
 
 
 def fetch_apod_page(day: date) -> ApodPage:
-    try:
-        response = requests.get(
-            APOD_PAGE_ENDPOINT,
-            params={"date": f"{day:%y%m%d}"},
-            timeout=REQUEST_TIMEOUT,
-        )
-    except requests.RequestException as exc:
-        raise ApodUnavailableError(f"APOD page could not be fetched: {exc}") from exc
+    """Fetch and parse the entry page.
+
+    Transport failures (network, HTTP error) raise http.TransientError or
+    RuntimeError, so the run fails and opens an issue: a skip here would lose
+    the day silently. ApodUnavailableError stays for pages that answered but
+    cannot be trusted (wrong host or date, missing title, media or credit).
+    """
+    response = http.get(
+        APOD_PAGE_ENDPOINT,
+        label="APOD page",
+        params={"date": f"{day:%y%m%d}"},
+        timeout=REQUEST_TIMEOUT,
+    )
     final_url = urlparse(response.url or "")
-    if response.status_code != 200 or final_url.scheme != "https" or final_url.netloc != PAGE_HOST:
-        raise ApodUnavailableError(
-            f"APOD page returned HTTP {response.status_code} from {response.url}"
-        )
+    if response.status_code != 200:
+        raise RuntimeError(f"APOD page returned HTTP {response.status_code} for {day.isoformat()}")
+    if final_url.scheme != "https" or final_url.netloc != PAGE_HOST:
+        raise ApodUnavailableError(f"APOD page redirected to {response.url}")
     return parse_apod_page(response.text, day, page_url=response.url)

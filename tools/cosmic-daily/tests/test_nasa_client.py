@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import pytest
+import requests
 
+from cosmic_daily import http, nasa_client
 from cosmic_daily.nasa_client import APODRecord, fetch_apod
 
 
@@ -48,14 +50,19 @@ def test_fetch_apod_missing_field_raises(monkeypatch):
         fetch_apod("2024-01-01", api_key="DEMO_KEY")
 
 
-def test_fetch_apod_network_error_raises(monkeypatch):
+def test_api_and_page_both_down_fails_loudly(monkeypatch):
+    # Network errors on every request: the API retries, the page fallback
+    # retries too, then the run fails (an issue), it is never a silent skip.
     def fake_get(*args, **kwargs):
-        raise RuntimeError("boom")
+        raise requests.ConnectionError("down")
 
     monkeypatch.setattr("requests.get", fake_get)
-    with pytest.raises(RuntimeError):
+    with pytest.raises(http.TransientError, match="APOD page failed after 3 attempts"):
         fetch_apod("2024-01-01", api_key="DEMO_KEY")
 
+
+
+# --- Retries and fallback (cosmic_daily/http.py) -------------------------------
 
 PAYLOAD = {
     "date": "2026-10-16",
@@ -67,52 +74,73 @@ PAYLOAD = {
 }
 
 
-@pytest.fixture
-def no_sleep(monkeypatch):
-    waits = []
-    monkeypatch.setattr("cosmic_daily.nasa_client.time.sleep", waits.append)
-    return waits
+def _answers(monkeypatch, *answers):
+    """requests.get serves these in order (an exception is raised); returns the URLs asked."""
+    queue, asked = list(answers), []
 
-
-def test_transient_5xx_is_retried_with_growing_pauses(monkeypatch, no_sleep):
-    answers = [DummyResponse(status_code=503), DummyResponse(status_code=502), DummyResponse(PAYLOAD)]
-    monkeypatch.setattr("requests.get", lambda *args, **kwargs: answers.pop(0))
-
-    record = fetch_apod("2026-10-16", api_key="key")
-
-    assert record.title == "Example title"
-    assert no_sleep == [10, 20]
-
-
-def test_persistent_503_fails_after_the_last_attempt(monkeypatch, no_sleep):
-    calls = []
-    monkeypatch.setattr("requests.get", lambda *args, **kwargs: calls.append(1) or DummyResponse(status_code=503))
-
-    with pytest.raises(RuntimeError, match="HTTP 503"):
-        fetch_apod("2026-10-16", api_key="key")
-    assert len(calls) == 4 and no_sleep == [10, 20, 30]
-
-
-def test_client_errors_are_not_retried(monkeypatch, no_sleep):
-    calls = []
-    monkeypatch.setattr("requests.get", lambda *args, **kwargs: calls.append(1) or DummyResponse(status_code=403))
-
-    with pytest.raises(RuntimeError, match="HTTP 403"):
-        fetch_apod("2026-10-16", api_key="key")
-    assert len(calls) == 1 and no_sleep == []
-
-
-def test_network_error_then_success(monkeypatch, no_sleep):
-    import requests
-
-    answers = [requests.ConnectionError("reset"), DummyResponse(PAYLOAD)]
-
-    def fake_get(*args, **kwargs):
-        answer = answers.pop(0)
+    def fake_get(url, *args, **kwargs):
+        asked.append((url, kwargs))
+        answer = queue.pop(0)
         if isinstance(answer, Exception):
             raise answer
         return answer
 
     monkeypatch.setattr("requests.get", fake_get)
-    assert fetch_apod("2026-10-16", api_key="key").date == "2026-10-16"
-    assert no_sleep == [10]
+    return asked
+
+
+def test_api_key_is_sent_in_a_header_never_in_the_url(monkeypatch):
+    asked = _answers(monkeypatch, DummyResponse(PAYLOAD))
+    fetch_apod("2026-10-16", api_key="secret-key")
+    url, kwargs = asked[0]
+    assert kwargs["headers"] == {"X-Api-Key": "secret-key"}
+    assert "secret-key" not in url and "api_key" not in kwargs["params"]
+
+
+def test_transient_5xx_is_retried(monkeypatch, pauses):
+    _answers(monkeypatch, DummyResponse(status_code=503), DummyResponse(status_code=502), DummyResponse(PAYLOAD))
+    assert fetch_apod("2026-10-16", api_key="k").title == "Example title"
+    assert pauses == [5, 15]
+
+
+@pytest.mark.parametrize("status", [400, 403, 404, 429, 500])
+def test_other_statuses_fail_at_once(monkeypatch, pauses, status):
+    # 429 is the hourly quota and 500 a deterministic API error: a retry cannot help.
+    asked = _answers(monkeypatch, DummyResponse(status_code=status))
+    with pytest.raises(RuntimeError, match=f"HTTP {status}"):
+        fetch_apod("2026-10-16", api_key="k")
+    assert len(asked) == 1 and pauses == []
+
+
+def test_api_outage_falls_back_to_the_page(monkeypatch, pauses):
+    # 16 October 2026: api.nasa.gov down for hours while the page was fine.
+    _answers(monkeypatch, DummyResponse(status_code=503), requests.ConnectionError("x"), requests.ReadTimeout("x"))
+    seen = []
+    monkeypatch.setattr(nasa_client, "fetch_apod_page", lambda day: seen.append(day) or _page(day))
+    record = fetch_apod("2026-10-16", api_key="k")
+    assert [d.isoformat() for d in seen] == ["2026-10-16"]
+    assert record.title == "From the page" and record.apod_url.endswith("ap20261016.html")
+    assert pauses == [5, 15]
+
+
+def test_transient_error_message_never_contains_the_url(monkeypatch):
+    leaky = requests.ConnectionError("Max retries exceeded with url: /planetary/apod?api_key=SECRET")
+    _answers(monkeypatch, leaky, leaky, leaky)
+    with pytest.raises(http.TransientError) as caught:
+        http.get("https://api.nasa.gov/planetary/apod?api_key=SECRET", label="NASA API")
+    assert "SECRET" not in str(caught.value) and "ConnectionError" in str(caught.value)
+
+
+def test_network_error_then_success(monkeypatch, pauses):
+    _answers(monkeypatch, requests.ConnectionError("reset"), DummyResponse(PAYLOAD))
+    assert fetch_apod("2026-10-16", api_key="k").date == "2026-10-16"
+    assert pauses == [5]
+
+
+def _page(day):
+    from cosmic_daily.apod_page import ApodPage
+
+    return ApodPage(
+        date=day.isoformat(), title="From the page", explanation="An explanation.", credit="NASA",
+        image_urls=("https://assets.science.nasa.gov/content/dam/science/cds/apod/x.jpg",),
+    )

@@ -55,9 +55,15 @@ The default mode is `preview`.
   hero is a photo, an "original / annotated" image rollover (only the original is used, as on
   13 October 2026), or a video. The credit is
   passed to the rights policy unchanged. If the page is for another date or its title, image or credit cannot be found, the
-  day is skipped with `Skipped: APOD entry unavailable (...)` and exit 0, like a video day.
-- The NASA API call is retried up to four times, 10, 20 then 30 seconds apart, on network errors
-  and on transient answers (HTTP 429, 500, 502, 503, 504); any other status fails at once.
+  day is skipped with `Skipped: APOD entry unavailable (...)` and exit 0.
+- Every request to NASA (API, entry page, image, video) goes through `cosmic_daily/http.py`: up to
+  three attempts, 5 then 15 seconds apart, on network errors and HTTP 502/503/504. HTTP 429 (the
+  api.data.gov hourly quota) and 500 fail at once: a short retry cannot fix them. Error messages
+  never include the request URL, and the API key travels in the `X-Api-Key` header, never in the URL.
+- When api.nasa.gov stays down after its attempts, the entry is read from the science.nasa.gov page
+  directly (as on placeholder days). When the page itself cannot be fetched, the run fails and opens
+  an issue: only a page that answered but cannot be trusted (wrong date, missing title, media or
+  credit) is a silent skip.
 - The image is fetched from `hdurl` first, then from `url` when the HD file answers 403/404 or
   cannot fit the size budget; the command fails only when every candidate fails.
 - PRs and merges made with the default `GITHUB_TOKEN` fire no workflow, so the job dispatches

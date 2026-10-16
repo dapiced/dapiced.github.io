@@ -82,9 +82,7 @@ def test_parse_fails_closed(mutate, reason):
 
 
 def test_fetch_apod_page_rejects_unexpected_host(monkeypatch):
-    monkeypatch.setattr(
-        apod_page.requests,
-        "get",
+    monkeypatch.setattr("requests.get",
         lambda *args, **kwargs: FakeResponse(text=_html(), url="https://example.com/apod/"),
     )
     with pytest.raises(ApodUnavailableError, match="example.com"):
@@ -180,3 +178,18 @@ def test_library_video_check():
         "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/october/x.mp4")
     assert not apod_page.is_library_video("https://www.youtube.com/embed/abc")
     assert not apod_page.is_library_video("https://assets.science.nasa.gov/content/dam/other/x.mp4")
+
+
+
+def test_page_errors_fail_loudly_instead_of_skipping(monkeypatch):
+    # A skip (ApodUnavailableError) ends the run green and loses the day; a
+    # transport failure must fail the run so that an issue is opened.
+    from cosmic_daily import http
+
+    monkeypatch.setattr("requests.get", lambda *a, **k: FakeResponse(url="https://science.nasa.gov/apod/", status_code=503))
+    with pytest.raises(http.TransientError):
+        apod_page.fetch_apod_page(DAY)
+    monkeypatch.setattr("requests.get", lambda *a, **k: FakeResponse(url="https://science.nasa.gov/apod/", status_code=403))
+    with pytest.raises(RuntimeError, match="HTTP 403") as caught:
+        apod_page.fetch_apod_page(DAY)
+    assert not isinstance(caught.value, ApodUnavailableError)
