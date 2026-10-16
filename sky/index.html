@@ -26,14 +26,16 @@ description: >-
   <ul class="sky-grid">
     {% for entry in entries %}
     <li class="sky-item">
-      <a class="sky-card" href="{{ entry.url }}">
+      {%- comment -%} A video entry shows one frame and opens the video on NASA's page. {%- endcomment -%}
+      <a class="sky-card" href="{{ entry.video_url | default: entry.url }}"{% if entry.video_url %} target="_blank" rel="noopener"{% endif %}>
+        {% if entry.video_url %}<span class="sky-video-badge" aria-hidden="true">{{ site.data.i18n.en.sky_video_badge }}</span>{% endif %}
         {% if entry.image %}
         {%- assign thumb = entry.image | replace: "/assets/img/apod/", "/assets/img/apod/thumbs/" -%}
         <img src="{{ thumb }}" alt="{{ entry.title | escape }}"{% if entry.image_width %} width="{{ entry.image_width }}"{% endif %}{% if entry.image_height %} height="{{ entry.image_height }}"{% endif %} loading="lazy" decoding="async">
         {% endif %}
         <span class="sky-card-body">
           <time datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%B %-d, %Y" }}</time>
-          <span class="sky-card-title">{{ entry.title }}</span>
+          <span class="sky-card-title">{{ entry.title }}{% if entry.video_url %} <span class="sr-only">{{ site.data.i18n.en.sky_video_hint }}</span>{% endif %}</span>
         </span>
       </a>
     </li>

@@ -358,3 +358,73 @@ def test_thumbnails_backfills_only_missing_files(repo, capsys):
         assert kept.size == (10, 10)
     with Image.open(images / "thumbs" / "b.webp") as created:
         assert created.size == (640, 360)
+
+
+# --- Video entries (phase 5) ---------------------------------------------------
+
+LIBRARY_VIDEO = "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/october/CRS35-Holland30s1080p.mp4"
+VIDEO_PAGE = "https://science.nasa.gov/image-article/apod-2026-october-16-chasing-the-international-space-station/"
+
+
+def _video_record(url: str = LIBRARY_VIDEO, page_url: str | None = VIDEO_PAGE) -> APODRecord:
+    return APODRecord(
+        date="2026-10-16",
+        title="Chasing the International Space Station",
+        media_type="video",
+        url=url,
+        hdurl=None,
+        explanation="A timelapse of a Falcon 9 launch chasing the International Space Station at dawn.",
+        copyright="Eric Holland",
+        apod_url="https://apod.nasa.gov/apod/ap20261016.html",
+        page_url=page_url,
+    )
+
+
+def _png_frame(video_url):
+    import io
+    assert video_url == LIBRARY_VIDEO
+    buffer = io.BytesIO()
+    Image.new("RGB", (1620, 1080), "midnightblue").save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def test_generate_publishes_a_video_as_a_frame_linking_to_nasa(monkeypatch, repo, capsys):
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _video_record())
+    monkeypatch.setattr(cli, "poster_frame", _png_frame)
+
+    assert cli.generate("2026-10-16") == cli.EXIT_SUCCESS
+    entry = repo.root / "_apod" / "2026-10-16-chasing-the-international-space-station.md"
+    text = entry.read_text(encoding="utf-8")
+    assert "media_type: video" in text and f'video_url: "{VIDEO_PAGE}"' in text
+    assert "rights_status: allowed" in text and 'credit: "Eric Holland"' in text
+    with Image.open(repo.root / "assets" / "img" / "apod" / f"{entry.stem}.webp") as image:
+        assert image.size == (1600, 1067)
+    assert (repo.root / "assets" / "img" / "apod" / "thumbs" / f"{entry.stem}.webp").exists()
+    capsys.readouterr()
+    assert cli.check(str(entry)) == cli.EXIT_SUCCESS
+
+
+def test_video_without_page_url_links_to_the_dated_apod_page(monkeypatch, repo):
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _video_record(page_url=None))
+    monkeypatch.setattr(cli, "poster_frame", _png_frame)
+
+    assert cli.generate("2026-10-16") == cli.EXIT_SUCCESS
+    text = next((repo.root / "_apod").glob("*.md")).read_text(encoding="utf-8")
+    assert 'video_url: "https://science.nasa.gov/apod/?date=261016"' in text
+
+
+def test_embedded_video_is_still_skipped(monkeypatch, repo, capsys):
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _video_record(url="https://www.youtube.com/embed/abc"))
+
+    assert cli.generate("2026-10-16") == cli.EXIT_SUCCESS
+    assert "Skipped: The video is not a file from the APOD media library" in capsys.readouterr().out
+    assert not (repo.root / "_apod").exists()
+
+
+def test_parse_rejects_video_entry_without_nasa_link():
+    content = _valid_generated_content().replace("generated_by:", "media_type: video\ngenerated_by:")
+    with pytest.raises(ValueError, match="video_url"):
+        cli._parse_and_validate_post(content)
+    content = _valid_generated_content().replace("generated_by:", 'video_url: "https://science.nasa.gov/x/"\ngenerated_by:')
+    with pytest.raises(ValueError, match="video_url on an image entry"):
+        cli._parse_and_validate_post(content)

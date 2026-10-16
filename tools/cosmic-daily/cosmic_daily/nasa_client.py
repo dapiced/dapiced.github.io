@@ -35,6 +35,8 @@ class APODRecord:
     copyright: Optional[str]
     apod_url: str
     service_version: Optional[str] = None
+    # science.nasa.gov page of the entry; a video entry links its picture there.
+    page_url: Optional[str] = None
 
 
 def _validate_https_url(raw_url: str, field_name: str) -> str:
@@ -141,15 +143,21 @@ def _record_from_page(day: date, apod_url: str, payload: Dict[str, Any]) -> APOD
     """Rebuild the record from the science.nasa.gov page; raises ApodUnavailableError."""
     print("NASA API returned placeholder APOD metadata; reading the science.nasa.gov page instead.")
     page = fetch_apod_page(day)
+    if page.media_type == "video":
+        url, hdurl = page.video_url or "", None
+    else:
+        url = page.image_urls[-1]
+        hdurl = page.image_urls[0] if len(page.image_urls) > 1 else None
     return APODRecord(
         date=page.date,
         title=page.title,
-        media_type="image",
-        url=page.image_urls[-1],
-        hdurl=page.image_urls[0] if len(page.image_urls) > 1 else None,
+        media_type=page.media_type,
+        url=url,
+        hdurl=hdurl,
         explanation=page.explanation,
         copyright=page.credit,
         apod_url=apod_url,
         service_version=str(payload.get("service_version")) if payload.get("service_version") else None,
+        page_url=page.page_url,
     )
 

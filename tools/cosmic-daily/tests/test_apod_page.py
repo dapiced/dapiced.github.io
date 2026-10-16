@@ -146,3 +146,37 @@ def test_fetch_apod_keeps_healthy_api_payload_without_reading_the_page(monkeypat
 
     assert calls == ["https://api.nasa.gov/planetary/apod"]
     assert record.title == "Lunar Farside"
+
+
+ROLLOVER = Path(__file__).parent / "fixtures" / "apod_page_2026-10-13_rollover.html"
+VIDEO = Path(__file__).parent / "fixtures" / "apod_page_2026-10-16_video.html"
+
+
+def test_rollover_page_uses_the_original_not_the_annotated_image():
+    # 13 October 2026: an "original / annotated" rollover instead of a <figure>.
+    page = parse_apod_page(ROLLOVER.read_text(encoding="utf-8"), date(2026, 10, 13))
+    assert page.media_type == "image" and page.title == "Desert Stairway to Heaven"
+    assert page.credit == "Julien Looten"
+    assert page.image_urls[0] == (
+        "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/october/Stairway2Heaven_Looten_6750.jpg"
+    )
+    assert not any("annotated" in url for url in page.image_urls)
+
+
+def test_video_page_yields_the_library_video_and_its_credit():
+    url = "https://science.nasa.gov/image-article/apod-2026-october-16-chasing-the-international-space-station/"
+    page = parse_apod_page(VIDEO.read_text(encoding="utf-8"), date(2026, 10, 16), page_url=url)
+    assert page.media_type == "video" and page.image_urls == ()
+    assert page.video_url == (
+        "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/october/CRS35-Holland30s1080p.mp4"
+    )
+    assert page.credit == "Eric Holland"  # from "Video Credit:"
+    assert page.page_url == url
+    assert page.explanation.startswith("Blasting into the predawn sky")
+
+
+def test_library_video_check():
+    assert apod_page.is_library_video(
+        "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/october/x.mp4")
+    assert not apod_page.is_library_video("https://www.youtube.com/embed/abc")
+    assert not apod_page.is_library_video("https://assets.science.nasa.gov/content/dam/other/x.mp4")

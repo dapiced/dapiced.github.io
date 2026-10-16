@@ -47,10 +47,15 @@ def _encode_webp_bytes(image: Image.Image, quality: int) -> bytes:
 
 
 def process_apod_image(image_url: str, target_directory: str | Path, output_name: str) -> tuple[Path, tuple[int, int]]:
-    target_path = Path(target_directory)
-    target_path.mkdir(parents=True, exist_ok=True)
     image_bytes = _download_bytes(image_url)
     print(f"Original downloaded image size: {len(image_bytes)} bytes (limit: {MAX_IMAGE_BYTES} bytes)")
+    return process_image_bytes(image_bytes, target_directory, output_name)
+
+
+def process_image_bytes(image_bytes: bytes, target_directory: str | Path, output_name: str) -> tuple[Path, tuple[int, int]]:
+    """Resize to MAX_IMAGE_SIDE and encode as WebP under MAX_IMAGE_BYTES (also used for video frames)."""
+    target_path = Path(target_directory)
+    target_path.mkdir(parents=True, exist_ok=True)
 
     try:
         with Image.open(io.BytesIO(image_bytes)) as image:

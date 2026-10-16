@@ -8,7 +8,17 @@ layout: default
     <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time></p>
   </header>
 
-  {% if page.image %}
+  {% if page.image and page.video_url %}
+  {%- comment -%} Video entry: one frame of the video (tools/cosmic-daily/cosmic_daily/video_frame.py);
+  the video itself stays on NASA's page. {%- endcomment -%}
+  <figure class="apod-figure">
+    <a class="apod-video-link" href="{{ page.video_url }}" target="_blank" rel="noopener">
+      <span class="sky-video-badge" aria-hidden="true">{{ site.data.i18n.en.sky_video_badge }}</span>
+      <img src="{{ page.image }}" alt="Frame from the video: {{ page.title | escape }}"{% if page.image_width %} width="{{ page.image_width }}"{% endif %}{% if page.image_height %} height="{{ page.image_height }}"{% endif %} loading="eager">
+    </a>
+    <figcaption><a href="{{ page.video_url }}" target="_blank" rel="noopener">Watch the video on NASA Science ↗</a>{% if page.credit %} · Video credit: {{ page.credit | escape }}{% endif %}</figcaption>
+  </figure>
+  {% elsif page.image %}
   <figure class="apod-figure">
     <img src="{{ page.image }}" alt="{{ page.title | escape }}"{% if page.image_width %} width="{{ page.image_width }}"{% endif %}{% if page.image_height %} height="{{ page.image_height }}"{% endif %} loading="eager">
     {% if page.credit %}<figcaption>Image credit: {{ page.credit | escape }}</figcaption>{% endif %}

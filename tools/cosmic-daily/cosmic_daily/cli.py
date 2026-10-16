@@ -12,17 +12,19 @@ from pathlib import Path
 import yaml
 from PIL import Image, UnidentifiedImageError
 
-from .apod_page import ApodUnavailableError
+from .apod_page import ApodUnavailableError, is_library_video
 from .article_generator import generate_article, slugify_title
-from .image_processor import process_apod_image_with_fallback, write_thumbnail
+from .image_processor import process_apod_image_with_fallback, process_image_bytes, write_thumbnail
 from .nasa_client import APODRecord, fetch_apod
 from .repository import RepositoryContext
-from .rights_policy import evaluate_media_rights
+from .rights_policy import RightsDecision, evaluate_media_rights
+from .video_frame import poster_frame
 
 
 EXIT_SUCCESS = 0
 EXIT_ERROR = 1
 MIN_IMAGE_DIMENSION = 320
+VIDEO_PAGE_PREFIX = "https://science.nasa.gov/"
 BOILERPLATE_MARKERS = (
     "apod's main nasa site has moved",
     "apod's email for image submissions has changed",
@@ -64,12 +66,32 @@ def _image_candidates(apod: APODRecord) -> list[str | None]:
     return [apod.hdurl, apod.url]
 
 
+def _rights(apod: APODRecord) -> RightsDecision:
+    """Rights decision, plus: a video is published only when it is a file from
+    the APOD media library (a frame can be taken from it); an embedded player
+    (YouTube, Vimeo) is still skipped."""
+    if apod.media_type == "video" and not is_library_video(apod.url):
+        return RightsDecision(
+            status="unsupported_media",
+            allowed=False,
+            reason="The video is not a file from the APOD media library (embedded player).",
+        )
+    return evaluate_media_rights(apod.media_type, apod.copyright)
+
+
+def _stage_picture(apod: APODRecord, target_dir: Path, output_name: str) -> tuple[Path, tuple[int, int]]:
+    """The entry's picture: the image itself, or a frame from the middle of the video."""
+    if apod.media_type == "video":
+        return process_image_bytes(poster_frame(apod.url), target_dir, output_name)
+    return process_apod_image_with_fallback(_image_candidates(apod), target_dir, output_name)
+
+
 def _write_preview_files(apod, repo: RepositoryContext, output_dir: Path) -> tuple[Path, Path | None]:
     slug = slugify_title(apod.title)
     image_target_dir = output_dir / "assets" / "img" / "apod"
     image_target_dir.mkdir(parents=True, exist_ok=True)
-    if apod.media_type == "image":
-        image_path, size = process_apod_image_with_fallback(_image_candidates(apod), image_target_dir, f"{apod.date}-{slug}")
+    if apod.media_type in ("image", "video"):
+        image_path, size = _stage_picture(apod, image_target_dir, f"{apod.date}-{slug}")
         _, article_text = generate_article(apod, f"/assets/img/apod/{apod.date}-{slug}.webp", size[0], size[1])
         post_path = output_dir / "_apod" / f"{apod.date}-{slug}.md"
         post_path.parent.mkdir(parents=True, exist_ok=True)
@@ -100,9 +122,9 @@ def preview(date_value: str | None = None) -> int:
         "apod_url": apod.apod_url,
     }, indent=2))
 
-    decision = evaluate_media_rights(apod.media_type, apod.copyright)
+    decision = _rights(apod)
     if decision.status == "unsupported_media":
-        # A video day is a normal outcome, not a failure: nothing to publish.
+        # An embedded video is a normal outcome, not a failure: nothing to publish.
         print(f"Skipped: {decision.reason}")
         return EXIT_SUCCESS
 
@@ -139,9 +161,9 @@ def generate(date_value: str | None = None) -> int:
         print(f"Generation failed: {exc}")
         return EXIT_ERROR
 
-    decision = evaluate_media_rights(apod.media_type, apod.copyright)
+    decision = _rights(apod)
     if decision.status == "unsupported_media":
-        # A video day is a normal outcome, not a failure: nothing to publish.
+        # An embedded video is a normal outcome, not a failure: nothing to publish.
         _emit_github_output(apod_date=apod.date, result="unsupported_media", post_path="", image_path="")
         print(f"Skipped: {decision.reason}")
         return EXIT_SUCCESS
@@ -166,11 +188,7 @@ def generate(date_value: str | None = None) -> int:
         staging_image_dir = staging_root / "assets" / "img" / "apod"
         staging_image_dir.mkdir(parents=True)
         try:
-            staged_image, image_size = process_apod_image_with_fallback(
-                _image_candidates(apod),
-                staging_image_dir,
-                filename,
-            )
+            staged_image, image_size = _stage_picture(apod, staging_image_dir, filename)
             staged_thumbnail = write_thumbnail(staged_image, staging_image_dir / "thumbs")
         except Exception as exc:
             print(f"Image processing failed: {exc}")
@@ -296,7 +314,16 @@ def _parse_and_validate_post(content: str) -> tuple[dict, str]:
     rights_status = metadata.get("rights_status")
     if rights_status not in {"allowed", "manual_review"}:
         raise ValueError("invalid rights status")
-    rendered_rights = evaluate_media_rights("image", metadata["credit"])
+    media_type = metadata.get("media_type", "image")
+    if media_type not in {"image", "video"}:
+        raise ValueError("invalid media_type")
+    if media_type == "video":
+        video_url = metadata.get("video_url")
+        if not isinstance(video_url, str) or not video_url.startswith(VIDEO_PAGE_PREFIX):
+            raise ValueError("video entry needs a video_url on science.nasa.gov")
+    elif "video_url" in metadata:
+        raise ValueError("video_url on an image entry")
+    rendered_rights = evaluate_media_rights(media_type, metadata["credit"])
     if rendered_rights.status != rights_status:
         raise ValueError("rights status does not match rendered credit")
     publication_date = metadata.get("date")
