@@ -6,7 +6,16 @@ Personal site and blog of **Dominic D'Apice** - Developer, Azure Infrastructure 
 
 ## Writing a new blog post
 
-Add a Markdown file to `_posts/` named `YYYY-MM-DD-slug.md`:
+The quickest way is the generator, which writes the file (or the linked EN/FR pair) with
+a safe date, validated tags and an "In brief" box ready to fill
+([`tools/new-post/README.md`](tools/new-post/README.md)):
+
+```bash
+python tools/new-post/new_post.py --title-en "What I learned about XGBoost" \
+    --title-fr "Ce que j'ai appris sur XGBoost" --tags machine-learning,kaggle
+```
+
+By hand, add a Markdown file to `_posts/` named `YYYY-MM-DD-slug.md`:
 
 ```markdown
 ---
@@ -167,6 +176,11 @@ the generated navigation, skills, timeline, and off-duty cards still match those
   Cloudflare Pages project (`https://pr-<n>.dominicdapice-preview.pages.dev`, noindex) and
   the PR gets a comment with the link. Production stays on GitHub Pages. Setup and token
   scope: [`docs/infra/cloudflare-preview.md`](docs/infra/cloudflare-preview.md).
+- **Quarterly review** (`quarterly-review.yml`, first day of each quarter): opens one
+  "Quarterly review YYYY-Qn" issue with the posts published (against the two-a-month
+  target), untranslated posts, the scheduled checks' results and, with the optional
+  read-only `GOATCOUNTER_API_TOKEN` secret, visitors and referrers
+  ([`docs/quarterly-review.md`](docs/quarterly-review.md)).
 - **External links** (`links-weekly.yml`, Mondays): checks every outbound link and opens a
   single "Broken external links" issue when some stop answering.
 - **Dependabot** (`dependabot.yml`) opens weekly grouped PRs for the GitHub Actions, the

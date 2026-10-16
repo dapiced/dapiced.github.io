@@ -1276,6 +1276,27 @@ a.path-card:hover {
   color: var(--muted);
   font-style: italic;
 }
+/* "In brief" box at the top of a post (tools/new-post): the three bullets
+   are also the LinkedIn post. Markdown: a blockquote followed by {: .in-brief }. */
+.post-content blockquote.in-brief {
+  border-left-color: var(--cyan);
+  background: var(--panel);
+  border-radius: 0 10px 10px 0;
+  margin: var(--space-5) 0 var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text);
+  font-style: normal;
+}
+.post-content blockquote.in-brief > p:first-child {
+  margin: 0 0 var(--space-2);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--heading);
+}
+.post-content blockquote.in-brief ul { margin: 0; padding-left: 1.2rem; }
+.post-content blockquote.in-brief li + li { margin-top: var(--space-1); }
 .post-content img { max-width: 100%; height: auto; border-radius: 10px; }
 .post-content table {
   border-collapse: collapse;
