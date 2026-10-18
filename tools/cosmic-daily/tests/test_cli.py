@@ -428,3 +428,17 @@ def test_parse_rejects_video_entry_without_nasa_link():
     content = _valid_generated_content().replace("generated_by:", 'video_url: "https://science.nasa.gov/x/"\ngenerated_by:')
     with pytest.raises(ValueError, match="video_url on an image entry"):
         cli._parse_and_validate_post(content)
+
+
+@pytest.mark.parametrize("title", ["3D 67P", "M31"])
+def test_parse_accepts_short_apod_titles(title):
+    content = _valid_generated_content().replace('title: "Example Title"', f'title: "{title}"')
+    metadata, _ = cli._parse_and_validate_post(content)
+    assert metadata["title"] == title
+
+
+@pytest.mark.parametrize("title", ["NASA Science", "APOD - NASA Science", "Untitled", "APOD", "X", " - "])
+def test_parse_rejects_generic_or_empty_titles(title):
+    content = _valid_generated_content().replace('title: "Example Title"', f'title: "{title}"')
+    with pytest.raises(ValueError, match="generic or malformed title"):
+        cli._parse_and_validate_post(content)
