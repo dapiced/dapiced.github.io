@@ -25,6 +25,7 @@ EXIT_SUCCESS = 0
 EXIT_ERROR = 1
 MIN_IMAGE_DIMENSION = 320
 VIDEO_PAGE_PREFIX = "https://science.nasa.gov/"
+GENERIC_TITLES = {"nasa science", "apod - nasa science", "untitled", "apod"}
 BOILERPLATE_MARKERS = (
     "apod's main nasa site has moved",
     "apod's email for image submissions has changed",
@@ -306,7 +307,13 @@ def _parse_and_validate_post(content: str) -> tuple[dict, str]:
         if metadata.get(key) != expected:
             raise ValueError(f"invalid {key}")
     title = metadata.get("title")
-    if not isinstance(title, str) or len(title.strip()) < 8 or title.strip().lower() in {"nasa science", "untitled", "apod"}:
+    # APOD titles can be very short ("3D 67P", "M31"): reject the placeholders
+    # NASA serves, not short titles. Two letters or digits are the minimum.
+    if (
+        not isinstance(title, str)
+        or sum(char.isalnum() for char in title) < 2
+        or title.strip().lower() in GENERIC_TITLES
+    ):
         raise ValueError("generic or malformed title")
     for key in ("description", "image", "credit", "apod_url"):
         if not isinstance(metadata.get(key), str) or not metadata[key].strip():
