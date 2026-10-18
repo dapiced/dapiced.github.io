@@ -413,11 +413,41 @@ def test_video_without_page_url_links_to_the_dated_apod_page(monkeypatch, repo):
     assert 'video_url: "https://science.nasa.gov/apod/?date=261016"' in text
 
 
-def test_embedded_video_is_still_skipped(monkeypatch, repo, capsys):
-    monkeypatch.setattr(cli, "fetch_apod", lambda target: _video_record(url="https://www.youtube.com/embed/abc"))
+def test_youtube_video_is_published_with_its_thumbnail(monkeypatch, repo, capsys):
+    # 18 October 2026: the NASA page embeds a YouTube player.
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _video_record(url="https://www.youtube.com/embed/DzrCEm1ZBRY"))
+    monkeypatch.setattr(cli, "poster_frame", lambda url: pytest.fail("a YouTube video is never downloaded"))
+    seen: dict[str, object] = {}
+
+    def fake_process(urls, target_dir, output_name, trim_bars=False):
+        seen["urls"], seen["trim_bars"] = list(urls), trim_bars
+        target = Path(target_dir) / f"{output_name}.webp"
+        Image.new("RGB", (1280, 720), "black").save(target, format="WEBP")
+        return target, (1280, 720)
+
+    monkeypatch.setattr(cli, "process_apod_image_with_fallback", fake_process)
 
     assert cli.generate("2026-10-16") == cli.EXIT_SUCCESS
-    assert "Skipped: The video is not a file from the APOD media library" in capsys.readouterr().out
+    assert seen["urls"] == [
+        "https://i.ytimg.com/vi/DzrCEm1ZBRY/maxresdefault.jpg",
+        "https://i.ytimg.com/vi/DzrCEm1ZBRY/sddefault.jpg",
+        "https://i.ytimg.com/vi/DzrCEm1ZBRY/hqdefault.jpg",
+    ]
+    assert seen["trim_bars"] is True
+    entry = repo.root / "_apod" / "2026-10-16-chasing-the-international-space-station.md"
+    text = entry.read_text(encoding="utf-8")
+    assert "media_type: video" in text and f'video_url: "{VIDEO_PAGE}"' in text
+    assert "youtube" not in text.lower()
+    capsys.readouterr()
+    assert cli.check(str(entry)) == cli.EXIT_SUCCESS
+
+
+@pytest.mark.parametrize("url", ["https://player.vimeo.com/video/123456", "https://www.youtube.com/embed/abc"])
+def test_other_embedded_video_is_still_skipped(monkeypatch, repo, capsys, url):
+    monkeypatch.setattr(cli, "fetch_apod", lambda target: _video_record(url=url))
+
+    assert cli.generate("2026-10-16") == cli.EXIT_SUCCESS
+    assert "Skipped: The video is neither a file from the APOD media library nor a YouTube video" in capsys.readouterr().out
     assert not (repo.root / "_apod").exists()
 
 

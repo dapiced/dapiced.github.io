@@ -46,8 +46,13 @@ The default mode is `preview`.
   ffmpeg from the `imageio-ffmpeg` wheel), and the entry gets `media_type: video` and
   `video_url` (NASA's page). On the site the picture carries a "▶ Video" badge and opens the
   video on NASA's page in a new tab; the video itself is never copied or embedded. The credit
-  follows the image rule. A video shown through an embedded player (YouTube, Vimeo) is still
-  skipped with `Skipped: …` and exit 0.
+  follows the image rule.
+- YouTube videos (owner's choice, 2026-10-18): when the NASA page embeds a YouTube player
+  (`www.youtube.com/embed/<id>`), the video's YouTube thumbnail becomes the picture
+  (`i.ytimg.com/vi/<id>/maxresdefault.jpg`, then `sddefault.jpg`, then `hqdefault.jpg`). The
+  entry is otherwise a normal video entry: "▶ Video" badge, link to NASA's page, credit rule
+  unchanged. Nothing from YouTube is embedded on the site. A video in another embedded player
+  (Vimeo) is still skipped with `Skipped: …` and exit 0.
 - APOD moved to `science.nasa.gov` in autumn 2026, and `api.nasa.gov` now answers some days with
   placeholder data (title `NASA Science`, the NASA logo as image). When that happens the entry is
   read from `https://science.nasa.gov/apod/?date=YYMMDD` instead: title, explanation (without the

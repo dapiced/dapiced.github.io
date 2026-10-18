@@ -211,3 +211,38 @@ def test_write_thumbnail_never_overwrites(tmp_path):
     image_processor.write_thumbnail(source, tmp_path / "thumbs")
     with pytest.raises(FileExistsError):
         image_processor.write_thumbnail(source, tmp_path / "thumbs")
+
+
+def _framed(size, content_box, fill="midnightblue"):
+    """PNG bytes: a black canvas with a colored rectangle (the picture) inside."""
+    canvas = Image.new("RGB", size, "black")
+    canvas.paste(Image.new("RGB", (content_box[2] - content_box[0], content_box[3] - content_box[1]), fill), content_box[:2])
+    buffer = io.BytesIO()
+    canvas.save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def _size(image_bytes):
+    with Image.open(io.BytesIO(image_bytes)) as image:
+        return image.size
+
+
+def test_trim_black_bars_cuts_a_pillarbox():
+    # sddefault.jpg of the 18 October 2026 APOD: a square video in a 640x480 frame.
+    assert _size(image_processor.trim_black_bars(_framed((640, 480), (80, 0, 560, 480)))) == (480, 480)
+
+
+def test_trim_black_bars_cuts_a_letterbox():
+    assert _size(image_processor.trim_black_bars(_framed((640, 480), (0, 60, 640, 420)))) == (640, 360)
+
+
+def test_trim_black_bars_keeps_a_one_sided_dark_edge():
+    # A dark sky on one side of a photo is not a bar.
+    original = _framed((640, 480), (0, 0, 500, 480))
+    assert image_processor.trim_black_bars(original) == original
+
+
+def test_trim_black_bars_keeps_the_image_when_the_crop_is_too_small():
+    # hqdefault.jpg (480x360) of a 16:9 video: the crop would leave 270 px.
+    original = _framed((480, 360), (0, 45, 480, 315))
+    assert image_processor.trim_black_bars(original) == original

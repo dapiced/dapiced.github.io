@@ -22,6 +22,12 @@ MIN_IMAGE_SIDE = 320
 # are at most ~360 CSS px wide, so 640 px covers 1.75x screens.
 THUMBNAIL_WIDTH = 640
 THUMBNAIL_QUALITY = 75
+# Black bars around a YouTube thumbnail (a 4:3 or square video in a 16:9 frame,
+# or the reverse): pixels at or below this luminance count as bar, and both
+# bars of a pair must match within BAR_SYMMETRY of the side.
+BAR_LUMINANCE = 16
+BAR_MIN_FRACTION = 0.01
+BAR_SYMMETRY = 0.02
 
 
 def _validate_download_url(raw_url: str) -> str:
@@ -48,9 +54,44 @@ def _encode_webp_bytes(image: Image.Image, quality: int) -> bytes:
     return buffer.getvalue()
 
 
-def process_apod_image(image_url: str, target_directory: str | Path, output_name: str) -> tuple[Path, tuple[int, int]]:
+def trim_black_bars(image_bytes: bytes) -> bytes:
+    """Crop symmetric black bars (letterbox or pillarbox); other images are returned as is.
+
+    Only matched pairs are cut, so a dark sky on one edge of a photo stays, and
+    the crop is dropped when it would leave a side under MIN_IMAGE_SIDE.
+    """
+    with Image.open(io.BytesIO(image_bytes)) as image:
+        picture = image.convert("RGB")
+    width, height = picture.size
+    bbox = picture.convert("L").point(lambda value: 255 if value > BAR_LUMINANCE else 0).getbbox()
+    if not bbox:
+        return image_bytes
+
+    def _span(start: int, end: int, side: int) -> tuple[int, int]:
+        before, after = start, side - end
+        if min(before, after) >= side * BAR_MIN_FRACTION and abs(before - after) <= side * BAR_SYMMETRY:
+            return start, end
+        return 0, side
+
+    left, right = _span(bbox[0], bbox[2], width)
+    top, bottom = _span(bbox[1], bbox[3], height)
+    if (left, top, right, bottom) == (0, 0, width, height):
+        return image_bytes
+    if min(right - left, bottom - top) < MIN_IMAGE_SIDE:
+        return image_bytes
+    print(f"Trimmed black bars: {width}x{height} -> {right - left}x{bottom - top}")
+    buffer = io.BytesIO()
+    picture.crop((left, top, right, bottom)).save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def process_apod_image(
+    image_url: str, target_directory: str | Path, output_name: str, trim_bars: bool = False
+) -> tuple[Path, tuple[int, int]]:
     image_bytes = _download_bytes(image_url)
     print(f"Original downloaded image size: {len(image_bytes)} bytes (limit: {MAX_IMAGE_BYTES} bytes)")
+    if trim_bars:
+        image_bytes = trim_black_bars(image_bytes)
     return process_image_bytes(image_bytes, target_directory, output_name)
 
 
@@ -160,7 +201,7 @@ def write_thumbnail(source: str | Path, target_directory: str | Path) -> Path:
 
 
 def process_apod_image_with_fallback(
-    candidate_urls: Iterable[str | None], target_directory: str | Path, output_name: str
+    candidate_urls: Iterable[str | None], target_directory: str | Path, output_name: str, trim_bars: bool = False
 ) -> tuple[Path, tuple[int, int]]:
     """Try each candidate URL in order (typically hdurl, then url) until one is processed.
 
@@ -179,7 +220,7 @@ def process_apod_image_with_fallback(
     for index, url in enumerate(urls, start=1):
         print(f"Image candidate {index}/{len(urls)}: {url}")
         try:
-            return process_apod_image(url, target_directory, output_name)
+            return process_apod_image(url, target_directory, output_name, trim_bars=trim_bars)
         except (RuntimeError, ValueError, requests.RequestException) as exc:
             last_error = exc
             if index < len(urls):
