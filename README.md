@@ -145,8 +145,8 @@ the generated navigation, skills, timeline, and off-duty cards still match those
   and its feed), opens a PR,
   validates it and squash-merges every credited still image, third-party credits included. An
   entry without a credit remains open for manual review. A video day is published as one frame
-  of the video with a "▶ Video" badge, linking to the video on NASA's page; a video in an
-  embedded player is skipped (the run summary says why). A real failure opens an issue. Run it by hand from the Actions tab with
+  of the video (or its YouTube thumbnail) with a "▶ Video" badge, linking to the video on
+  NASA's page; a video in another embedded player (Vimeo) is skipped (the run summary says why). A real failure opens an issue. Run it by hand from the Actions tab with
   a `date` to fill a gap.
   Each entry also gets a 640 px grid thumbnail in `assets/img/apod/thumbs/` (used by
   `/sky/` and the homepage card); `python -m cosmic_daily thumbnails` backfills missing ones.

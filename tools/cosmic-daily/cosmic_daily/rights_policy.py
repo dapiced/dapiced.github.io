@@ -27,6 +27,9 @@ def evaluate_media_rights(media_type: str, copyright: Optional[str] = None) -> R
     Owner's choice (2026-10-16): a video entry follows the same rule. Only one
     frame of the video is republished, with the video credit, and it links to
     the video on NASA's page; the video itself is never copied.
+
+    Owner's choice (2026-10-18): a YouTube video follows the same rule, with
+    its YouTube thumbnail as the one picture.
     """
     normalized = (media_type or "").strip().lower()
     if normalized not in {"image", "video"}:

@@ -6,11 +6,12 @@ the title comes back as "NASA Science" and the image as the NASA logo, while the
 explanation still carries the "Tomorrow's picture" footer. This module reads the
 same entry from its new page instead.
 
-The hero media comes in three shapes: a photo (<figure class="hds-media-inner">),
-an "original / annotated" image rollover (only the original is used), or a video
-file from the APOD media library (an MP4 played by NASA's own player). A video
-entry is published with a frame of the video as its picture, linking to the
-NASA page (cosmic_daily/video_frame.py).
+The hero media comes in four shapes: a photo (<figure class="hds-media-inner">),
+an "original / annotated" image rollover (only the original is used), a video
+file from the APOD media library (an MP4 played by NASA's own player), or a
+YouTube player embedded in the page. A video entry is published with one
+picture of the video (a frame of the MP4, or the YouTube thumbnail) linking to
+the NASA page; the video itself is never copied or embedded.
 
 The parser fails closed: when the title, the media or the credit cannot be found,
 or the page is for another date, it raises ApodUnavailableError and the CLI skips
@@ -40,6 +41,13 @@ IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".tif", ".tiff")
 VIDEO_EXTENSIONS = (".mp4", ".m4v", ".webm", ".mov")
 # The annotated half of an image rollover: same picture with labels drawn on it.
 ROLLOVER_SECONDARY = "smd-image-rollover__image--secondary"
+# A YouTube player embedded in the page: www.youtube.com/embed/<11-character id>.
+YOUTUBE_HOSTS = {"www.youtube.com", "youtube.com", "www.youtube-nocookie.com"}
+YOUTUBE_EMBED_PATH = re.compile(r"/embed/([A-Za-z0-9_-]{11})")
+YOUTUBE_THUMBNAIL_HOST = "i.ytimg.com"
+# Largest first: maxresdefault (1280x720) and sddefault (640x480) are missing
+# on some videos and answer 404; hqdefault (480x360) always exists.
+YOUTUBE_THUMBNAILS = ("maxresdefault.jpg", "sddefault.jpg", "hqdefault.jpg")
 REQUEST_TIMEOUT = (10, 45)
 TOMORROW_MARKER = re.compile(r"tomorrow'?s picture\s*:", re.IGNORECASE)
 
@@ -105,7 +113,7 @@ class _ApodPageParser(HTMLParser):
                 self.hero_links.append(attributes["href"])
             elif tag == "img" and attributes.get("src") and ROLLOVER_SECONDARY not in classes:
                 self.hero_links.append(attributes["src"])
-            elif tag in ("video", "source") and attributes.get("src"):
+            elif tag in ("video", "source", "iframe") and attributes.get("src"):
                 self.hero_videos.append(attributes["src"])
 
         if tag == "h1" and self.title is None:
@@ -189,11 +197,34 @@ def is_library_video(url: str) -> bool:
     )
 
 
+def youtube_video_id(url: str) -> str | None:
+    """The id of a YouTube embed URL (www.youtube.com/embed/<id>), else None."""
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.netloc not in YOUTUBE_HOSTS:
+        return None
+    match = YOUTUBE_EMBED_PATH.fullmatch(parsed.path)
+    return match.group(1) if match else None
+
+
+def youtube_thumbnail_urls(url: str) -> tuple[str, ...]:
+    """Thumbnail candidates of a YouTube embed, largest first; () if not YouTube."""
+    video_id = youtube_video_id(url)
+    if not video_id:
+        return ()
+    return tuple(f"https://{YOUTUBE_THUMBNAIL_HOST}/vi/{video_id}/{name}" for name in YOUTUBE_THUMBNAILS)
+
+
 def _video_candidates(links: list[str]) -> tuple[str, ...]:
+    """Library files first, then YouTube embeds (normalized, query string dropped)."""
     candidates: list[str] = []
     for link in links:
         if is_library_video(link) and link not in candidates:
             candidates.append(link)
+    for link in links:
+        video_id = youtube_video_id(link)
+        embed = f"https://www.youtube.com/embed/{video_id}" if video_id else None
+        if embed and embed not in candidates:
+            candidates.append(embed)
     return tuple(candidates)
 
 
@@ -234,8 +265,8 @@ def parse_apod_page(html: str, expected_day: date, page_url: str | None = None) 
     image_urls = _image_candidates(parser.hero_links)
     video_urls = () if image_urls else _video_candidates(parser.hero_videos)
     if not image_urls and not video_urls:
-        # An embedded third-party player, or a layout this parser does not recognize.
-        raise ApodUnavailableError("APOD page has no still image or video from the APOD media library")
+        # Another embedded player (Vimeo...), or a layout this parser does not recognize.
+        raise ApodUnavailableError("APOD page has no still image, APOD library video or YouTube video")
 
     credit = _credit_value(parser.meta)
     if not credit:

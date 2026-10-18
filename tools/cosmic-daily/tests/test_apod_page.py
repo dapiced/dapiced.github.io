@@ -148,6 +148,7 @@ def test_fetch_apod_keeps_healthy_api_payload_without_reading_the_page(monkeypat
 
 ROLLOVER = Path(__file__).parent / "fixtures" / "apod_page_2026-10-13_rollover.html"
 VIDEO = Path(__file__).parent / "fixtures" / "apod_page_2026-10-16_video.html"
+YOUTUBE = Path(__file__).parent / "fixtures" / "apod_page_2026-10-18_youtube.html"
 
 
 def test_rollover_page_uses_the_original_not_the_annotated_image():
@@ -178,6 +179,41 @@ def test_library_video_check():
         "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/october/x.mp4")
     assert not apod_page.is_library_video("https://www.youtube.com/embed/abc")
     assert not apod_page.is_library_video("https://assets.science.nasa.gov/content/dam/other/x.mp4")
+
+
+def test_youtube_page_yields_the_embed_and_its_credit():
+    # 18 October 2026: a YouTube player in the hero instead of an image or MP4.
+    page = parse_apod_page(YOUTUBE.read_text(encoding="utf-8"), date(2026, 10, 18))
+    assert page.media_type == "video" and page.image_urls == ()
+    assert page.title == "Sonified: Eagle Nebula Pillars"
+    assert page.video_url == "https://www.youtube.com/embed/DzrCEm1ZBRY"
+    assert page.credit.startswith("Image Credit: NASA, ESA")
+    assert page.explanation.startswith("Yes, but have you ever experienced the Eagle Nebula")
+
+
+@pytest.mark.parametrize(
+    ("url", "expected"),
+    [
+        ("https://www.youtube.com/embed/DzrCEm1ZBRY?feature=oembed", "DzrCEm1ZBRY"),
+        ("https://www.youtube-nocookie.com/embed/DzrCEm1ZBRY", "DzrCEm1ZBRY"),
+        ("https://www.youtube.com/embed/abc", None),
+        ("http://www.youtube.com/embed/DzrCEm1ZBRY", None),
+        ("https://www.youtube.com/watch?v=DzrCEm1ZBRY", None),
+        ("https://evil.example/embed/DzrCEm1ZBRY", None),
+        ("https://player.vimeo.com/video/123456", None),
+    ],
+)
+def test_youtube_video_id(url, expected):
+    assert apod_page.youtube_video_id(url) == expected
+
+
+def test_youtube_thumbnails_largest_first():
+    assert apod_page.youtube_thumbnail_urls("https://www.youtube.com/embed/DzrCEm1ZBRY") == (
+        "https://i.ytimg.com/vi/DzrCEm1ZBRY/maxresdefault.jpg",
+        "https://i.ytimg.com/vi/DzrCEm1ZBRY/sddefault.jpg",
+        "https://i.ytimg.com/vi/DzrCEm1ZBRY/hqdefault.jpg",
+    )
+    assert apod_page.youtube_thumbnail_urls("https://player.vimeo.com/video/1") == ()
 
 
 

@@ -12,7 +12,7 @@ from pathlib import Path
 import yaml
 from PIL import Image, UnidentifiedImageError
 
-from .apod_page import ApodUnavailableError, is_library_video
+from .apod_page import ApodUnavailableError, is_library_video, youtube_thumbnail_urls
 from .article_generator import generate_article, slugify_title
 from .image_processor import process_apod_image_with_fallback, process_image_bytes, write_thumbnail
 from .nasa_client import APODRecord, fetch_apod
@@ -69,20 +69,25 @@ def _image_candidates(apod: APODRecord) -> list[str | None]:
 
 def _rights(apod: APODRecord) -> RightsDecision:
     """Rights decision, plus: a video is published only when it is a file from
-    the APOD media library (a frame can be taken from it); an embedded player
-    (YouTube, Vimeo) is still skipped."""
-    if apod.media_type == "video" and not is_library_video(apod.url):
+    the APOD media library (a frame can be taken from it) or a YouTube video
+    (its thumbnail is the picture); another embedded player (Vimeo...) is
+    still skipped."""
+    if apod.media_type == "video" and not (is_library_video(apod.url) or youtube_thumbnail_urls(apod.url)):
         return RightsDecision(
             status="unsupported_media",
             allowed=False,
-            reason="The video is not a file from the APOD media library (embedded player).",
+            reason="The video is neither a file from the APOD media library nor a YouTube video.",
         )
     return evaluate_media_rights(apod.media_type, apod.copyright)
 
 
 def _stage_picture(apod: APODRecord, target_dir: Path, output_name: str) -> tuple[Path, tuple[int, int]]:
-    """The entry's picture: the image itself, or a frame from the middle of the video."""
+    """The entry's picture: the image itself, the YouTube thumbnail, or a frame
+    from the middle of a library video."""
     if apod.media_type == "video":
+        thumbnails = youtube_thumbnail_urls(apod.url)
+        if thumbnails:
+            return process_apod_image_with_fallback(thumbnails, target_dir, output_name, trim_bars=True)
         return process_image_bytes(poster_frame(apod.url), target_dir, output_name)
     return process_apod_image_with_fallback(_image_candidates(apod), target_dir, output_name)
 
