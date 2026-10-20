@@ -1,0 +1,17 @@
+---
+layout: apod
+title: "An Anticrepuscular Rainbow Fan"
+date: 2026-10-20 08:00:00 -0400
+tags: [astronomy, nasa, apod]
+description: "An Anticrepuscular Rainbow Fan: This is an unusual rainbow. For one thing, the rainbow is not complete, appearing only in a sunlit fan -- but that by itself is"
+image: /assets/img/apod/2026-10-20-an-anticrepuscular-rainbow-fan.webp
+image_width: 1600
+image_height: 1200
+credit: "Aurelia Degli Esposti"
+rights_status: allowed
+apod_date: 2026-10-20
+apod_url: "https://apod.nasa.gov/apod/ap20261020.html"
+generated_by: cosmic-daily
+---
+
+This is an unusual rainbow. For one thing, the rainbow is not complete, appearing only in a sunlit fan -- but that by itself is not very unusual. What is most unusual is the fake location of the Sun. The Sun appears to be toward the front, just below those hills -- but it is not. That is not how rainbows work. Rainbows involve a backward reflection from falling rain, so that the Sun must really be behind you. In this case, gaps between clouds near the setting Sun allowed rays to cross the entire sky and appear to converge in front, an unusual phenomenon called anticrepuscular rays. The photo was taken with a phone last week at sunset in Presenzano, Italy. The seemingly reverse rainbow was noticed when hanging up laundry.
