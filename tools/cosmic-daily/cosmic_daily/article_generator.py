@@ -14,6 +14,13 @@ from .rights_policy import UNATTRIBUTED_CREDIT, evaluate_media_rights
 SEO_TEXT_MIN = 120
 SEO_TEXT_MAX = 160
 
+# Local publication time written in each entry's `date`. It must stay earlier
+# than the scheduled run (cosmic-daily.yml, 12:00 UTC = 07:00 EST / 08:00 EDT):
+# Jekyll lists a future-dated collection entry on /sky/ but does not render its
+# page, so CI's link check fails. 08:00 broke this once DST ended (08:00 EST is
+# 13:00 UTC). 06:00 is 10:00 or 11:00 UTC, before the run in both seasons.
+PUBLISH_TIME = "06:00:00"
+
 
 def slugify_title(title: str) -> str:
     normalized = title.strip().lower()
@@ -74,7 +81,7 @@ def generate_article(apod: APODRecord, image_path: str, width: int, height: int)
         "---\n"
         "layout: apod\n"
         f"title: {_yaml_string(apod.title)}\n"
-        f"date: {date_value} 08:00:00 {offset}\n"
+        f"date: {date_value} {PUBLISH_TIME} {offset}\n"
         "tags: [astronomy, nasa, apod]\n"
         f"description: {_yaml_string(seo)}\n"
         f"image: {image_path}\n"

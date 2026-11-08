@@ -309,7 +309,7 @@ def _valid_generated_content() -> str:
     ("mutate", "expected_error"),
     [
         (lambda content: content.replace('title: "Example Title"\n', 'title: "First Title"\ntitle: "Example Title"\n'), "duplicate front matter key"),
-        (lambda content: content.replace("date: 2026-09-13 08:00:00 -0400\n", ""), "missing date"),
+        (lambda content: content.replace("date: 2026-09-13 06:00:00 -0400\n", ""), "missing date"),
         (lambda content: content.replace("apod_date: 2026-09-13", "apod_date: not-a-date"), "invalid apod_date"),
         (lambda content: content.replace(
             'apod_url: "https://apod.nasa.gov/apod/ap20260913.html"',
