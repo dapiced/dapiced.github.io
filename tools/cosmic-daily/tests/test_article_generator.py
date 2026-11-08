@@ -23,7 +23,7 @@ def test_generate_article_includes_required_fields():
     front_matter, article = generate_article(_apod(), "/assets/img/apod/2024-03-15-a-fine-example.webp", 1200, 800)
     assert "layout: apod\n" in front_matter
     assert 'title: "A Fine Example"' in front_matter
-    assert "date: 2024-03-15 08:00:00 -0400" in front_matter
+    assert "date: 2024-03-15 06:00:00 -0400" in front_matter
     assert "tags: [astronomy, nasa, apod]" in front_matter
     assert "image: /assets/img/apod/2024-03-15-a-fine-example.webp" in front_matter
     assert "image_width: 1200" in front_matter
@@ -60,3 +60,20 @@ def test_generate_article_preserves_missing_rights_as_manual_review():
     assert 'credit: "Rights metadata unavailable"' in front_matter
     assert "rights_status: manual_review" in front_matter
     assert 'credit: "NASA"' not in front_matter
+
+
+def test_publish_time_precedes_scheduled_run_in_winter_and_summer():
+    """The entry must not be future-dated when the 12:00 UTC cron builds the site.
+
+    Jekyll lists future-dated entries on /sky/ without rendering their page,
+    which broke CI every day after DST ended (2026-11-02).
+    """
+    from datetime import datetime, timezone
+
+    for day, expected_offset in (("2026-01-15", "-0500"), ("2026-07-15", "-0400")):
+        front_matter, _ = generate_article(_apod(date=day), "/assets/img/apod/x.webp", 1200, 800)
+        line = next(l for l in front_matter.splitlines() if l.startswith("date: "))
+        published = datetime.strptime(line[len("date: "):], "%Y-%m-%d %H:%M:%S %z")
+        assert line.endswith(expected_offset)
+        run = datetime.fromisoformat(f"{day}T12:00:00").replace(tzinfo=timezone.utc)
+        assert published < run, f"{line} is after the 12:00 UTC run"
